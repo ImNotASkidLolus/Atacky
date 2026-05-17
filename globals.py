@@ -16,3 +16,4 @@ stop_scan = False
 lock = threading.Lock()
 selected_row = 1
 send_deauth = False
+attack_menu = False
