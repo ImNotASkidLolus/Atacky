@@ -7,8 +7,11 @@ import datetime
 import deauth
 import get_networks
 import main_tui
+import attack_scr
 import globals
 
+deauth_thread = None
+deauth_attack = None
 def main(stdscr):
     rows, cols = stdscr.getmaxyx()
     curses.start_color()
@@ -27,8 +30,9 @@ def main(stdscr):
     curses.init_pair(7, curses.COLOR_YELLOW, -1) #color of KUKI the cat
     curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_GREEN)
 
-    main_box = curses.newwin(rows - 10, 80, 1, 1)
-
+    main_box = curses.newwin(rows - 10, cols - 2, 1, 1)
+    attack_box = curses.newwin(10, len("SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM") + 2, int(rows/2 - 10), 10)
+    attack_screen = curses.newwin(10, 10, 30,10)
     current_time = datetime.datetime.now()                      
     last_time_stamp = current_time.time()
     status = curses.newwin(1, cols-2, rows - 2, 1)
@@ -41,18 +45,60 @@ def main(stdscr):
     status.noutrefresh()
     main_box.noutrefresh()
     curses.doupdate()
+
     while True:
         current_time = datetime.datetime.now()
         last_time_stamp = current_time.time()
-        main_tui.draw_main_box(main_box, stdscr, rows-10, 80)
+
+        main_tui.draw_main_box(main_box, stdscr, rows-10, cols-2)
+
+        key = stdscr.getch()
+
+        if globals.stop_scan and globals.selected_ssid and globals.selected_bssid: 
+            attack_scr.draw_attack_screen(attack_box, stdscr)
+            if globals.send_deauth:
+                attack_scr.draw_deauth_screen(attack_screen, stdscr)
+                #Start only one deauth thread at a time, and stop it if it's already running when the user tries to start it again
+                if globals.clients:
+                    if deauth_thread is None or not deauth_thread.is_alive():
+                        deauth_attack = deauth.DeauthAttack()
+                        deauth_thread = threading.Thread(target=deauth_attack.send_deauth, daemon=True)
+                        deauth_thread.start()
+                    else:
+                        if deauth_attack is not None:
+                            deauth_attack.stop()
+                            deauth_thread = None
+                            deauth_attack = None
+
+                if key == curses.KEY_BACKSPACE:
+                    globals.send_deauth = False
+                    if deauth_attack is not None:
+                        deauth_attack.stop()
+                        deauth_thread = None
+                        deauth_attack = None
+
+            if key == curses.KEY_BACKSPACE:
+                globals.selected_ssid = None
+                globals.selected_bssid = None
+                globals.clients = None
+            elif key in (curses.KEY_ENTER, 10, 13):
+                if globals.selected_row == 1:
+                    globals.send_deauth = True
+        
+
         status.attron(curses.color_pair(1))
         status.addstr(0, 2, f" Last updated: {last_time_stamp} ".ljust(cols - 7))
         status.addstr(0, cols - 3 - len("Press q or Q to exit  "), "Press q or Q to exit ")
         status.attroff(curses.color_pair(1))
         stdscr.noutrefresh()
-        main_box.noutrefresh()
+
+        if globals.stop_scan and globals.selected_ssid and globals.selected_bssid:
+            attack_box.noutrefresh()
+        elif globals.send_deauth:
+            attack_scr.noutrefresh()
+        else:
+            main_box.noutrefresh()
         status.noutrefresh()
-        key = stdscr.getch()
         if key == ord('q') or key == ord('Q'):
             break
         elif key == ord('s') or key == ord('S'):
@@ -60,6 +106,8 @@ def main(stdscr):
                 if globals.proc:
                     globals.proc.terminate()
                 globals.stop_scan = True
+            elif globals.selected_bssid and globals.selected_ssid:
+                pass
             else:
                 globals.stop_scan = False
         elif key == curses.KEY_UP:
@@ -71,10 +119,10 @@ def main(stdscr):
                 if globals.selected_row <= max(1, len(globals.l_ssids)):
                     globals.selected_row += 1
         elif key in (curses.KEY_ENTER, 10, 13):
-            # When scan is stopped, Enter selects the highlighted row
             if globals.stop_scan:
                 with globals.lock:
                     idx = globals.selected_row - 1
+                    globals.selected_row = 1
                     if 0 <= idx < len(globals.l_ssids):
                         globals.selected_ssid = globals.l_ssids[idx]
                         globals.selected_bssid = globals.l_bssids[idx]
@@ -103,4 +151,4 @@ print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")
 if os.path.exists(os.path.expanduser("~/output-01.csv")):
     os.remove(os.path.expanduser("~/output-01.csv"))
-
+thread1.stop()
