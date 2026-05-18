@@ -4,14 +4,18 @@ import curses
 import time
 import argparse
 import datetime
-import deauth
+import attacks.deauth as deauth
 import get_networks
 import main_tui
-import attack_scr
+import attacks.attack_scr as attack_scr
+import attacks.beacon_spam
 import globals
 
 deauth_thread = None
+beacon_thread = None
 deauth_attack = None
+beacon_sp = None
+
 def main(stdscr):
     rows, cols = stdscr.getmaxyx()
     curses.start_color()
@@ -30,7 +34,7 @@ def main(stdscr):
     curses.init_pair(7, curses.COLOR_YELLOW, -1) #color of KUKI the cat
     curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_GREEN)
 
-    main_box = curses.newwin(rows - 10, cols - 2, 1, 1)
+    main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
     attack_box = curses.newwin(10, len("SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM") + 2, int(rows/2 - 10), 10)
     attack_screen = curses.newwin(10, 30, int(rows/2), 10)
 
@@ -52,14 +56,14 @@ def main(stdscr):
         current_time = datetime.datetime.now()
         last_time_stamp = current_time.time()
 
-        main_tui.draw_main_box(main_box, stdscr, rows-10, cols-2)
+        main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
 
         key = stdscr.getch()
 
         if globals.stop_scan and globals.selected_ssid and globals.selected_bssid: 
-            attack_scr.draw_attack_screen(attack_box, stdscr)
+            attacks.attack_scr.draw_attack_screen(attack_box, stdscr)
             if globals.send_deauth:
-                attack_scr.draw_deauth_screen(attack_screen, stdscr)
+                attacks.attack_scr.draw_deauth_screen(attack_screen, stdscr)
                 #Start only one deauth thread at a time, and stop it if it's already running when the user tries to start it again
 
 
@@ -114,6 +118,12 @@ def main(stdscr):
                     deauth_thread = None
                     deauth_attack = None
                 stdscr.refresh()
+            elif globals.send_beacon:
+                globals.send_beacon = False
+                if beacon_sp is not None:
+                    beacon_sp.stop()
+                    beacon_thread = None
+                    beacon_sp = None
             elif globals.attack_menu:
                 globals.attack_menu = False
                 globals.selected_ssid = None
@@ -137,10 +147,19 @@ def main(stdscr):
                     if globals.clients and (deauth_thread is None or not deauth_thread.is_alive()):
                         globals.send_deauth = True
                         deauth_attack = deauth.DeauthAttack()
-                        deauth_thread = threading.Thread(target=deauth_attack.send_deauth, daemon=True)
+                        deauth_thread = threading.Thread(target=deauth_attack.send_deauth_packet, daemon=True)
                         deauth_thread.start()
                     else:
                         pass
+                elif globals.selected_row == 2:
+                    if not globals.send_beacon and (beacon_thread is None or not beacon_thread.is_alive()):
+                        globals.send_beacon = True
+                        beacon_sp = attacks.beacon_spam.BeaconSpam()
+                        beacon_thread = threading.Thread(target=beacon_sp.send_beacon_packet, daemon=True)
+                        beacon_thread.start()
+                    else:
+                        pass
+
 
         else:
             time.sleep(0.05)

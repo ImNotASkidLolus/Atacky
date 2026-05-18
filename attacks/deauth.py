@@ -21,7 +21,7 @@ class DeauthAttack:
         )
         return packet
     
-    def send_deauth(self):
+    def send_deauth_packet(self):
         while not self._stop_event.is_set():
             targets = globals.clients if globals.clients else ["ff:ff:ff:ff:ff:ff"]
             for client in targets:
