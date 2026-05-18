@@ -25,7 +25,7 @@ class get_networks:
         )
         return t_proc
     def parse_csv(self, filename):
-        bssids, ssids, sec = [], [], []
+        channels, bssids, ssids, sec = [], [], [], []
         with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
             reader = csv.reader(f, delimiter=',')
             for row in reader:
@@ -36,9 +36,10 @@ class get_networks:
                     break  # client section starts, we only want APs
                 if len(row) > 13:
                     bssids.append(row[0].strip())
+                    channels.append(row[3].strip())
                     sec.append(row[5].strip())
                     ssids.append(row[13].strip())
-        return ssids, bssids, sec
+        return ssids, bssids, sec, channels
     def parse_clients_csv(self, filename):
         global station_line
         clients = []
@@ -69,11 +70,12 @@ class get_networks:
                     time.sleep(10)
                     globals.proc.terminate()
                     globals.proc.wait()
-                    ssids, bssids, sec = self.parse_csv(filepath)
+                    ssids, bssids, sec, channels = self.parse_csv(filepath)
                     with globals.lock:
                         globals.l_bssids = bssids
                         globals.l_ssids = ssids
                         globals.l_sec = sec
+                        globals.l_channels = channels
                     if os.path.exists(filepath):
                         os.remove(filepath)
                 elif globals.attack_menu:

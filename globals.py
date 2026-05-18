@@ -3,6 +3,7 @@ import threading
 l_bssids = []
 l_ssids = []
 l_sec = []
+l_channels = []
 
 interface = "wlan0"
 channel = None

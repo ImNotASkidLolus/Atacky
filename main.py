@@ -35,12 +35,12 @@ def main(stdscr):
     curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_GREEN)
 
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
-    attack_box = curses.newwin(10, len("SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM") + 2, int(rows/2 - 10), 10)
-    attack_screen = curses.newwin(10, 30, int(rows/2), 10)
+    attack_box = curses.newwin(10, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
+    attack_screen = curses.newwin(10, 50, int((rows-10)//2), int((cols - 50)//2))
 
     current_time = datetime.datetime.now()                      
     last_time_stamp = current_time.time()
-    status = curses.newwin(1, cols-2, rows - 2, 1)
+    status = curses.newwin(1, cols-1, rows - 2, 1)
     status.attron(curses.color_pair(1))
     status.addstr(0, 2, f"Last updated: {last_time_stamp}".ljust(cols - 7))
     status.addstr(0, cols - 3 - len("Press q or Q to exit "), "Press q or Q to exit")
@@ -52,7 +52,7 @@ def main(stdscr):
     curses.doupdate()
 
     while True:
-        global deauth_thread, deauth_attack
+        global deauth_thread, deauth_attack, beacon_sp, beacon_thread
         current_time = datetime.datetime.now()
         last_time_stamp = current_time.time()
 
@@ -64,8 +64,8 @@ def main(stdscr):
             attacks.attack_scr.draw_attack_screen(attack_box, stdscr)
             if globals.send_deauth:
                 attacks.attack_scr.draw_deauth_screen(attack_screen, stdscr)
-                #Start only one deauth thread at a time, and stop it if it's already running when the user tries to start it again
-
+            elif globals.send_beacon:
+                attacks.attack_scr.draw_beacon_screen(attack_screen, stdscr)
 
         status.attron(curses.color_pair(1))
         status.addstr(0, 2, f" Last updated: {last_time_stamp} ".ljust(cols - 7))
@@ -75,7 +75,7 @@ def main(stdscr):
 
         if globals.attack_menu:
             attack_box.noutrefresh()
-            if globals.send_deauth:
+            if globals.send_deauth or globals.send_beacon:
                 attack_screen.noutrefresh()
         else:
             main_box.noutrefresh()
@@ -140,6 +140,8 @@ def main(stdscr):
                     if 0 <= idx < len(globals.l_ssids):
                         globals.selected_ssid = globals.l_ssids[idx]
                         globals.selected_bssid = globals.l_bssids[idx]
+                        if globals.l_channels[idx]:
+                            globals.channel = globals.l_channels[idx]
                         globals.selected_row = 1
                         globals.attack_menu = True
             elif globals.attack_menu and not globals.send_deauth:
@@ -147,7 +149,7 @@ def main(stdscr):
                     if globals.clients and (deauth_thread is None or not deauth_thread.is_alive()):
                         globals.send_deauth = True
                         deauth_attack = deauth.DeauthAttack()
-                        deauth_thread = threading.Thread(target=deauth_attack.send_deauth_packet, daemon=True)
+                        deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
                         deauth_thread.start()
                     else:
                         pass
@@ -155,7 +157,7 @@ def main(stdscr):
                     if not globals.send_beacon and (beacon_thread is None or not beacon_thread.is_alive()):
                         globals.send_beacon = True
                         beacon_sp = attacks.beacon_spam.BeaconSpam()
-                        beacon_thread = threading.Thread(target=beacon_sp.send_beacon_packet, daemon=True)
+                        beacon_thread = threading.Thread(target=beacon_sp.start_beacon_spam, daemon=True)
                         beacon_thread.start()
                     else:
                         pass
@@ -185,5 +187,6 @@ print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")
 print(f"Clients: {globals.clients}")
+print(f"Channels: {globals.l_channels}")
 if os.path.exists(os.path.expanduser("~/output-01.csv")):
     os.remove(os.path.expanduser("~/output-01.csv"))

