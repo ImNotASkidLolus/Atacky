@@ -36,7 +36,7 @@ def main(stdscr):
 
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
     attack_box = curses.newwin(10, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
-    attack_screen = curses.newwin(10, 50, int((rows-10)//2), int((cols - 50)//2))
+    attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
 
     current_time = datetime.datetime.now()                      
     last_time_stamp = current_time.time()
@@ -73,12 +73,11 @@ def main(stdscr):
         status.attroff(curses.color_pair(1))
         stdscr.noutrefresh()
 
+        main_box.noutrefresh()
         if globals.attack_menu:
             attack_box.noutrefresh()
             if globals.send_deauth or globals.send_beacon:
                 attack_screen.noutrefresh()
-        else:
-            main_box.noutrefresh()
         status.noutrefresh()
 
         if key == ord('q') or key == ord('Q'):
@@ -117,13 +116,14 @@ def main(stdscr):
                     deauth_attack.stop()
                     deauth_thread = None
                     deauth_attack = None
-                stdscr.refresh()
+                stdscr.clear()
             elif globals.send_beacon:
                 globals.send_beacon = False
                 if beacon_sp is not None:
                     beacon_sp.stop()
                     beacon_thread = None
                     beacon_sp = None
+                stdscr.clear()
             elif globals.attack_menu:
                 globals.attack_menu = False
                 globals.selected_ssid = None
@@ -131,7 +131,7 @@ def main(stdscr):
                 globals.clients = None
                 if globals.proc:
                         globals.proc.terminate()
-                stdscr.refresh()
+                stdscr.clear()
             
         elif key in (curses.KEY_ENTER, 10, 13):
             if globals.stop_scan and not globals.attack_menu:

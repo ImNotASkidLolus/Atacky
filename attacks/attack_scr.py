@@ -28,7 +28,11 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
         attack_box.addstr(1,1, "No clients found for this network.", curses.color_pair(1))
     else:
         attack_box.addstr(1,1, "DEAUTHENTICATION ATTACK", curses.color_pair(1))
-        attack_box.addstr(3,1, f"CLIENTS: {globals.clients}", curses.color_pair(4))
+        for i, client in globals.clients:
+            try:
+                attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
+            except curses.error:
+                break
         
 def draw_beacon_screen(attack_box, stdscr):
     attack_box.erase()
