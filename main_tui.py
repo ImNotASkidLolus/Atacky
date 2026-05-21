@@ -12,22 +12,24 @@ def draw_main_box(main_box, stdscr, height, width):
         if globals.attack_menu:
             pass
         else:
-            main_box.addstr(1, 1, "SSID", curses.color_pair(4))
-            main_box.addstr(1, 30, "BSSID", curses.color_pair(4))
-            main_box.addstr(1, 60, "SECURITY", curses.color_pair(4))
-            main_box.addstr(1, 75, "CH", curses.color_pair(4))
-            for i, (ssid, bssid, sec, ch) in enumerate(data, start=2):
+            main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
+            main_box.addstr(1, 1,  "SSID", curses.color_pair(8))
+            main_box.addstr(1, 30, "BSSID", curses.color_pair(8))
+            main_box.addstr(1, 60, "SECURITY", curses.color_pair(8))
+            main_box.addstr(1, 75, "CH", curses.color_pair(8))
+            for i, (ssid, bssid, sec, ch) in enumerate(data, start=1):
                 try:
                     if not stop_scan or row_selected != i + 1:
-                        main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(3))
-                        main_box.addstr(i + 1, 30, bssid, curses.color_pair(3))
-                        main_box.addstr(i + 1, 60, sec, curses.color_pair(3))
-                        main_box.addstr(i + 1, 75, ch, curses.color_pair(3))
+                        main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(4))
+                        main_box.addstr(i + 1, 30, bssid, curses.color_pair(4))
+                        main_box.addstr(i + 1, 60, sec, curses.color_pair(4))
+                        main_box.addstr(i + 1, 75, ch, curses.color_pair(4))
                     else:
+                        main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
                         main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(8))
                         main_box.addstr(i + 1, 30, bssid, curses.color_pair(8))
                         main_box.addstr(i + 1, 60, sec, curses.color_pair(8))
-                        main_box.addstr(i + 1, 75, ch, curses.color_pair(3))
+                        main_box.addstr(i + 1, 75, ch, curses.color_pair(8))
                 except curses.error:
                     break
 

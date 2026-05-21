@@ -33,6 +33,7 @@ def main(stdscr):
     curses.init_pair(6, curses.COLOR_YELLOW, curses.COLOR_WHITE) #color of the KUKI text
     curses.init_pair(7, curses.COLOR_YELLOW, -1) #color of KUKI the cat
     curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_GREEN)
+    curses.init_pair(9, curses.COLOR_GREEN, curses.COLOR_GREEN)
 
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
     attack_box = curses.newwin(10, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
@@ -60,7 +61,7 @@ def main(stdscr):
 
         key = stdscr.getch()
 
-        if globals.stop_scan and globals.selected_ssid and globals.selected_bssid: 
+        if globals.attack_menu: 
             attacks.attack_scr.draw_attack_screen(attack_box, stdscr)
             if globals.send_deauth:
                 attacks.attack_scr.draw_deauth_screen(attack_screen, stdscr)
@@ -151,14 +152,15 @@ def main(stdscr):
                 globals.selected_ssid = None
                 globals.selected_bssid = None
                 globals.clients = ""
+                globals.selected_row = 2
                 if globals.proc:
-                        globals.proc.terminate()
+                    globals.proc.terminate()
                 stdscr.clear()
             
         elif key in (curses.KEY_ENTER, 10, 13):
             if globals.stop_scan and not globals.attack_menu:
                 with globals.lock:
-                    idx = globals.selected_row - 1
+                    idx = globals.selected_row - 2
                     if 0 <= idx < len(globals.l_ssids):
                         globals.selected_ssid = globals.l_ssids[idx]
                         globals.selected_bssid = globals.l_bssids[idx]
@@ -174,14 +176,6 @@ def main(stdscr):
                             deauth_attack = deauth.DeauthAttack()
                             deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
                             deauth_thread.start()
-                        elif globals.guided_deauth and globals.send_deauth:
-                            for i in range(min(10, len(globals.clients))):
-                                if i + 1 == globals.selected_client_row:
-                                    globals.selected_client = globals.clients[i]
-                                    globals.send_deauth = True
-                                    deauth_attack = deauth.DeauthAttack()
-                                    deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
-                                    deauth_thread.start()
                     else:
                         pass
                 elif globals.selected_row == 2:
@@ -192,7 +186,14 @@ def main(stdscr):
                         beacon_thread.start()
                     else:
                         pass
-
+            elif globals.guided_deauth and globals.send_deauth:
+                for i in range(min(10, len(globals.clients))):
+                    if i + 1 == globals.selected_client_row:
+                        globals.selected_client = globals.clients[i]
+                        globals.send_deauth = True
+                        deauth_attack = deauth.DeauthAttack()
+                        deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
+                        deauth_thread.start()
 
         else:
             time.sleep(0.05)

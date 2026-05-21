@@ -83,7 +83,7 @@ class get_networks:
                         globals.l_channels = channels
                     if os.path.exists(filepath):
                         os.remove(filepath)
-                elif globals.attack_menu:
+                elif globals.attack_menu and not globals.guided_deauth:
                     if globals.proc:
                         globals.proc.terminate()
                         globals.proc.wait()

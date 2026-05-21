@@ -28,7 +28,7 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
         attack_box.addstr(1,1, "No clients found for this network.", curses.color_pair(1))
     else:
         attack_box.addstr(1,1, "DEAUTHENTICATION ATTACK".center(48), curses.color_pair(1))
-        for i, client in enumerate(globals.clients):
+        for i, client in enumerate(globals.clients,start=1):
             try:
                 if not globals.guided_deauth:
                     attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
@@ -37,7 +37,8 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
                         attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(8))
                     else:
                         attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
-                    attack_box.addstr(14, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
+                    attack_box.addstr(13, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
+                    attack_box.addstr(13, 10, f"CLIENT: {globals.selected_client}", curses.color_pair(1))
             except curses.error:
                 break
         
