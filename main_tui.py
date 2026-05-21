@@ -24,6 +24,7 @@ def draw_main_box(main_box, stdscr, height, width):
                         main_box.addstr(i + 1, 30, bssid, curses.color_pair(4))
                         main_box.addstr(i + 1, 60, sec, curses.color_pair(4))
                         main_box.addstr(i + 1, 75, ch, curses.color_pair(4))
+
                     else:
                         main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
                         main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(8))
@@ -32,6 +33,10 @@ def draw_main_box(main_box, stdscr, height, width):
                         main_box.addstr(i + 1, 75, ch, curses.color_pair(8))
                 except curses.error:
                     break
+            for i in range(height -2):
+                main_box.addstr(i+1, 28, "│", curses.color_pair(3))
+                main_box.addstr(i+1, 52, "│", curses.color_pair(3))
+                main_box.addstr(i+1, 73, "│", curses.color_pair(3))
 
         try:
             main_box.addstr(height - 2, 1,  f"STOP SCAN: {stop_scan}",curses.color_pair(8))

@@ -167,6 +167,7 @@ def main(stdscr):
                         if globals.l_channels[idx]:
                             globals.channel = globals.l_channels[idx]
                         globals.selected_row = 1
+                        globals.retry_time_left = 10
                         globals.attack_menu = True
             elif globals.attack_menu and not globals.send_deauth:
                 if globals.selected_row == 1:

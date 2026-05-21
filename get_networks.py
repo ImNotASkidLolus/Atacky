@@ -94,7 +94,10 @@ class get_networks:
                     while not os.path.exists(filepath) and waited < 15:
                         time.sleep(0.5)
                         waited += 0.5
-                    time.sleep(10)
+                    globals.retry_time_left = 10
+                    for _ in range(10):
+                        time.sleep(1)
+                        globals.retry_time_left -=1
                     globals.proc.terminate()
                     globals.proc.wait()
                     clients = self.parse_clients_csv(filepath)

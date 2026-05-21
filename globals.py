@@ -15,9 +15,13 @@ selected_client = None
 proc = None
 stop_scan = False
 lock = threading.Lock()
+
 selected_row = 2
 selected_client_row = 1
+
 send_deauth = False
 attack_menu = False
 send_beacon = False
 guided_deauth = False
+
+retry_time_left = 10 #time in seconds for retrying the client sniff
