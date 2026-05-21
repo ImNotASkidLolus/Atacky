@@ -2,7 +2,7 @@ import curses
 import globals
 def draw_main_box(main_box, stdscr, height, width):
         with globals.lock:
-            data = list(zip(globals.l_ssids, globals.l_bssids, globals.l_sec))
+            data = list(zip(globals.l_ssids, globals.l_bssids, globals.l_sec, globals.l_channels))
             stop_scan = globals.stop_scan
         main_box.erase()
         main_box.attron(curses.color_pair(2))
@@ -12,22 +12,22 @@ def draw_main_box(main_box, stdscr, height, width):
         if globals.attack_menu:
             pass
         else:
-            for i, (ssid, bssid, sec) in enumerate(data):
+            main_box.addstr(1, 1, "SSID", curses.color_pair(4))
+            main_box.addstr(1, 30, "BSSID", curses.color_pair(4))
+            main_box.addstr(1, 60, "SECURITY", curses.color_pair(4))
+            main_box.addstr(1, 75, "CH", curses.color_pair(4))
+            for i, (ssid, bssid, sec, ch) in enumerate(data, start=2):
                 try:
                     if not stop_scan or row_selected != i + 1:
-                        main_box.addstr(i + 1, 1,  "SSID: ", curses.color_pair(4))
-                        main_box.addstr(i + 1, 7,  ssid[:20], curses.color_pair(3))
-                        main_box.addstr(i + 1, 30, "BSSID: ", curses.color_pair(4))
-                        main_box.addstr(i + 1, 37, bssid, curses.color_pair(3))
-                        main_box.addstr(i + 1, 60, "SECURITY: ", curses.color_pair(4))
-                        main_box.addstr(i + 1, 70, sec, curses.color_pair(3))
+                        main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(3))
+                        main_box.addstr(i + 1, 30, bssid, curses.color_pair(3))
+                        main_box.addstr(i + 1, 60, sec, curses.color_pair(3))
+                        main_box.addstr(i + 1, 75, ch, curses.color_pair(3))
                     else:
-                        main_box.addstr(i + 1, 1,  "SSID: ", curses.color_pair(8))
-                        main_box.addstr(i + 1, 7,  ssid[:20], curses.color_pair(8))
-                        main_box.addstr(i + 1, 30, "BSSID: ", curses.color_pair(8))
-                        main_box.addstr(i + 1, 37, bssid, curses.color_pair(8))
-                        main_box.addstr(i + 1, 60, "SECURITY: ", curses.color_pair(8))
-                        main_box.addstr(i + 1, 70, sec, curses.color_pair(8))
+                        main_box.addstr(i + 1, 1,  ssid[:20], curses.color_pair(8))
+                        main_box.addstr(i + 1, 30, bssid, curses.color_pair(8))
+                        main_box.addstr(i + 1, 60, sec, curses.color_pair(8))
+                        main_box.addstr(i + 1, 75, ch, curses.color_pair(3))
                 except curses.error:
                     break
 

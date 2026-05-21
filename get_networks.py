@@ -3,8 +3,11 @@ import subprocess
 import os
 import time
 import globals
+import threading
 
 class get_networks:
+    def __init__(self):
+        self._event_stop = threading.Event()
     def run_airodump(self, interface, channel=None, bssid=None):
         output_path = os.path.expanduser("~/output")
         command = ["airodump-ng", 
@@ -24,6 +27,8 @@ class get_networks:
             stderr=subprocess.DEVNULL
         )
         return t_proc
+    def stop(self):
+        self._event_stop.set()
     def parse_csv(self, filename):
         channels, bssids, ssids, sec = [], [], [], []
         with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
@@ -59,7 +64,7 @@ class get_networks:
         return clients
     def continuous_running(self):
         filepath = os.path.expanduser("~/output-01.csv")
-        while True:
+        while not self._event_stop.is_set():
             try:
                 if not globals.stop_scan:
                     globals.proc = self.run_airodump(globals.interface, globals.channel)

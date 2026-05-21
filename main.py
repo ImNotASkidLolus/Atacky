@@ -82,7 +82,6 @@ def main(stdscr):
 
         if key == ord('q') or key == ord('Q'):
             break
-
         elif key == ord('s') or key == ord('S'):
             if not globals.stop_scan:
                 if globals.proc:
@@ -92,26 +91,49 @@ def main(stdscr):
                 pass
             else:
                 globals.stop_scan = False
+        elif key == ord('g') or key == ord('G'):
+            if globals.send_deauth:
+                if not globals.guided_deauth:
+                    globals.guided_deauth = True
+                    globals.selected_client_row = 1
+                    if deauth_attack:
+                        deauth_attack.stop()
+                    deauth_thread = None
+                    deauth_attack = None
+                else:
+                    globals.guided_deauth = False
+                    globals.selected_client = None
+                    globals.selected_client_row = 1
+                    if deauth_attack:
+                        deauth_attack.stop()
+                    deauth_thread = None
+                    deauth_attack = None
 
         elif key == curses.KEY_UP:
             with globals.lock:
-                if globals.selected_row > 1 and not globals.attack_menu:
-                    globals.selected_row -= 1
-                elif globals.attack_menu:
+                if globals.attack_menu:
                     if globals.selected_row > 1:
                         globals.selected_row -= 1
-
+                if globals.guided_deauth and not globals.selected_client:
+                    if globals.selected_client_row > 1:
+                        globals.selected_client_row -= 1
+            if globals.selected_row > 1 and not globals.attack_menu:
+                globals.selected_row -= 1
         elif key == curses.KEY_DOWN:
             with globals.lock:
-                if globals.selected_row <= max(1, len(globals.l_ssids)) and not globals.attack_menu:
-                    globals.selected_row += 1
-                elif globals.attack_menu:
+                if globals.attack_menu:
                     if globals.selected_row < 2:
                         globals.selected_row += 1
+                if globals.guided_deauth and not globals.selected_client:
+                    if globals.selected_client_row < max(1, len(globals.clients)):
+                        globals.selected_client_row += 1
+            if globals.selected_row <= max(1, len(globals.l_ssids)) and not globals.attack_menu:
+                globals.selected_row += 1
 
         elif key == curses.KEY_BACKSPACE:
             if globals.send_deauth:
                 globals.send_deauth = False
+                globals.guided_deauth = False
                 if deauth_attack is not None:
                     deauth_attack.stop()
                     deauth_thread = None
@@ -128,7 +150,7 @@ def main(stdscr):
                 globals.attack_menu = False
                 globals.selected_ssid = None
                 globals.selected_bssid = None
-                globals.clients = None
+                globals.clients = ""
                 if globals.proc:
                         globals.proc.terminate()
                 stdscr.clear()
@@ -147,10 +169,19 @@ def main(stdscr):
             elif globals.attack_menu and not globals.send_deauth:
                 if globals.selected_row == 1:
                     if globals.clients and (deauth_thread is None or not deauth_thread.is_alive()):
-                        globals.send_deauth = True
-                        deauth_attack = deauth.DeauthAttack()
-                        deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
-                        deauth_thread.start()
+                        if not globals.guided_deauth:
+                            globals.send_deauth = True
+                            deauth_attack = deauth.DeauthAttack()
+                            deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
+                            deauth_thread.start()
+                        elif globals.guided_deauth and globals.send_deauth:
+                            for i in range(min(10, len(globals.clients))):
+                                if i + 1 == globals.selected_client_row:
+                                    globals.selected_client = globals.clients[i]
+                                    globals.send_deauth = True
+                                    deauth_attack = deauth.DeauthAttack()
+                                    deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
+                                    deauth_thread.start()
                     else:
                         pass
                 elif globals.selected_row == 2:
@@ -183,10 +214,20 @@ thread1.start()
 curses.wrapper(main)
 if globals.proc:
     globals.proc.terminate()
+if beacon_thread:
+    beacon_sp.stop()
+if deauth_thread:
+    deauth_attack.stop()
+scanner.stop()
+deauth_thread = None
+beacon_sp = None
+beacon_thread = None
+deauth_attack = None
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")
 print(f"Clients: {globals.clients}")
 print(f"Channels: {globals.l_channels}")
+print(f"Selected client: {globals.selected_client}")
 if os.path.exists(os.path.expanduser("~/output-01.csv")):
     os.remove(os.path.expanduser("~/output-01.csv"))

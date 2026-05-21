@@ -6,7 +6,7 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
     attack_box.attron(curses.color_pair(2))
     attack_box.box()
     attack_box.attroff(curses.color_pair(2))
-    attack_box.addstr(1,1, "SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM", curses.color_pair(1))
+    attack_box.addstr(1,1, "SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM".center(48), curses.color_pair(1))
     if globals.selected_row == 1:
         attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(8))
     else:
@@ -27,10 +27,17 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
     if globals.clients == None:
         attack_box.addstr(1,1, "No clients found for this network.", curses.color_pair(1))
     else:
-        attack_box.addstr(1,1, "DEAUTHENTICATION ATTACK", curses.color_pair(1))
-        for i, client in globals.clients:
+        attack_box.addstr(1,1, "DEAUTHENTICATION ATTACK".center(48), curses.color_pair(1))
+        for i, client in enumerate(globals.clients):
             try:
-                attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
+                if not globals.guided_deauth:
+                    attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
+                if globals.guided_deauth:
+                    if globals.selected_client_row == i+1:
+                        attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(8))
+                    else:
+                        attack_box.addstr(i + 1, 1, f"{i+1}. {client}", curses.color_pair(4))
+                    attack_box.addstr(14, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
             except curses.error:
                 break
         
@@ -39,5 +46,5 @@ def draw_beacon_screen(attack_box, stdscr):
     attack_box.attron(curses.color_pair(2))
     attack_box.box()
     attack_box.attroff(curses.color_pair(2))
-    attack_box.addstr(1,1, "BEACON SPAM ATTACK", curses.color_pair(1))
+    attack_box.addstr(1,1, "BEACON SPAM ATTACK".center(48), curses.color_pair(1))
     attack_box.addstr(3,1, f"Selected SSID: {globals.selected_ssid} {globals.selected_bssid} {globals.channel}", curses.color_pair(1))
