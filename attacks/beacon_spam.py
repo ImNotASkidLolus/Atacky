@@ -48,5 +48,5 @@ class BeaconSpam:
                     pkt = self.build_beacon_packet(ssid)
                     scapy.sendp(pkt, iface=self.IFACE, count=3, inter=0.01, verbose=False)
             except Exception as e:
-                print(f"Beacon send error: {e}")
+                globals.log.log_message(log_type = 2, message = f"Error in sending the beacon spam: {e}")
                 time.sleep(0.1)                

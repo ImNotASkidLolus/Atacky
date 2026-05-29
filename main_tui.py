@@ -15,8 +15,8 @@ def draw_main_box(main_box, stdscr, height, width):
             main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
             main_box.addstr(1, 1,  "SSID", curses.color_pair(8))
             main_box.addstr(1, 30, "BSSID", curses.color_pair(8))
-            main_box.addstr(1, 60, "SECURITY", curses.color_pair(8))
-            main_box.addstr(1, 75, "CH", curses.color_pair(8))
+            main_box.addstr(1, 53, "SECURITY", curses.color_pair(8))
+            main_box.addstr(1, 75, "CHANNEL", curses.color_pair(8))
             for i, (ssid, bssid, sec, ch) in enumerate(data, start=1):
                 try:
                     if not stop_scan or row_selected != i + 1:
@@ -34,9 +34,9 @@ def draw_main_box(main_box, stdscr, height, width):
                 except curses.error:
                     break
             for i in range(height -2):
-                main_box.addstr(i+1, 28, "│", curses.color_pair(3))
-                main_box.addstr(i+1, 52, "│", curses.color_pair(3))
-                main_box.addstr(i+1, 73, "│", curses.color_pair(3))
+                main_box.addstr(i+1, 28, "│", curses.color_pair(2))
+                main_box.addstr(i+1, 52, "│", curses.color_pair(2))
+                main_box.addstr(i+1, 73, "│", curses.color_pair(2))
 
         try:
             main_box.addstr(height - 2, 1,  f"STOP SCAN: {stop_scan}",curses.color_pair(8))

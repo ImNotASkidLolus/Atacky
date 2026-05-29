@@ -15,12 +15,16 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
         attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(8))
     else:
         attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(3))
-    if globals.clients:
+    if globals.selected_row == 3:
+        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(8))
+    else:
+        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(3))
+    if globals.clients is not None or globals.clients == "":
         attack_box.addstr(5,1, "Clients for this network FOUND!", curses.color_pair(3))
     else:
         attack_box.addstr(5,1, "Clients for this network NOT FOUND!", curses.color_pair(5))
         attack_box.addstr(6, 1, f"Retrying in {globals.retry_time_left}s")
-    attack_box.addstr(9,1, f"Selected SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
+    attack_box.addstr(8,1, f"Target SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
 
 def draw_deauth_screen(attack_box:curses.window, stdscr):
     attack_box.erase()
@@ -41,7 +45,7 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
                     else:
                         attack_box.addstr(i + 1, 1, f"{i}. {client}", curses.color_pair(4))
                     attack_box.addstr(13, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
-                    attack_box.addstr(13, 10, f"CLIENT: {globals.selected_client}", curses.color_pair(1))
+                    attack_box.addstr(13, 15, f"CLIENT: {globals.selected_client}", curses.color_pair(1))
             except curses.error:
                 break
         
@@ -51,4 +55,11 @@ def draw_beacon_screen(attack_box, stdscr):
     attack_box.box()
     attack_box.attroff(curses.color_pair(2))
     attack_box.addstr(1,1, "BEACON SPAM ATTACK".center(48), curses.color_pair(1))
-    attack_box.addstr(3,1, f"Selected SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
+    attack_box.addstr(3,1, f"Target SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
+def draw_auth_screen(attack_box, stdscr):
+    attack_box.erase()
+    attack_box.attron(curses.color_pair(2))
+    attack_box.box()
+    attack_box.attroff(curses.color_pair(2))
+    attack_box.addstr(1,1, "AUTHENTICATION FLOOD ATTACK".center(48), curses.color_pair(1))
+    attack_box.addstr(3,1, f"Target SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))

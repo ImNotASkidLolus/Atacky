@@ -40,4 +40,5 @@ class DeauthAttack:
                         scapy.sendp(pkt, iface=self.IFACE, verbose=False)
                         time.sleep(0.1)
                     except Exception as e:
+                        globals.log.log_message(log_type = 2, message = f"Error in sending deauth packet: {e}")
                         time.sleep(0.1)

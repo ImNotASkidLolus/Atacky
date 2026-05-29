@@ -111,6 +111,6 @@ class get_networks:
                         globals.proc.wait()
                     time.sleep(1)
             except Exception as e:
-                print(e)
+                globals.log.log_message(log_type = 2, message = f"Error in get_networks.py: {e}")
                 globals.proc.terminate()
                 time.sleep(1)

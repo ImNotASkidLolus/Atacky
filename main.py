@@ -9,12 +9,16 @@ import get_networks
 import main_tui
 import attacks.attack_scr as attack_scr
 import attacks.beacon_spam
+import attacks.authattack
+import logger.log
 import globals
 
 deauth_thread = None
 beacon_thread = None
 deauth_attack = None
 beacon_sp = None
+auth_attack = None
+auth_thread = None
 
 def main(stdscr):
     rows, cols = stdscr.getmaxyx()
@@ -53,7 +57,7 @@ def main(stdscr):
     curses.doupdate()
 
     while True:
-        global deauth_thread, deauth_attack, beacon_sp, beacon_thread
+        global deauth_thread, deauth_attack, beacon_sp, beacon_thread, auth_attack, auth_thread
         current_time = datetime.datetime.now()
         last_time_stamp = current_time.time()
 
@@ -123,7 +127,7 @@ def main(stdscr):
         elif key == curses.KEY_DOWN:
             with globals.lock:
                 if globals.attack_menu:
-                    if globals.selected_row < 2:
+                    if globals.selected_row < 3:
                         globals.selected_row += 1
                 if globals.guided_deauth and not globals.selected_client:
                     if globals.selected_client_row < max(1, len(globals.clients)):
@@ -146,6 +150,13 @@ def main(stdscr):
                     beacon_sp.stop()
                     beacon_thread = None
                     beacon_sp = None
+                stdscr.clear()
+            elif globals.send_auth:
+                globals.send_auth = False
+                if auth_attack is not None:
+                    auth_attack.stop()
+                    auth_thread = None
+                    auth_attack = None
                 stdscr.clear()
             elif globals.attack_menu:
                 globals.attack_menu = False
@@ -187,6 +198,12 @@ def main(stdscr):
                         beacon_thread.start()
                     else:
                         pass
+                elif globals.selected_row == 3:
+                    if not globals.send_auth and (auth_thread is None or not auth_thread.is_alive()):
+                        globals.send_auth = True
+                        auth_attack = attacks.authattack.auth_attack()
+                        auth_thread = threading.Thread(target=auth_attack.start_auth_attack, daemon=True)
+                        auth_thread.start()
             elif globals.guided_deauth and globals.send_deauth:
                 for i in range(min(10, len(globals.clients))):
                     if i + 1 == globals.selected_client_row:
@@ -211,7 +228,7 @@ globals.interface = args.interface
 scanner = get_networks.get_networks()
 thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
 thread1.start()
-
+globals.log.log_message(log_type = 1, message = f"================= STARTING ATTACK TUI PROGRAM AT {datetime.datetime.now()} =================")
 #=====================start main loop=========================#
 curses.wrapper(main)
 if globals.proc:
@@ -225,6 +242,8 @@ deauth_thread = None
 beacon_sp = None
 beacon_thread = None
 deauth_attack = None
+auth_attack = None
+auth_thread = None
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")

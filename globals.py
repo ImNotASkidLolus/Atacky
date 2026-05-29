@@ -1,4 +1,7 @@
 import threading
+import logger.log
+
+log = logger.log()
 
 l_bssids = []
 l_ssids = []
@@ -19,6 +22,7 @@ lock = threading.Lock()
 selected_row = 2
 selected_client_row = 1
 
+send_auth = False
 send_deauth = False
 attack_menu = False
 send_beacon = False
