@@ -1,4 +1,6 @@
-def load_oui(path="./IEEE_MACS.txt"):
+import os
+import globals
+def load_oui(path="/home/bb/Attack-TUI/attacks/IEEE_MACS.txt"):
     oui_map = {}
     with open(path, "r") as f:
         for line in f:
@@ -10,5 +12,5 @@ def load_oui(path="./IEEE_MACS.txt"):
     return oui_map
 def check_vendor(mac):
     mac_prefix = mac[:8].lower()
-    vendor = globals.oui_map.get(mac_prefix)
+    vendor = globals.oui_map.get(mac_prefix, "Unknown")
     return vendor

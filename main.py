@@ -15,7 +15,6 @@ def main(stdscr):
     curses.use_default_colors()
     curses.curs_set(0)
     stdscr.nodelay(True) 
-    stdscr.noecho()
     stdscr.keypad(True)
 
     #======================COLORS INITIALIZATION=======================#

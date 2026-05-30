@@ -21,9 +21,9 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
     else:
         attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(3))
     if globals.selected_row == 4:
-        attack_box.addstr(6, 1, "MAC address OUI map lookup", curses.color_pair(8))
+        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(8))
     else:
-        attack_box.addstr(6, 1, "MAC address OUI map lookup", curses.color_pair(3))
+        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(3))
     if globals.clients is not None or globals.clients == "":
         attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(3))
     else:
@@ -43,12 +43,12 @@ def draw_deauth_screen(attack_box:curses.window, stdscr):
         for i, client in enumerate(globals.clients,start=1):
             try:
                 if not globals.guided_deauth:
-                    attack_box.addstr(i + 1, 1, f"{i}. {client} -->  {oui.check_vendor(client)}", curses.color_pair(4))
+                    attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
                 if globals.guided_deauth:
                     if globals.selected_client_row == i:
-                        attack_box.addstr(i + 1, 1, f"{i}. {client} -->  {oui.check_vendor(client)}", curses.color_pair(8))
+                        attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(8))
                     else:
-                        attack_box.addstr(i + 1, 1, f"{i}. {client} -->  {oui.check_vendor(client)}", curses.color_pair(4))
+                        attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
                     attack_box.addstr(13, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
                     attack_box.addstr(13, 15, f"CLIENT: {globals.selected_client}", curses.color_pair(1))
             except curses.error:
@@ -79,7 +79,7 @@ def draw_oui_screen(attack_box, stdscr):
     else:
         for i, client in enumerate(globals.clients,start=1):
             try:
-                attack_box.addstr(i + 1, 1, f"{i}. {client}  -->  {oui.check_vendor(client)}", curses.color_pair(4))
+                attack_box.addstr(i + 1, 1, f"{i}. {client}  ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
             except curses.error:
                 break
     attack_box.addstr(13,1, f"Target SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
