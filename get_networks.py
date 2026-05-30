@@ -72,7 +72,10 @@ class get_networks:
                     while not os.path.exists(filepath) and waited < 15:
                         time.sleep(0.5)
                         waited += 0.5
-                    time.sleep(10)
+                    globals.retry_time_left = 10
+                    for _ in range(10):
+                        time.sleep(1)
+                        globals.retry_time_left -=1
                     globals.proc.terminate()
                     globals.proc.wait()
                     ssids, bssids, sec, channels = self.parse_csv(filepath)
@@ -111,6 +114,5 @@ class get_networks:
                         globals.proc.wait()
                     time.sleep(1)
             except Exception as e:
-                globals.log.log_message(log_type = 2, message = f"Error in get_networks.py: {e}")
                 globals.proc.terminate()
                 time.sleep(1)

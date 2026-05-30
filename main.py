@@ -1,24 +1,13 @@
 import os
 import threading 
 import curses
-import time
 import argparse
-import datetime
-import attacks.deauth as deauth
 import get_networks
-import main_tui
-import attacks.attack_scr as attack_scr
-import attacks.beacon_spam
-import attacks.authattack
-import logger.log
+import screen.main_tui as main_tui
+import screen.attack_scr as attack_scr
+import handle_input
+import attacks.OUI_checker as oui
 import globals
-
-deauth_thread = None
-beacon_thread = None
-deauth_attack = None
-beacon_sp = None
-auth_attack = None
-auth_thread = None
 
 def main(stdscr):
     rows, cols = stdscr.getmaxyx()
@@ -26,6 +15,7 @@ def main(stdscr):
     curses.use_default_colors()
     curses.curs_set(0)
     stdscr.nodelay(True) 
+    stdscr.noecho()
     stdscr.keypad(True)
 
     #======================COLORS INITIALIZATION=======================#
@@ -40,14 +30,12 @@ def main(stdscr):
     curses.init_pair(9, curses.COLOR_GREEN, curses.COLOR_GREEN)
 
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
-    attack_box = curses.newwin(10, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
+    attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
     attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
 
-    current_time = datetime.datetime.now()                      
-    last_time_stamp = current_time.time()
-    status = curses.newwin(1, cols-1, rows - 2, 1)
+    status = curses.newwin(1, cols-1, rows - 3, 1)
     status.attron(curses.color_pair(1))
-    status.addstr(0, 2, f"Last updated: {last_time_stamp}".ljust(cols - 7))
+    status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s".ljust(cols - 7))
     status.addstr(0, cols - 3 - len("Press q or Q to exit "), "Press q or Q to exit")
     status.attroff(curses.color_pair(1))
 
@@ -56,24 +44,24 @@ def main(stdscr):
     main_box.noutrefresh()
     curses.doupdate()
 
-    while True:
-        global deauth_thread, deauth_attack, beacon_sp, beacon_thread, auth_attack, auth_thread
-        current_time = datetime.datetime.now()
-        last_time_stamp = current_time.time()
-
-        main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
-
+    while not globals.quit_app:
+        
         key = stdscr.getch()
 
+        main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
         if globals.attack_menu: 
-            attacks.attack_scr.draw_attack_screen(attack_box, stdscr)
+            attack_scr.draw_attack_screen(attack_box, stdscr)
             if globals.send_deauth:
-                attacks.attack_scr.draw_deauth_screen(attack_screen, stdscr)
+                attack_scr.draw_deauth_screen(attack_screen, stdscr)
             elif globals.send_beacon:
-                attacks.attack_scr.draw_beacon_screen(attack_screen, stdscr)
+                attack_scr.draw_beacon_screen(attack_screen, stdscr)
+            elif globals.send_auth:
+                attack_scr.draw_auth_screen(attack_screen,stdscr)
+            elif globals.oui_checker:
+                attack_scr.draw_oui_screen(attack_screen, stdscr)
 
         status.attron(curses.color_pair(1))
-        status.addstr(0, 2, f" Last updated: {last_time_stamp} ".ljust(cols - 7))
+        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s ".ljust(cols - 7))
         status.addstr(0, cols - 3 - len("Press q or Q to exit  "), "Press q or Q to exit ")
         status.attroff(curses.color_pair(1))
         stdscr.noutrefresh()
@@ -81,140 +69,13 @@ def main(stdscr):
         main_box.noutrefresh()
         if globals.attack_menu:
             attack_box.noutrefresh()
-            if globals.send_deauth or globals.send_beacon:
+            if globals.send_deauth or globals.send_beacon or globals.send_auth:
+                attack_screen.noutrefresh()
+            elif globals.oui_checker:
                 attack_screen.noutrefresh()
         status.noutrefresh()
 
-        if key == ord('q') or key == ord('Q'):
-            break
-        elif key == ord('s') or key == ord('S'):
-            if not globals.stop_scan:
-                if globals.proc:
-                    globals.proc.terminate()
-                globals.stop_scan = True
-            elif globals.selected_bssid and globals.selected_ssid:
-                pass
-            else:
-                globals.stop_scan = False
-        elif key == ord('g') or key == ord('G'):
-            if globals.send_deauth:
-                if not globals.guided_deauth:
-                    globals.guided_deauth = True
-                    globals.selected_client_row = 1
-                    if deauth_attack:
-                        deauth_attack.stop()
-                    deauth_thread = None
-                    deauth_attack = None
-                else:
-                    globals.guided_deauth = False
-                    globals.selected_client = None
-                    globals.selected_client_row = 1
-                    if deauth_attack:
-                        deauth_attack.stop()
-                    deauth_thread = None
-                    deauth_attack = None
-
-        elif key == curses.KEY_UP:
-            with globals.lock:
-                if globals.attack_menu:
-                    if globals.selected_row > 1:
-                        globals.selected_row -= 1
-                if globals.guided_deauth and not globals.selected_client:
-                    if globals.selected_client_row > 1:
-                        globals.selected_client_row -= 1
-            if globals.selected_row > 1 and not globals.attack_menu:
-                globals.selected_row -= 1
-        elif key == curses.KEY_DOWN:
-            with globals.lock:
-                if globals.attack_menu:
-                    if globals.selected_row < 3:
-                        globals.selected_row += 1
-                if globals.guided_deauth and not globals.selected_client:
-                    if globals.selected_client_row < max(1, len(globals.clients)):
-                        globals.selected_client_row += 1
-            if globals.selected_row <= max(1, len(globals.l_ssids)) and not globals.attack_menu:
-                globals.selected_row += 1
-
-        elif key == curses.KEY_BACKSPACE:
-            if globals.send_deauth:
-                globals.send_deauth = False
-                globals.guided_deauth = False
-                if deauth_attack is not None:
-                    deauth_attack.stop()
-                    deauth_thread = None
-                    deauth_attack = None
-                stdscr.clear()
-            elif globals.send_beacon:
-                globals.send_beacon = False
-                if beacon_sp is not None:
-                    beacon_sp.stop()
-                    beacon_thread = None
-                    beacon_sp = None
-                stdscr.clear()
-            elif globals.send_auth:
-                globals.send_auth = False
-                if auth_attack is not None:
-                    auth_attack.stop()
-                    auth_thread = None
-                    auth_attack = None
-                stdscr.clear()
-            elif globals.attack_menu:
-                globals.attack_menu = False
-                globals.selected_ssid = None
-                globals.selected_bssid = None
-                globals.clients = ""
-                globals.selected_row = 2
-                if globals.proc:
-                    globals.proc.terminate()
-                stdscr.clear()
-            
-        elif key in (curses.KEY_ENTER, 10, 13):
-            if globals.stop_scan and not globals.attack_menu:
-                with globals.lock:
-                    idx = globals.selected_row - 2
-                    if 0 <= idx < len(globals.l_ssids):
-                        globals.selected_ssid = globals.l_ssids[idx]
-                        globals.selected_bssid = globals.l_bssids[idx]
-                        if globals.l_channels[idx]:
-                            globals.channel = globals.l_channels[idx]
-                        globals.selected_row = 1
-                        globals.retry_time_left = 10
-                        globals.attack_menu = True
-            elif globals.attack_menu and not globals.send_deauth:
-                if globals.selected_row == 1:
-                    if globals.clients and (deauth_thread is None or not deauth_thread.is_alive()):
-                        if not globals.guided_deauth:
-                            globals.send_deauth = True
-                            deauth_attack = deauth.DeauthAttack()
-                            deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
-                            deauth_thread.start()
-                    else:
-                        pass
-                elif globals.selected_row == 2:
-                    if not globals.send_beacon and (beacon_thread is None or not beacon_thread.is_alive()):
-                        globals.send_beacon = True
-                        beacon_sp = attacks.beacon_spam.BeaconSpam()
-                        beacon_thread = threading.Thread(target=beacon_sp.start_beacon_spam, daemon=True)
-                        beacon_thread.start()
-                    else:
-                        pass
-                elif globals.selected_row == 3:
-                    if not globals.send_auth and (auth_thread is None or not auth_thread.is_alive()):
-                        globals.send_auth = True
-                        auth_attack = attacks.authattack.auth_attack()
-                        auth_thread = threading.Thread(target=auth_attack.start_auth_attack, daemon=True)
-                        auth_thread.start()
-            elif globals.guided_deauth and globals.send_deauth:
-                for i in range(min(10, len(globals.clients))):
-                    if i + 1 == globals.selected_client_row:
-                        globals.selected_client = globals.clients[i]
-                        globals.send_deauth = True
-                        deauth_attack = deauth.DeauthAttack()
-                        deauth_thread = threading.Thread(target=deauth_attack.start_deauth, daemon=True)
-                        deauth_thread.start()
-
-        else:
-            time.sleep(0.05)
+        handle_input.handle_input(key,stdscr)
         curses.doupdate()
 
 #==================argument parser=============================#
@@ -224,26 +85,26 @@ argument_parser.add_argument("-c", "--channel", type=str, help="Specify the chan
 args = argument_parser.parse_args()
 globals.channel = args.channel
 globals.interface = args.interface
+globals.oui_map = oui.load_oui()
 #==================scanner thread init========================#
 scanner = get_networks.get_networks()
 thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
 thread1.start()
-globals.log.log_message(log_type = 1, message = f"================= STARTING ATTACK TUI PROGRAM AT {datetime.datetime.now()} =================")
 #=====================start main loop=========================#
 curses.wrapper(main)
 if globals.proc:
     globals.proc.terminate()
-if beacon_thread:
-    beacon_sp.stop()
-if deauth_thread:
-    deauth_attack.stop()
+if globals.beacon_thread:
+    globals.beacon_sp.stop()
+if globals.deauth_thread:
+    globals.deauth_attack.stop()
 scanner.stop()
-deauth_thread = None
-beacon_sp = None
-beacon_thread = None
-deauth_attack = None
-auth_attack = None
-auth_thread = None
+globals.deauth_thread = None
+globals.beacon_sp = None
+globals.beacon_thread = None
+globals.deauth_attack = None
+globals.auth_attack = None
+globals.auth_thread = None
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")

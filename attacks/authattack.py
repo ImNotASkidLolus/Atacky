@@ -26,5 +26,4 @@ class auth_attack():
                 time.sleep(0.01)
                 scapy.sendp(packet, iface = self.IFACE, verbose = False)
             except Exception as e:
-                globals.log.log_message(log_type = 2, message = f"Error in sending auth attack: {e}")
                 time.sleep(0.01)
