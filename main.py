@@ -7,6 +7,8 @@ import screen.main_tui as main_tui
 import screen.attack_scr as attack_scr
 import handle_input
 import attacks.OUI_checker as oui
+import attacks.ble_query as ble
+import screen.draw_ble_menu as ble_menu
 import globals
 
 def main(stdscr):
@@ -31,6 +33,7 @@ def main(stdscr):
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
     attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
     attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
+    ble_window = curses.newwin(rows - 2, cols - 2, 1, 1)
 
     title = curses.newwin(1, cols - 1, 0, 1)
     title.attron(curses.color_pair(1))
@@ -68,6 +71,8 @@ def main(stdscr):
                 attack_scr.draw_auth_screen(attack_screen,stdscr)
             elif globals.oui_checker:
                 attack_scr.draw_oui_screen(attack_screen, stdscr)
+        elif globals.check_ble_devices:
+            ble_menu.draw_main(ble_window)
 
         status.attron(curses.color_pair(1))
         status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s ".ljust(cols - 7))
@@ -82,6 +87,8 @@ def main(stdscr):
                 attack_screen.noutrefresh()
             elif globals.oui_checker:
                 attack_screen.noutrefresh()
+        elif globals.check_ble_devices:
+            ble_window.noutrefresh()
         status.noutrefresh()
         input_info.noutrefresh()
         title.noutrefresh()

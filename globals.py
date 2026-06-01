@@ -29,11 +29,16 @@ send_beacon = False
 guided_deauth = False
 larp_mode = False
 oui_checker = False
+check_ble_devices = False
+ble_devices = []
+
 deauth_thread = None
 beacon_thread = None
 deauth_attack = None
 beacon_sp = None
 auth_attack = None
 auth_thread = None
+ble_scan = None
+ble_thread = None
 
 retry_time_left = 10 #time in seconds for retrying the client sniff

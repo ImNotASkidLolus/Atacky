@@ -4,6 +4,7 @@ import curses
 import attacks.authattack
 import attacks.beacon_spam
 import attacks.deauth as deauth
+import attacks.ble_query as ble
 import time
 
 def handle_input(key, stdscr):
@@ -18,6 +19,20 @@ def handle_input(key, stdscr):
             pass
         else:
             globals.stop_scan = False
+    elif key == ord('c') or key == ord('C'):
+        if not globals.attack_menu:
+            if not globals.check_ble_devices:
+                globals.check_ble_devices = True
+                if not globals.ble_thread and not globals.ble_scan:
+                    globals.ble_scan = ble.ble_device_recognizer()
+                    globals.ble_thread = threading.Thread(target=globals.ble_scan.ble_packet_scan, daemon=True)
+                    globals.ble_thread.start()
+            else:
+                globals.check_ble_devices = False
+                globals.ble_scan.stop()
+                globals.ble_scan = None
+                globals.ble_thread = None
+
     elif key == ord('g') or key == ord('G'):
         if globals.send_deauth:
             if not globals.guided_deauth:
