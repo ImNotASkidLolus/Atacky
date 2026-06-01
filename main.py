@@ -77,8 +77,8 @@ def main(stdscr):
         status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s ".ljust(cols - 7))
         status.addstr(0, cols - 3 - len("Press q or Q to exit  "), "Press q or Q to exit ")
         status.attroff(curses.color_pair(1))
+        
         stdscr.noutrefresh()
-
         main_box.noutrefresh()
         if globals.attack_menu:
             attack_box.noutrefresh()
@@ -127,13 +127,19 @@ if globals.beacon_thread:
     globals.beacon_sp.stop()
 if globals.deauth_thread:
     globals.deauth_attack.stop()
+if globals.auth_thread:
+    globals.auth_attack.stop()
+if globals.ble_thread:
+    globals.ble_scan.stop()
 scanner.stop()
 globals.deauth_thread = None
-globals.beacon_sp = None
+globals.beacon_sp =None
 globals.beacon_thread = None
 globals.deauth_attack = None
 globals.auth_attack = None
 globals.auth_thread = None
+globals.ble_thread = None
+globals.ble_scan = None
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")
