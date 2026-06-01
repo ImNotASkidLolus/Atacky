@@ -3,7 +3,7 @@ import threading
 import time
 import globals
 
-def draw_main(box:curses.win, cols):
+def draw_main(box, cols):
     box.addstr(1,1, "BLE DEVICE SCANNING".center(cols - 2), curses.color_pair(1))
     box.attron(curses.color_pair(2))
     box.box()
