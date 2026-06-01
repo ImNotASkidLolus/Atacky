@@ -1,6 +1,7 @@
 import os
 import globals
-def load_oui(path="/home/bb/Attack-TUI/attacks/IEEE_MACS.txt"):
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+def load_oui(path=os.path.join(BASE_DIR, "IEEE_MACS.txt")):
     oui_map = {}
     with open(path, "r") as f:
         for line in f:

@@ -45,7 +45,6 @@ def main(stdscr):
     input_info.addstr(0, 1, "S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
     input_info.attroff(curses.color_pair(1))
 
-
     status = curses.newwin(1, cols-1, rows - 3, 1)
     status.attron(curses.color_pair(1))
     status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s".ljust(cols - 7))
@@ -72,7 +71,7 @@ def main(stdscr):
             elif globals.oui_checker:
                 attack_scr.draw_oui_screen(attack_screen, stdscr)
         elif globals.check_ble_devices:
-            ble_menu.draw_main(ble_window)
+            ble_menu.draw_main(ble_window, cols)
 
         status.attron(curses.color_pair(1))
         status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s ".ljust(cols - 7))
@@ -104,8 +103,7 @@ args = argument_parser.parse_args()
 globals.channel = args.channel
 globals.interface = args.interface
 globals.larp_mode = args.larp
-if not globals.larp_mode:
-    globals.oui_map = oui.load_oui()
+globals.oui_map = oui.load_oui()
 
 #==================scanner thread init========================#
 if not globals.larp_mode:
