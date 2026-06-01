@@ -52,7 +52,7 @@ def handle_input(key, stdscr):
                 globals.deauth_attack = None
     elif key == curses.KEY_UP:
         with globals.lock:
-            if globals.attack_menu:
+            if globals.attack_menu and not globals.guided_deauth:
                 if globals.selected_row > 1:
                     globals.selected_row -= 1
             if globals.guided_deauth and not globals.selected_client:
@@ -62,7 +62,7 @@ def handle_input(key, stdscr):
             globals.selected_row -= 1
     elif key == curses.KEY_DOWN:
         with globals.lock:
-            if globals.attack_menu:
+            if globals.attack_menu and not globals.guided_deauth:
                 if globals.selected_row < 4:
                     globals.selected_row += 1
             if globals.guided_deauth and not globals.selected_client:
@@ -119,7 +119,7 @@ def handle_input(key, stdscr):
                     globals.retry_time_left = 10
                     globals.attack_menu = True
         elif globals.attack_menu:
-            if globals.selected_row == 1:
+            if globals.selected_row == 1 and not globals.send_auth and not globals.send_beacon:
                 if globals.clients and (globals.deauth_thread is None or not globals.deauth_thread.is_alive()):
                     if not globals.guided_deauth:
                         globals.send_deauth = True
@@ -128,7 +128,7 @@ def handle_input(key, stdscr):
                         globals.deauth_thread.start()
                 else:
                     pass
-            elif globals.selected_row == 2:
+            elif globals.selected_row == 2 and not globals.send_auth and not globals.send_deauth:
                 if not globals.send_beacon and (globals.beacon_thread is None or not globals.beacon_thread.is_alive()):
                     globals.send_beacon = True
                     globals.beacon_sp = attacks.beacon_spam.BeaconSpam()
@@ -136,13 +136,13 @@ def handle_input(key, stdscr):
                     globals.beacon_thread.start()
                 else:
                     pass
-            elif globals.selected_row == 3:
+            elif globals.selected_row == 3 and not globals.send_beacon and not globals.send_deauth:
                 if not globals.send_auth and (globals.auth_thread is None or not globals.auth_thread.is_alive()):
                     globals.send_auth = True
                     globals.auth_attack = attacks.authattack.auth_attack()
                     globals.auth_thread = threading.Thread(target=globals.auth_attack.start_auth_attack, daemon=True)
                     globals.auth_thread.start()
-            elif globals.selected_row == 4:
+            elif globals.selected_row == 4 and not globals.send_deauth and not globals.send_auth and not globals.send_beacon:
                 if not globals.oui_checker:
                     globals.oui_checker = True
         elif globals.guided_deauth and globals.send_deauth:
