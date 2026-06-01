@@ -27,8 +27,8 @@ send_deauth = False
 attack_menu = False
 send_beacon = False
 guided_deauth = False
+larp_mode = False
 oui_checker = False
-
 deauth_thread = None
 beacon_thread = None
 deauth_attack = None

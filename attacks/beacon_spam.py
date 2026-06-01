@@ -42,7 +42,7 @@ class BeaconSpam:
         return ssids
     def start_beacon_spam(self):
         ssids = self.create_ssid_array()
-        while not self._stop_event.is_set():
+        while not self._stop_event.is_set() or not globals.larp_mode:
             try:
                 for ssid in ssids:
                     pkt = self.build_beacon_packet(ssid)

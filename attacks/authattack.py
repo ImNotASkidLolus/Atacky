@@ -20,7 +20,7 @@ class auth_attack():
                     scapy.Dot11Auth(algo = 0, seqnum=1, status=0))
         return packet
     def start_auth_attack(self):
-        while not self._stop_event.is_set():
+        while not self._stop_event.is_set() or not globals.larp_mode:
             try:
                 packet = self.build_auth_packet()
                 time.sleep(0.01)

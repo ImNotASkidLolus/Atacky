@@ -22,7 +22,7 @@ class DeauthAttack:
         return packet
     
     def start_deauth(self):
-        while not self._stop_event.is_set():
+        while not self._stop_event.is_set() or not globals.larp_mode:
             if globals.selected_client:
                 try:
                     pkt = self.build_deauth_packet(globals.selected_client)
