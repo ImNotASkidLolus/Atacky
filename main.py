@@ -96,7 +96,7 @@ def main(stdscr):
         curses.doupdate()
 
 #==================argument parser=============================#
-argument_parser = argparse.ArgumentParser(description="WIFI SCANNING TOOL")
+argument_parser = argparse.ArgumentParser(description="WIFI AND BLE SCANNING TOOL")
 argument_parser.add_argument("-i", "--interface", type=str, help="Specify the network interface")
 argument_parser.add_argument("-c", "--channel", type=str, help="Specify the channel of scanning")
 argument_parser.add_argument("-l", "--larp", action="store_true", help = "Enable LARP mode")
