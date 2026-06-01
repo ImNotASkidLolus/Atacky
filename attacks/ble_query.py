@@ -2,6 +2,9 @@ import scapy.all as scapy
 import globals
 import time
 import threading
+from scapy.layers.bluetooth import BluetoothHCISocket
+import subprocess
+
 
 class ble_device_recognizer:
     def __init__(self):
@@ -22,9 +25,12 @@ class ble_device_recognizer:
             globals.ble_devices.append(device)
 
     def ble_packet_scan(self):
+        subprocess.run(["sudo", "hciconfig", "hci0", "up"])
+        subprocess.run(["sudo", "hcitool", "lescan", "--passive", "--duplicates"],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         while not self._stop_event.is_set():
             try:
-                scapy.sniff(iface="hci0", prn=self.ble_check_dev, store=False,
+                scapy.sniff(opened_socket=BluetoothHCISocket(0), prn=self.ble_check_dev, store=False,
                     stop_filter=lambda _: self._stop_event.is_set())
             except Exception as e:
                 time.sleep(1)
