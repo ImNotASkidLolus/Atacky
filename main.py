@@ -34,25 +34,27 @@ def main(stdscr):
     attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
     attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
     ble_window = curses.newwin(rows - 2, cols - 2, 1, 1)
-
-    title = curses.newwin(1, cols - 1, 0, 1)
-    title.attron(curses.color_pair(1))
-    title.addstr(0, 1, "NETWORK SCANNING AND PENETRATION TESTING TOOL".center(cols - 3))
-    title.attroff(curses.color_pair(1))
-
-    input_info = curses.newwin(1, cols - 1, rows - 1, 1)
-    input_info.attron(curses.color_pair(1))
-    input_info.addstr(0, 1, "S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
-    input_info.attroff(curses.color_pair(1))
-
     status = curses.newwin(1, cols-1, rows - 3, 1)
-    status.attron(curses.color_pair(1))
-    status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s".ljust(cols - 7))
-    status.addstr(0, cols - 3 - len("Press q or Q to exit "), "Press q or Q to exit")
-    status.attroff(curses.color_pair(1))
+    title = curses.newwin(1, cols - 1, 0, 1)
+    input_info = curses.newwin(1, cols - 1, rows - 1, 1)
+    def draw_title():
+        title.attron(curses.color_pair(1))
+        title.addstr(0, 1, "NETWORK SCANNING AND PENETRATION TESTING TOOL".center(cols - 3))
+        title.attroff(curses.color_pair(1))
+    def draw_input_info():
+        input_info.attron(curses.color_pair(1))
+        input_info.addstr(0, 1, "S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
+        input_info.attroff(curses.color_pair(1))
+    def draw_status():
+        status.attron(curses.color_pair(1))
+        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s".ljust(cols - 7))
+        status.addstr(0, cols - 3 - len("Press q or Q to exit "), "Press q or Q to exit")
+        status.attroff(curses.color_pair(1))
 
     stdscr.noutrefresh()
     status.noutrefresh()
+    input_info.noutrefresh()
+    title.noutrefresh()
     main_box.noutrefresh()
     curses.doupdate()
 
@@ -72,6 +74,9 @@ def main(stdscr):
                 attack_scr.draw_oui_screen(attack_screen, stdscr)
         elif globals.check_ble_devices:
             ble_menu.draw_main(ble_window, cols)
+        draw_input_info()
+        draw_status()
+        draw_title()
 
         status.attron(curses.color_pair(1))
         status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s ".ljust(cols - 7))
