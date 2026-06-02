@@ -11,21 +11,21 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
     if globals.selected_row == 1:
         attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(1))
     else:
-        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(6))
+        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(4))
     if globals.selected_row == 2:
         attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(1))
     else:
-        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(6))
+        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(4))
     if globals.selected_row == 3:
         attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(1))
     else:
-        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(6))
+        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(4))
     if globals.selected_row == 4:
         attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(1))
     else:
-        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(6))
+        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(4))
     if globals.clients is not None or globals.clients == "":
-        attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(6))
+        attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(4))
     else:
         attack_box.addstr(7,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
         attack_box.addstr(8, 1, f"Retrying in {globals.retry_time_left}s")
