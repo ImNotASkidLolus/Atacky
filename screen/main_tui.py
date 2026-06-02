@@ -13,10 +13,10 @@ def draw_main_box(main_box, stdscr, height, width):
             pass
         else:
             main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
-            main_box.addstr(1, 1,  "SSID", curses.color_pair(8))
-            main_box.addstr(1, 30, "BSSID", curses.color_pair(8))
-            main_box.addstr(1, 53, "SECURITY", curses.color_pair(8))
-            main_box.addstr(1, 75, "CHANNEL", curses.color_pair(8))
+            main_box.addstr(1, 1,  "SSID", curses.color_pair(1))
+            main_box.addstr(1, 30, "BSSID", curses.color_pair(1))
+            main_box.addstr(1, 53, "SECURITY", curses.color_pair(1))
+            main_box.addstr(1, 75, "CHANNEL", curses.color_pair(1))
             for i, (ssid, bssid, sec, ch) in enumerate(data, start=1):
                 try:
                     if not stop_scan or row_selected != i + 1:

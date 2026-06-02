@@ -9,19 +9,19 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
     attack_box.attroff(curses.color_pair(2))
     attack_box.addstr(1,1, "SELECT THE TYPE OF ATTACK YOU WANT TO PERFORM".center(48), curses.color_pair(1))
     if globals.selected_row == 1:
-        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(8))
+        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(1))
     else:
         attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(3))
     if globals.selected_row == 2:
-        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(8))
+        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(1))
     else:
         attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(3))
     if globals.selected_row == 3:
-        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(8))
+        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(1))
     else:
         attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(3))
     if globals.selected_row == 4:
-        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(8))
+        attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(1))
     else:
         attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(3))
     if globals.clients is not None or globals.clients == "":
