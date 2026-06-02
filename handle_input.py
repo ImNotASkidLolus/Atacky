@@ -118,7 +118,7 @@ def handle_input(key, stdscr):
                     globals.selected_row = 1
                     globals.retry_time_left = 10
                     globals.attack_menu = True
-        elif globals.attack_menu:
+        elif globals.attack_menu and not globals.guided_deauth:
             if globals.selected_row == 1 and not globals.send_auth and not globals.send_beacon:
                 if globals.clients and (globals.deauth_thread is None or not globals.deauth_thread.is_alive()):
                     if not globals.guided_deauth:
