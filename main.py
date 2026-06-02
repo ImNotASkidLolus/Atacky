@@ -20,12 +20,12 @@ def main(stdscr):
     stdscr.keypad(True)
 
     #======================COLORS INITIALIZATION=======================#
-    curses.init_pair(1, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # title bar — keeping phosphor green, it's perfect
-    curses.init_pair(2, curses.COLOR_MAGENTA, -1)                    # box border — magenta ≈ dracula purple #BD93F9
-    curses.init_pair(4, curses.COLOR_CYAN,    -1)                    # values text — cyan ≈ dracula cyan #8BE9FD
-    curses.init_pair(6, curses.COLOR_BLACK,   curses.COLOR_MAGENTA)  # highlight — black on magenta, punchy
-    curses.init_pair(8, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # line select — unchanged
-    curses.init_pair(9, curses.COLOR_GREEN,   curses.COLOR_GREEN)    # green bar fill — unchanged
+    curses.init_pair(1, curses.COLOR_BLACK,  curses.COLOR_GREEN)  # title bar and label text — keeping classic phosphor green bg
+    curses.init_pair(2, curses.COLOR_CYAN,   -1)                  # box border color — #8BE9FD dracula cyan
+    curses.init_pair(4, curses.COLOR_MAGENTA, -1)                 # values text — curses MAGENTA maps close to #BD93F9 dracula purple
+    curses.init_pair(6, curses.COLOR_BLACK,  curses.COLOR_CYAN)   # was yellow/white — now black on cyan, clean and readable
+    curses.init_pair(8, curses.COLOR_BLACK,  curses.COLOR_GREEN)  # line select text — unchanged, this one was already correct
+    curses.init_pair(9, curses.COLOR_GREEN,  curses.COLOR_GREEN)  # green bar — unchanged, solid fill needs to stay green
     
     main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
     attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
