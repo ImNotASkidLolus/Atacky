@@ -24,7 +24,7 @@ def handle_input(key, stdscr):
             if not globals.check_ble_devices:
                 globals.check_ble_devices = True
                 if not globals.ble_thread and not globals.ble_scan:
-                    globals.ble_scan = ble.ble_device_recognizer()
+                    globals.ble_scan = ble.BLEDeviceRecognizer()
                     globals.ble_thread = threading.Thread(target=globals.ble_scan.ble_packet_scan, daemon=True)
                     globals.ble_thread.start()
             else:
