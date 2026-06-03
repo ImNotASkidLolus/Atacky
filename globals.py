@@ -41,4 +41,4 @@ auth_thread = None
 ble_scan = None
 ble_thread = None
 
-retry_time_left = 10 #time in seconds for retrying the client sniff
+retry_time_left = 10 #time in seconds for retrying the client sniffs
