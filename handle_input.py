@@ -6,9 +6,19 @@ import attacks.beacon_spam
 import attacks.deauth as deauth
 import attacks.ble_query as ble
 import time
+import signal 
+import sys
 
+sigflag = 0
+
+def catch_int(sig_num, frame):
+    global sigflag
+    sigflag = 1
 def handle_input(key, stdscr):
+    signal.signal(signal.SIGINT, catch_int)
     if key == ord('q') or key == ord('Q'):
+        globals.quit_app = True
+    elif sigflag:
         globals.quit_app = True
     elif key == ord('s') or key == ord('S'):
         if not globals.stop_scan:
