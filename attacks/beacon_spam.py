@@ -32,7 +32,7 @@ class BeaconSpam:
     def create_ssid_array(self):
         ssids = []
         while len(ssids) < 20:
-            random_num = random.randrange(0,30)
+            random_num = random.randrange(1,30)
             random_space = "=" * random_num
             new_ssid = globals.selected_ssid + random_space
             if new_ssid in ssids:
@@ -42,7 +42,7 @@ class BeaconSpam:
         return ssids
     def start_beacon_spam(self):
         ssids = self.create_ssid_array()
-        while not self._stop_event.is_set() or not globals.larp_mode:
+        while not self._stop_event.is_set() and not globals.larp_mode:
             try:
                 for ssid in ssids:
                     pkt = self.build_beacon_packet(ssid)
