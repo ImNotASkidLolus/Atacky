@@ -24,7 +24,7 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
         attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(1))
     else:
         attack_box.addstr(6, 1, "4. MAC address OUI map lookup", curses.color_pair(4))
-    if globals.clients is not None or globals.clients == "":
+    if globals.clients is not None or globals.clients == []:
         attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(4))
     else:
         attack_box.addstr(7,1, "Clients for this network NOT FOUND!", curses.color_pair(4))

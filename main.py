@@ -7,8 +7,6 @@ import screen.main_tui as main_tui
 import screen.attack_scr as attack_scr
 import handle_input
 import attacks.OUI_checker as oui
-import attacks.ble_query as ble
-import screen.draw_ble_menu as ble_menu
 import globals
 
 def main(stdscr):
@@ -27,10 +25,9 @@ def main(stdscr):
     curses.init_pair(8, curses.COLOR_BLACK,  curses.COLOR_GREEN)  # line select text — unchanged, this one was already correct
     curses.init_pair(9, curses.COLOR_GREEN,  curses.COLOR_GREEN)  # green bar — unchanged, solid fill needs to stay green
     
-    main_box = curses.newwin(rows - 2, cols - 2, 1, 1)
+    main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
     attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
     attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
-    ble_window = curses.newwin(rows - 2, cols - 2, 1, 1)
     status = curses.newwin(1, cols-1, rows - 3, 1)
     title = curses.newwin(1, cols - 1, 0, 1)
     input_info = curses.newwin(1, cols - 1, rows - 1, 1)
@@ -69,8 +66,6 @@ def main(stdscr):
                 attack_scr.draw_auth_screen(attack_screen,stdscr)
             elif globals.oui_checker:
                 attack_scr.draw_oui_screen(attack_screen, stdscr)
-        elif globals.check_ble_devices:
-            ble_menu.draw_main(ble_window, cols)
         draw_input_info()
         draw_status()
         draw_title()
@@ -88,8 +83,6 @@ def main(stdscr):
                 attack_screen.noutrefresh()
             elif globals.oui_checker:
                 attack_screen.noutrefresh()
-        elif globals.check_ble_devices:
-            ble_window.noutrefresh()
         status.noutrefresh()
         input_info.noutrefresh()
         title.noutrefresh()
@@ -131,17 +124,7 @@ if globals.deauth_thread:
     globals.deauth_attack.stop()
 if globals.auth_thread:
     globals.auth_attack.stop()
-if globals.ble_thread:
-    globals.ble_scan.stop()
 scanner.stop()
-globals.deauth_thread = None
-globals.beacon_sp =None
-globals.beacon_thread = None
-globals.deauth_attack = None
-globals.auth_attack = None
-globals.auth_thread = None
-globals.ble_thread = None
-globals.ble_scan = None
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
 print(f"SECURITY: {globals.l_sec}")
