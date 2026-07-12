@@ -127,6 +127,8 @@ if globals.deauth_thread:
     globals.deauth_attack.stop()
 if globals.auth_thread:
     globals.auth_attack.stop()
+if globals.sniff_thread:
+    globals.sniff.stop()
 scanner.stop()
 print(f"BSSIDS: {globals.l_bssids}\n")
 print(f"SSIDS: {globals.l_ssids}\n")
