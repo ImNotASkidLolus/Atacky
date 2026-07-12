@@ -24,11 +24,11 @@ def draw_attack_screen(attack_box:curses.window, stdscr):
         attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(1))
     else:
         attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(4))
-    if globals.clients is not None or globals.clients != []:
-        attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(4))
-    else:
+    if globals.clients is None or globals.clients == []:
         attack_box.addstr(7,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
         attack_box.addstr(8, 1, f"Retrying in {globals.retry_time_left}s")
+    else:
+        attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(4))        
     attack_box.addstr(10,1, f"Target SSID: {globals.selected_ssid} {globals.selected_bssid}".center(48), curses.color_pair(1))
 
 def draw_deauth_screen(attack_box:curses.window, stdscr):

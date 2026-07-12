@@ -4,7 +4,7 @@ import curses
 import attacks.authattack
 import attacks.beacon_spam
 import attacks.deauth as deauth
-import attacks.ble_query as ble
+import attacks.sniffer as sniffer
 import time
 import signal 
 import sys
@@ -29,19 +29,46 @@ def handle_input(key, stdscr):
             pass
         else:
             globals.stop_scan = False
-    elif key == ord('c') or key == ord('C'):
-        if not globals.attack_menu:
-            if not globals.check_ble_devices:
-                globals.check_ble_devices = True
-                if not globals.ble_thread and not globals.ble_scan:
-                    globals.ble_scan = ble.BLEDeviceRecognizer()
-                    globals.ble_thread = threading.Thread(target=globals.ble_scan.ble_packet_scan, daemon=True)
-                    globals.ble_thread.start()
+    elif key == ord('p') or key == ord('P'):
+        if not globals.sniff_packets and not globals.larp_mode:
+            globals.stop_scan = False
+            globals.sniff_packets = True
+            globals.packets = []
+            globals.sniff = sniffer.Sniffer()
+            globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets, daemon=True)
+            globals.sniff_thread.start()
+        else:
+            globals.stop_scan = True
+            globals.sniff_packets = False
+            globals.sniff.stop()
+            globals.sniff = None
+            globals.sniff_thread = None
+            globals.packets = []
+    elif key == ord('f') or key == ord('F'):
+        if globals.sniff_packets:
+            if not globals.filter_packets:
+                globals.filter_packets = True
+                globals.sniff.stop()
+                globals.sniff = sniffer.Sniffer()
+                globals.sniff_thread = None
+                globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets_filtered, daemon=True)
+                globals.sniff_thread.start()
             else:
-                globals.check_ble_devices = False
-                globals.ble_scan.stop()
-                globals.ble_scan = None
-                globals.ble_thread = None
+                globals.filter_packets = False
+                globals.sniff.stop()
+                globals.sniff = None
+                globals.sniff_thread = None
+                globals.packets = []
+    elif key == ord('r') or key == ord('R'):
+        if globals.sniff_packets:
+            globals.filter_packets = False
+            globals.sniff_filter = ""
+            globals.packets = []
+            globals.sniff.stop()
+            globals.sniff = sniffer.Sniffer()
+            globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets, daemon=True)
+            globals.sniff_thread.start()
+
 
     elif key == ord('g') or key == ord('G'):
         if globals.send_deauth:
@@ -70,6 +97,9 @@ def handle_input(key, stdscr):
                     globals.selected_client_row -= 1
         if globals.selected_row > 1 and not globals.attack_menu:
             globals.selected_row -= 1
+        if globals.sniff_packets:
+            if globals.scroll_delay < 1:
+                globals.scroll_delay += 0.1
     elif key == curses.KEY_DOWN:
         with globals.lock:
             if globals.attack_menu and not globals.guided_deauth:
@@ -80,6 +110,11 @@ def handle_input(key, stdscr):
                     globals.selected_client_row += 1
         if globals.selected_row <= max(1, len(globals.l_ssids)) and not globals.attack_menu:
             globals.selected_row += 1
+        if globals.sniff_packets:
+            if globals.scroll_delay > 0:
+                globals.scroll_delay -= 0.1
+            elif globals.scroll_delay < 0:
+                globals.scroll_delay = 0
 
     elif key == curses.KEY_BACKSPACE:
         if globals.send_deauth:

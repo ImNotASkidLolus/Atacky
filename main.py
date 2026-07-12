@@ -5,6 +5,7 @@ import argparse
 import get_networks
 import screen.main_tui as main_tui
 import screen.attack_scr as attack_scr
+import screen.sniffer_scr as sniff_scr
 import handle_input
 import attacks.OUI_checker as oui
 import globals
@@ -37,7 +38,7 @@ def main(stdscr):
         title.attroff(curses.color_pair(1))
     def draw_input_info():
         input_info.attron(curses.color_pair(1))
-        input_info.addstr(0, 1, "S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
+        input_info.addstr(0, 1, "P-Packet sniff S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
         input_info.attroff(curses.color_pair(1))
     def draw_status():
         status.attron(curses.color_pair(1))
@@ -66,6 +67,8 @@ def main(stdscr):
                 attack_scr.draw_auth_screen(attack_screen,stdscr)
             elif globals.oui_checker:
                 attack_scr.draw_oui_screen(attack_screen, stdscr)
+        elif globals.sniff_packets:
+            sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         draw_input_info()
         draw_status()
         draw_title()

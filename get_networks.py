@@ -98,6 +98,6 @@ class get_networks:
                         globals.proc.terminate()
                         globals.proc.wait()
                     time.sleep(1)
-            except Exception as e:
+            except Exception:
                 globals.proc.terminate()
                 time.sleep(1)
