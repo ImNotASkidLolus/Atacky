@@ -30,4 +30,5 @@ def parse_packet(packet):
                 packet += p
                 packet += " / "
     time.sleep(globals.scroll_delay)
-    globals.packets.append(packet)
+    if not "SSID" in packet:
+        globals.packets.append(packet)
