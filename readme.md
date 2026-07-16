@@ -43,7 +43,7 @@ While on the main screen every `10s` it refreshes the found networks. By pressin
 * pressing `g` while in deauth mode allows to deauth a chosen device
 ## IMAGES
 <p float="left">
-    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
-    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
-    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="35%">
+    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="35%">
+    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="35%">
 </p>
