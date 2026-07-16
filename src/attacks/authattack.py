@@ -1,7 +1,7 @@
 import threading
 import scapy.all as scapy
 import time
-import src.globals as globals
+import globals
 
 class auth_attack():
     def __init__(self):

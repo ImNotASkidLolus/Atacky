@@ -1,4 +1,4 @@
-import src.attacks.gps_tracker as gps
+import attacks.gps_tracker as gps
 l_bssids = [
     "00:1A:2B:3C:4D:5E", "11:22:33:44:55:66", "AA:BB:CC:DD:EE:FF",
     "DE:AD:BE:EF:00:01", "FE:DC:BA:98:76:54", "12:34:56:78:9A:BC",

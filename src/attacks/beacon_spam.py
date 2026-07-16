@@ -1,5 +1,5 @@
 import scapy.all as scapy
-import src.globals as globals
+import globals
 import time 
 import threading
 import random

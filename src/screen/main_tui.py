@@ -1,5 +1,5 @@
 import curses
-import src.globals as globals
+import globals
 def draw_main_box(main_box, stdscr, height, width):
         with globals.lock:
             data = list(zip(globals.l_ssids, globals.l_bssids, globals.l_sec, globals.l_channels))

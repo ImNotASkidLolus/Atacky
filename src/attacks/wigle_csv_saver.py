@@ -1,5 +1,5 @@
 import csv
-import src.globals as globals
+import globals
 WIGLE_HEADER = [
     'WigleWifi-1.4',
     'appRelease=Attack-TUI-v0.9',

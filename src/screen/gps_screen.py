@@ -1,5 +1,5 @@
 import curses
-import src.globals as globals
+import globals
 
 def draw_gps(main_box):
     try:
