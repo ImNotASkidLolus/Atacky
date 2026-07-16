@@ -42,6 +42,8 @@ While on the main screen every `10s` it refreshes the found networks. By pressin
 * pressing `q` or `CTRL+c` quits the app
 * pressing `g` while in deauth mode allows to deauth a chosen device
 ## IMAGES
-<img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
-<img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
-<img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
+<p float="left">
+    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
+</p>
