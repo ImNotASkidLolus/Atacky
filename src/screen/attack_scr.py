@@ -1,6 +1,6 @@
 import curses
-import globals
-import attacks.OUI_checker as oui
+import src.globals as globals
+import src.attacks.OUI_checker as oui
 
 def draw_attack_screen(attack_box:curses.window, stdscr):
     attack_box.erase()

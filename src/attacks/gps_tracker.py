@@ -3,7 +3,7 @@ import datetime
 import threading
 import math
 import json
-import globals
+import src.globals as globals
 from shapely.geometry import shape, Point
 from pathlib import Path
 try:

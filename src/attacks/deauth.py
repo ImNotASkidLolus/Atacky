@@ -1,6 +1,6 @@
 import time
 import scapy.all as scapy
-import globals
+import src.globals as globals
 import threading
 
 class DeauthAttack:

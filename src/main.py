@@ -7,16 +7,16 @@ import os
 import threading 
 import curses
 import argparse
-import get_networks
-import screen.main_tui as main_tui
-import screen.attack_scr as attack_scr
-import screen.sniffer_scr as sniff_scr
-import screen.gps_screen as gps_scr
-import handle_input
-import attacks.OUI_checker as oui
-import attacks.wigle_csv_saver as saver
-import attacks.gps_tracker as tracker
-import globals
+import src.get_networks as get_networks
+import src.screen.main_tui as main_tui
+import src.screen.attack_scr as attack_scr
+import src.screen.sniffer_scr as sniff_scr
+import src.screen.gps_screen as gps_scr
+import src.handle_input as handle_input
+import src.attacks.OUI_checker as oui
+import src.attacks.wigle_csv_saver as saver
+import src.attacks.gps_tracker as tracker
+import src.globals as globals
 
 
 def main(stdscr):
@@ -131,7 +131,7 @@ if not globals.larp_mode:
     thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
     thread1.start()
 else:
-    import larp_values
+    import src.larp_values as larp_values
     globals.l_bssids = larp_values.l_bssids
     globals.l_channels = larp_values.l_channels
     globals.l_ssids = larp_values.l_ssids

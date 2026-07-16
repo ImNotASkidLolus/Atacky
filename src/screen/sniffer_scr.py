@@ -1,5 +1,5 @@
 import curses
-import globals
+import src.globals as globals
 
 def draw_packets(box:curses.window, win_height, win_width, stdscr):
     box.erase()

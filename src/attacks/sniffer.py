@@ -1,6 +1,6 @@
 import scapy.all as scapy
 import threading
-import globals
+import src.globals as globals
 import time
 class Sniffer:
     def __init__(self):

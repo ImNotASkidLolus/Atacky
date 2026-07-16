@@ -1,5 +1,5 @@
 import os
-import globals
+import src.globals as globals
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def load_oui(path=os.path.join(BASE_DIR, "IEEE_MACS.txt")):
     oui_map = {}

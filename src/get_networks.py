@@ -2,7 +2,7 @@ import csv
 import subprocess
 import os
 import time
-import globals
+import src.globals as globals
 import threading
 
 class get_networks:

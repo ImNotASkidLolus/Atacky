@@ -1,11 +1,9 @@
-import globals
+from src.attacks import authattack, beacon_spam, deauth as deauth
+import src.globals as globals
 import threading
 import curses
 if not globals.larp_mode:
-    from attacks import (
-        authattack,
-        beacon_spam,
-        deauth as deauth,
+    from src.attacks import (
         sniffer as sniffer
     )
 import time
