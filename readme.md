@@ -32,6 +32,8 @@ This app has to be launched as root or with sudo
 * `-o` specify wardriving output file
 * `-c` specify a network channel
 * `-l` larp mode 
+### LARP MODE?!
+This mode basically allows to use the app without a network interface and a gps, it fills the data with imaginary values. This way y'all skids can use it and look cool infront of your fake friends :)
 ### How to traverse the UI:
 While on the main screen every `10s` it refreshes the found networks. By pressing the `S` key it allows you to use `ARROW-UP` and `ARROW-DOWN` to select a desired network. You can select the network by pressing the `ENTER` key. After an attack menu will be displayed for you. You can traverse through the menu using `ARROWS` and pressing `ENTER` to select the attack. To go back you can simply press the `BACKSPACE` or `ARROW-LEFT` key.
 ### Other options:
