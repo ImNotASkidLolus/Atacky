@@ -15,6 +15,9 @@ selected_ssid = None
 selected_bssid = None
 selected_client = None
 packets = []
+gps = None
+csv_saver = None
+fix = 0
 
 proc = None
 stop_scan = False
@@ -33,7 +36,7 @@ oui_checker = False
 check_ble_devices = False
 sniff_packets = False
 filter_packets = False
-ble_devices = []
+det_gps = False
 
 deauth_thread = None
 beacon_thread = None
@@ -48,3 +51,4 @@ sniff = None
 sniff_filter = ""
 retry_time_left = 10 #time in seconds for retrying the client and wifi network sniffs
 scroll_delay = 0.1
+times_logged = 0

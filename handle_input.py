@@ -87,6 +87,11 @@ def handle_input(key, stdscr):
                     globals.deauth_attack.stop()
                 globals.deauth_thread = None
                 globals.deauth_attack = None
+    elif key == ord('t') or key == ord('T'):
+        if not globals.det_gps:
+            globals.det_gps = True
+        else:
+            globals.det_gps = False
     elif key == curses.KEY_UP:
         with globals.lock:
             if globals.attack_menu and not globals.guided_deauth:
@@ -150,6 +155,13 @@ def handle_input(key, stdscr):
             if globals.proc:
                 globals.proc.terminate()
             stdscr.clear()
+        elif globals.sniff_packets:
+            globals.sniff_packets = False
+            globals.sniff.stop()
+            globals.sniff_thread = None
+        elif globals.det_gps:
+            globals.det_gps = False
+        stdscr.clear()
         
     elif key in (curses.KEY_ENTER, 10, 13):
         if globals.stop_scan and not globals.attack_menu:

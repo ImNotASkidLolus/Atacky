@@ -75,7 +75,7 @@ def draw_oui_screen(attack_box, stdscr):
     attack_box.attroff(curses.color_pair(2))
     attack_box.addstr(1,1, "OUI MAC ADDRESS LOOKUP".center(48), curses.color_pair(1))
     if not globals.clients:
-        attack_box.addstr(1,1, "No clients found for this network. ", curses.color_pair(1))
+        attack_box.addstr(1,1, "No clients found for this network".center(48), curses.color_pair(1))
     else:
         for i, client in enumerate(globals.clients,start=1):
             try:

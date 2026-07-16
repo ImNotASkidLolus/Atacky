@@ -93,6 +93,8 @@ class get_networks:
                             globals.clients = clients
                     if os.path.exists(filepath):
                         os.remove(filepath)
+                    if globals.fix:
+                        globals.csv_saver.log()
                 else:
                     if globals.proc:
                         globals.proc.terminate()
