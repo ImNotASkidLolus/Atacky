@@ -166,5 +166,3 @@ if not globals.larp_mode:
 # print("\nGPS class data:")
 # for key, value in vars(globals.gps).items():
 #     print(f"{key}: {value}")
-print(f"Times logged: {globals.times_logged}")
-print (f"SATELLITES: {globals.gps.get_satelite_info()}")
