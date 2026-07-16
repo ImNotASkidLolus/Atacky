@@ -5,6 +5,7 @@ import math
 import json
 import globals
 from shapely.geometry import shape, Point
+from pathlib import Path
 try:
     import gps as gpsd_module
     GPS_AVAILABLE = True
@@ -123,9 +124,14 @@ class gps_get():
             return "Not found"
     
     def get_country(self): #Calculates which country the position give by the gps is based on the data in COUNTRY_BOUNDS
-        with open("./map.geojson") as f:
+        current_dir = Path(__file__).resolve().parent
+        project_root = current_dir.parent
+        try:
+            geojson_path = next(project_root.rglob("map.geojson"))
+        except StopIteration:
+            return "NO MAP FILE!"
+        with open(geojson_path) as f:
             data = json.load(f)
-
         location = Point(self.lon, self.lat)
         features = data.get('features', [data])
         for feature in features:
