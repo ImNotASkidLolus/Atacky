@@ -1,10 +1,13 @@
 import globals
 import threading
 import curses
-import attacks.authattack
-import attacks.beacon_spam
-import attacks.deauth as deauth
-import attacks.sniffer as sniffer
+if not globals.larp_mode:
+    from attacks import (
+        authattack,
+        beacon_spam,
+        deauth as deauth,
+        sniffer as sniffer
+    )
 import time
 import signal 
 import sys
@@ -30,20 +33,21 @@ def handle_input(key, stdscr):
         else:
             globals.stop_scan = False
     elif key == ord('p') or key == ord('P'):
-        if not globals.sniff_packets and not globals.larp_mode:
-            globals.stop_scan = False
-            globals.sniff_packets = True
-            globals.packets = []
-            globals.sniff = sniffer.Sniffer()
-            globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets, daemon=True)
-            globals.sniff_thread.start()
-        else:
-            globals.stop_scan = True
-            globals.sniff_packets = False
-            globals.sniff.stop()
-            globals.sniff = None
-            globals.sniff_thread = None
-            globals.packets = []
+        if not globals.larp_mode:
+            if not globals.sniff_packets:
+                globals.stop_scan = False
+                globals.sniff_packets = True
+                globals.packets = []
+                globals.sniff = sniffer.Sniffer()
+                globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets, daemon=True)
+                globals.sniff_thread.start()
+            else:
+                globals.stop_scan = True
+                globals.sniff_packets = False
+                globals.sniff.stop()
+                globals.sniff = None
+                globals.sniff_thread = None
+                globals.packets = []
     elif key == ord('f') or key == ord('F'):
         if globals.sniff_packets:
             if not globals.filter_packets:
@@ -121,7 +125,7 @@ def handle_input(key, stdscr):
             elif globals.scroll_delay < 0:
                 globals.scroll_delay = 0
 
-    elif key == curses.KEY_BACKSPACE:
+    elif key == curses.KEY_BACKSPACE or key == curses.KEY_LEFT:
         if globals.send_deauth:
             globals.send_deauth = False
             globals.guided_deauth = False
@@ -188,7 +192,7 @@ def handle_input(key, stdscr):
             elif globals.selected_row == 2 and not globals.send_auth and not globals.send_deauth:
                 if not globals.send_beacon and (globals.beacon_thread is None or not globals.beacon_thread.is_alive()):
                     globals.send_beacon = True
-                    globals.beacon_sp = attacks.beacon_spam.BeaconSpam()
+                    globals.beacon_sp = beacon_spam.BeaconSpam()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_beacon_spam, daemon=True)
                     globals.beacon_thread.start()
                 else:
@@ -196,7 +200,7 @@ def handle_input(key, stdscr):
             elif globals.selected_row == 3 and not globals.send_beacon and not globals.send_deauth:
                 if not globals.send_auth and (globals.auth_thread is None or not globals.auth_thread.is_alive()):
                     globals.send_auth = True
-                    globals.auth_attack = attacks.authattack.auth_attack()
+                    globals.auth_attack = authattack.auth_attack()
                     globals.auth_thread = threading.Thread(target=globals.auth_attack.start_auth_attack, daemon=True)
                     globals.auth_thread.start()
             elif globals.selected_row == 4 and not globals.send_deauth and not globals.send_auth and not globals.send_beacon:

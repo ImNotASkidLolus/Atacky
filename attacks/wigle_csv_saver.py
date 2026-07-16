@@ -1,5 +1,4 @@
 import csv
-import threading
 import globals
 WIGLE_HEADER = [
     'WigleWifi-1.4',

@@ -112,21 +112,21 @@ argument_parser = argparse.ArgumentParser(description="WIFI AND BLE SCANNING TOO
 argument_parser.add_argument("-i", "--interface", type=str, help="Specify the network interface")
 argument_parser.add_argument("-c", "--channel", type=str, help="Specify the channel of scanning")
 argument_parser.add_argument("-l", "--larp", action="store_true", help = "Enable LARP mode")
-argument_parser.add_argument("-o", "--output", type=str, required=True, help="Specify the output file of the wigle csv")
+argument_parser.add_argument("-o", "--output", type=str, help="Specify the output file of the wigle csv")
 args = argument_parser.parse_args()
 globals.channel = args.channel
 globals.interface = args.interface
 globals.larp_mode = args.larp
 wigle_filepath = args.output
-globals.oui_map = oui.load_oui()
-globals.gps = tracker.gps_get()
-globals.fix = globals.gps.get_fix()
-
-globals.csv_saver = saver.csv_saver(wigle_filepath)
-gps_thread = threading.Thread(target=globals.gps.update_fix, daemon=True)
-gps_thread.start()
-#==================scanner thread init========================#
 if not globals.larp_mode:
+    globals.oui_map = oui.load_oui()
+    globals.gps = tracker.gps_get()
+    globals.fix = globals.gps.get_fix()
+    if wigle_filepath != "" or wigle_filepath != None:
+        globals.csv_saver = saver.csv_saver(wigle_filepath)
+    gps_thread = threading.Thread(target=globals.gps.update_fix, daemon=True)
+    gps_thread.start()
+#==================scanner thread init========================#
     scanner = get_networks.get_networks()
     thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
     thread1.start()
@@ -137,23 +137,24 @@ else:
     globals.l_ssids = larp_values.l_ssids
     globals.l_sec = larp_values.l_sec
     globals.clients = larp_values.l_clients
-
+    globals.gps = larp_values.gps
 
 #=====================start main loop=========================#
 curses.wrapper(main)
-if globals.proc:
-    globals.proc.terminate()
-if globals.beacon_thread:
-    globals.beacon_sp.stop()
-if globals.deauth_thread:
-    globals.deauth_attack.stop()
-if globals.auth_thread:
-    globals.auth_attack.stop()
-if globals.sniff_thread:
-    globals.sniff.stop()
-if gps_thread:
-    globals.gps.stop()
-scanner.stop()
+if not globals.larp_mode:
+    if globals.proc:
+        globals.proc.terminate()
+    if globals.beacon_thread:
+        globals.beacon_sp.stop()
+    if globals.deauth_thread:
+        globals.deauth_attack.stop()
+    if globals.auth_thread:
+        globals.auth_attack.stop()
+    if globals.sniff_thread:
+        globals.sniff.stop()
+    if gps_thread:
+        globals.gps.stop()
+    scanner.stop()
 # print(f"BSSIDS: {globals.l_bssids}\n")
 # print(f"SSIDS: {globals.l_ssids}\n")
 # print(f"SECURITY: {globals.l_sec}")
@@ -166,4 +167,4 @@ scanner.stop()
 # for key, value in vars(globals.gps).items():
 #     print(f"{key}: {value}")
 print(f"Times logged: {globals.times_logged}")
-    
+print (f"SATELLITES: {globals.gps.get_satelite_info()}")

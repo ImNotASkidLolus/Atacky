@@ -7,10 +7,11 @@ l_bssids = []
 l_ssids = []
 l_sec = []
 l_channels = []
+clients = []
 
 interface = "wlan0"
 channel = None
-clients = None
+
 selected_ssid = None
 selected_bssid = None
 selected_client = None

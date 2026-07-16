@@ -150,6 +150,29 @@ class gps_get():
                 sat.append((satellite.get('PRN', 0), satellite.get('used', False), satellite.get('ss', 0)))
             return sat
         return [("N/A", "N/A", "N/A")]
+    def set_larp_values(self):
+        self.lat = 21.3769420
+        self.lon = 42.0967321
+        self.alt = 276
+        self.laterr = 10
+        self.lonerr = 10
+        self.speed = 0
+        self.speederr = 0
+        self.fix = 2 #what type of fix the gps has
+        self.time = "21:37"  
+        self.timeerr = 0.5
+        self.heading = 0 
+        self.climb = 0 #climb rate 
+        self.session = None
+        self.satelites = [
+            {"PRN": 10, "el": 63, "az": 137, "ss": 17, "used": True},
+            {"PRN": 7,  "el": 61, "az": 98,  "ss": 15, "used": True},
+            {"PRN": 5,  "el": 59, "az": 290, "ss": 20, "used": True},
+            {"PRN": 26, "el": 23, "az": 252, "ss": 0,  "used": True}
+        ]
+        self.usat = 4 #number of used satellites
+        self.nsat = 4 #number of found satellites
+        self.country_name = "STOP LARPING"
 
     
     
