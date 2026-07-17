@@ -10,12 +10,13 @@ class BeaconSpam:
     def stop(self):
         self._stop_event.set()
     def build_beacon_packet(self,ssid:str):
+        rand_mac = str(scapy.RandMac())
         packet = (
             scapy.RadioTap()/
             scapy.Dot11(type=0, subtype=8,
                 addr1='ff:ff:ff:ff:ff:ff',  # Broadcast
-                addr2=str(scapy.RandMAC()),
-                addr3=str(scapy.RandMAC())) /
+                addr2=rand_mac,
+                addr3=rand_mac) /
             scapy.Dot11Beacon(cap="ESS+privacy")/
             scapy.Dot11Elt(ID='SSID', info=str(ssid), len=len(ssid))/
             scapy.Dot11Elt(ID='RSNinfo', info=(

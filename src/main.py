@@ -37,7 +37,7 @@ def main(stdscr):
     curses.init_pair(9, curses.COLOR_GREEN,  curses.COLOR_GREEN)  # green bar — unchanged, solid fill needs to stay green
 
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
-    if cols > 70:
+    if cols > 80:
         attack_box = curses.newwin(12, cols - 10, rows//2 - 12, 5)
         attack_screen = curses.newwin(12, cols - 10, rows//2, 5)
         gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
@@ -71,7 +71,7 @@ def main(stdscr):
         if not globals.sniff_packets:
             main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
         if globals.attack_menu: 
-            if cols < 70:
+            if cols < 80:
                 attack_scr.draw_attack_screen(attack_box, stdscr, cols - 10, 12)
                 if globals.send_deauth:
                     attack_scr.draw_deauth_screen(attack_screen, stdscr, cols - 10, min(rows - 22, 12))
