@@ -13,7 +13,7 @@ def draw_main_box(main_box, stdscr, height, width):
         if globals.attack_menu:
             pass
         else:
-            if width > 100:
+            if width > 85:
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
                 main_box.addstr(1, 1,  "SSID", curses.color_pair(1))
                 main_box.addstr(1, 30, "BSSID", curses.color_pair(1))

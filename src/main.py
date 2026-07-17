@@ -37,9 +37,9 @@ def main(stdscr):
     curses.init_pair(9, curses.COLOR_GREEN,  curses.COLOR_GREEN)  # green bar — unchanged, solid fill needs to stay green
 
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
-    if cols > 100:
-        attack_box = curses.newwin(12, cols//2, rows//2 - 12, cols//2 - 50)
-        attack_screen = curses.newwin(12, cols//2, rows//2, cols//2 - 50)
+    if cols > 70:
+        attack_box = curses.newwin(12, cols - 10, rows//2 - 12, 5)
+        attack_screen = curses.newwin(12, cols - 10, rows//2, 5)
         gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
         gps_sats = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2)
     else:
@@ -72,15 +72,15 @@ def main(stdscr):
             main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
         if globals.attack_menu: 
             if cols < 70:
-                attack_scr.draw_attack_screen(attack_box, stdscr, cols//2, 12)
+                attack_scr.draw_attack_screen(attack_box, stdscr, cols - 10, 12)
                 if globals.send_deauth:
-                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols//2, min(rows - 22, 12))
+                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols - 10, min(rows - 22, 12))
                 elif globals.send_beacon:
-                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols//2)
+                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols - 10)
                 elif globals.send_auth:
-                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols//2)
+                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols - 10)
                 elif globals.oui_checker:
-                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols//2,  min(rows - 22, 12))
+                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
             else:
                 attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, 12)
                 if globals.send_deauth:
@@ -166,15 +166,15 @@ if not globals.larp_mode:
     if gps_thread:
         globals.gps.stop()
     scanner.stop()
-print(f"BSSIDS: {globals.l_bssids}\n")
-print(f"SSIDS: {globals.l_ssids}\n")
-print(f"SECURITY: {globals.l_sec}")
-print(f"Clients: {globals.clients}")
-print(f"Channels: {globals.l_channels}")
-# print(f"Selected client: {globals.selected_client}")
-# if os.path.exists(os.path.expanduser("~/output-01.csv")):
-#     os.remove(os.path.expanduser("~/output-01.csv"))
-# print("\nGPS class data:")
-# for key, value in vars(globals.gps).items():
-#     print(f"{key}: {value}")
-print(f"COLS: {cols} ROWS: {rows}")
+# print(f"BSSIDS: {globals.l_bssids}\n")
+# print(f"SSIDS: {globals.l_ssids}\n")
+# print(f"SECURITY: {globals.l_sec}")
+# print(f"Clients: {globals.clients}")
+# print(f"Channels: {globals.l_channels}")
+# # print(f"Selected client: {globals.selected_client}")
+# # if os.path.exists(os.path.expanduser("~/output-01.csv")):
+# #     os.remove(os.path.expanduser("~/output-01.csv"))
+# # print("\nGPS class data:")
+# # for key, value in vars(globals.gps).items():
+# #     print(f"{key}: {value}")
+# print(f"COLS: {cols} ROWS: {rows}")
