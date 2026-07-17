@@ -11,15 +11,15 @@ import get_networks as get_networks
 import screen.main_tui as main_tui
 import screen.attack_scr as attack_scr
 import screen.sniffer_scr as sniff_scr
-import screen.gps_screen as gps_scr
+import screen.gps_screen as gps_scr                                 
 import handle_input
 import attacks.OUI_checker as oui
 import attacks.wigle_csv_saver as saver
 import attacks.gps_tracker as tracker
 import globals
 
-
 def main(stdscr):
+    global rows, cols 
     rows, cols = stdscr.getmaxyx()
     curses.start_color()
     curses.use_default_colors()
@@ -37,13 +37,21 @@ def main(stdscr):
     curses.init_pair(9, curses.COLOR_GREEN,  curses.COLOR_GREEN)  # green bar — unchanged, solid fill needs to stay green
 
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
-    attack_box = curses.newwin(12, 50, int((rows - 10)//2)-11, int((cols - 50)//2))
-    attack_screen = curses.newwin(15, 50, int((rows-10)//2), int((cols - 50)//2))
+    if cols > 100:
+        attack_box = curses.newwin(12, cols//2, rows//2 - 12, cols//2 - 50)
+        attack_screen = curses.newwin(12, cols//2, rows//2, cols//2 - 50)
+        gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
+        gps_sats = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2)
+    else:
+        attack_box = curses.newwin(12, cols - 10, 2, 5)
+        attack_screen = curses.newwin(min(rows - 22, 12), cols-10, 14, 5)
+        gps_info = curses.newwin(17, 38, 2, cols//2 - 19)
+        gps_sats = curses.newwin(min(rows - 22, 17), 38, 19, cols//2- 19) 
+
     status = curses.newwin(1, cols-1, rows - 3, 1)
     title = curses.newwin(1, cols - 1, 0, 1)
     input_info = curses.newwin(1, cols - 1, rows - 1, 1)
-    gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
-    gps_sats = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2)
+   
     def draw_title():
         title.attron(curses.color_pair(1))
         title.addstr(0, 1, "NETWORK SCANNING AND PENETRATION TESTING TOOL".center(cols - 3))
@@ -54,16 +62,8 @@ def main(stdscr):
         input_info.attroff(curses.color_pair(1))
     def draw_status():
         status.attron(curses.color_pair(1))
-        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s lat: {round(globals.gps.lat,4)} lon: {round(globals.gps.lon,4)}".ljust(cols - 7))
+        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s lat: {round(globals.gps.lat,2)} lon: {round(globals.gps.lon,2)}".ljust(cols - 7))
         status.attroff(curses.color_pair(1))
-
-    stdscr.noutrefresh()
-    status.noutrefresh()
-    input_info.noutrefresh()
-    title.noutrefresh()
-    main_box.noutrefresh()
-    curses.doupdate()
-
     
     while not globals.quit_app:
 
@@ -71,24 +71,35 @@ def main(stdscr):
         if not globals.sniff_packets:
             main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
         if globals.attack_menu: 
-            attack_scr.draw_attack_screen(attack_box, stdscr)
-            if globals.send_deauth:
-                attack_scr.draw_deauth_screen(attack_screen, stdscr)
-            elif globals.send_beacon:
-                attack_scr.draw_beacon_screen(attack_screen, stdscr)
-            elif globals.send_auth:
-                attack_scr.draw_auth_screen(attack_screen,stdscr)
-            elif globals.oui_checker:
-                attack_scr.draw_oui_screen(attack_screen, stdscr)
+            if cols < 70:
+                attack_scr.draw_attack_screen(attack_box, stdscr, cols//2, 12)
+                if globals.send_deauth:
+                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols//2, min(rows - 22, 12))
+                elif globals.send_beacon:
+                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols//2)
+                elif globals.send_auth:
+                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols//2)
+                elif globals.oui_checker:
+                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols//2,  min(rows - 22, 12))
+            else:
+                attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, 12)
+                if globals.send_deauth:
+                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols -10, 12)
+                elif globals.send_beacon:
+                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols -10)
+                elif globals.send_auth:
+                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols -10)
+                elif globals.oui_checker:
+                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, 12)
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         elif globals.det_gps:
             gps_scr.draw_gps(gps_info)
             gps_scr.draw_satelite_info(gps_sats)
-
-        draw_input_info()
         draw_status()
-        draw_title()
+        if cols > 100:
+            draw_input_info()
+            draw_title()
         
         stdscr.noutrefresh()
         main_box.noutrefresh()
@@ -155,14 +166,15 @@ if not globals.larp_mode:
     if gps_thread:
         globals.gps.stop()
     scanner.stop()
-# print(f"BSSIDS: {globals.l_bssids}\n")
-# print(f"SSIDS: {globals.l_ssids}\n")
-# print(f"SECURITY: {globals.l_sec}")
-# print(f"Clients: {globals.clients}")
-# print(f"Channels: {globals.l_channels}")
+print(f"BSSIDS: {globals.l_bssids}\n")
+print(f"SSIDS: {globals.l_ssids}\n")
+print(f"SECURITY: {globals.l_sec}")
+print(f"Clients: {globals.clients}")
+print(f"Channels: {globals.l_channels}")
 # print(f"Selected client: {globals.selected_client}")
 # if os.path.exists(os.path.expanduser("~/output-01.csv")):
 #     os.remove(os.path.expanduser("~/output-01.csv"))
 # print("\nGPS class data:")
 # for key, value in vars(globals.gps).items():
 #     print(f"{key}: {value}")
+print(f"COLS: {cols} ROWS: {rows}")
