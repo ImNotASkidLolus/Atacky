@@ -34,7 +34,7 @@ class BeaconSpam:
         ssids = []
         while len(ssids) < 20:
             random_num = random.randrange(1,30)
-            random_space = "=" * random_num
+            random_space = " " * random_num
             new_ssid = globals.selected_ssid + random_space
             if new_ssid in ssids:
                 pass
