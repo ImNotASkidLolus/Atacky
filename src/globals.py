@@ -19,7 +19,7 @@ packets = []
 gps = None
 csv_saver = None
 fix = 0
-
+bc = 0
 proc = None
 stop_scan = False
 lock = threading.Lock()

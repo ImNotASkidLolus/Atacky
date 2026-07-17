@@ -2,7 +2,6 @@ import scapy.all as scapy
 import globals
 import time 
 import threading
-import random
 class BeaconSpam:
     def __init__(self):
         self.IFACE = globals.interface
@@ -12,7 +11,7 @@ class BeaconSpam:
     def stop(self):
         self._stop_event.set()
     def build_beacon_packet(self,ssid:str, channel):
-        rand_mac = str(scapy.RandMac())
+        rand_mac = str(scapy.RandMAC())
         packet = (
             scapy.RadioTap()/
             scapy.Dot11(type=0, subtype=8,
@@ -50,5 +49,7 @@ class BeaconSpam:
                 pkt = self.build_beacon_packet(ssid, self.channel)
                 scapy.sendp(pkt, iface=self.IFACE, verbose=False)
                 time.sleep(0.1)
+                globals.bc += 1
             except Exception as e:
+                print(e)
                 time.sleep(0.1)                

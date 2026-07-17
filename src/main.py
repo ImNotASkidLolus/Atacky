@@ -178,3 +178,4 @@ if not globals.larp_mode:
 # # for key, value in vars(globals.gps).items():
 # #     print(f"{key}: {value}")
 # print(f"COLS: {cols} ROWS: {rows}")
+print(globals.bc)
