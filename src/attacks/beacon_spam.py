@@ -56,7 +56,7 @@ class BeaconSpam:
                     self.next_channel()
                     self.counter = 1
                 pkt = self.build_beacon_packet(ssid, self.channel)
-                scapy.sendp(pkt, iface=self.IFACE, verbose=False, loop=2, interval=0.1)
+                scapy.sendp(pkt, iface=self.IFACE, verbose=False, loop=2,inter=0.1)
                 globals.bc += 1
             except Exception as e:
                 print(e)
