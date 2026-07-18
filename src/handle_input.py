@@ -138,6 +138,7 @@ def handle_input(key, stdscr):
                 globals.beacon_sp.stop()
                 globals.beacon_thread = None
                 globals.beacon_sp = None
+                
             stdscr.clear()
         elif globals.send_auth:
             globals.send_auth = False
@@ -193,6 +194,7 @@ def handle_input(key, stdscr):
                     globals.beacon_sp = beacon_spam.BeaconSpam()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_beacon_spam, daemon=True)
                     globals.beacon_thread.start()
+                    globals.proc.terminate()
                 else:
                     pass
             elif globals.selected_row == 3 and not globals.send_beacon and not globals.send_deauth:

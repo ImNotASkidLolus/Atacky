@@ -66,40 +66,41 @@ class get_networks:
         filepath = os.path.expanduser("~/output-01.csv")
         while not self._event_stop.is_set():
             try:
-                if globals.proc:
-                    globals.proc.terminate()
-                    globals.proc.wait()
-                if not globals.stop_scan:
-                    globals.proc = self.run_airodump(globals.interface, globals.channel)
-                elif globals.attack_menu and not globals.guided_deauth:
-                    globals.proc = self.run_airodump(globals.interface, channel=globals.channel, bssid=globals.selected_bssid)
-                if globals.proc:
-                    globals.retry_time_left = 10
-                    for _ in range(10):
-                        time.sleep(1)
-                        globals.retry_time_left -=1
-                    globals.proc.terminate()
-                    globals.proc.wait()
-                    if not globals.stop_scan:
-                        ssids, bssids, sec, channels = self.parse_csv(filepath)
-                        with globals.lock:
-                            globals.l_bssids = bssids
-                            globals.l_ssids = ssids
-                            globals.l_sec = sec
-                            globals.l_channels = channels
-                    elif globals.attack_menu and not globals.guided_deauth:
-                        clients = self.parse_clients_csv(filepath)
-                        with globals.lock:
-                            globals.clients = clients
-                    if os.path.exists(filepath):
-                        os.remove(filepath)
-                    if globals.fix:
-                        globals.csv_saver.log()
-                else:
+                if not globals.send_beacon:
                     if globals.proc:
                         globals.proc.terminate()
                         globals.proc.wait()
-                    time.sleep(1)
+                    if not globals.stop_scan:
+                        globals.proc = self.run_airodump(globals.interface, globals.channel)
+                    elif globals.attack_menu and not globals.guided_deauth:
+                        globals.proc = self.run_airodump(globals.interface, channel=globals.channel, bssid=globals.selected_bssid)
+                    if globals.proc:
+                        globals.retry_time_left = 10
+                        for _ in range(10):
+                            time.sleep(1)
+                            globals.retry_time_left -=1
+                        globals.proc.terminate()
+                        globals.proc.wait()
+                        if not globals.stop_scan:
+                            ssids, bssids, sec, channels = self.parse_csv(filepath)
+                            with globals.lock:
+                                globals.l_bssids = bssids
+                                globals.l_ssids = ssids
+                                globals.l_sec = sec
+                                globals.l_channels = channels
+                        elif globals.attack_menu and not globals.guided_deauth:
+                            clients = self.parse_clients_csv(filepath)
+                            with globals.lock:
+                                globals.clients = clients
+                        if os.path.exists(filepath):
+                            os.remove(filepath)
+                        if globals.fix:
+                            globals.csv_saver.log()
+                    else:
+                        if globals.proc:
+                            globals.proc.terminate()
+                            globals.proc.wait()
+                        time.sleep(1)
             except Exception:
                 globals.proc.terminate()
                 time.sleep(1)

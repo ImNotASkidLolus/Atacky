@@ -2,19 +2,19 @@ import scapy.all as scapy
 import globals
 import time 
 import threading
-import get_networks as get_networks
+import subprocess
+
 class BeaconSpam:
     def __init__(self):
         self.IFACE = globals.interface
         self._stop_event = threading.Event()
         self.channel = 1
         self.counter = 1
-        self.channel_switcher = get_networks.get_networks()
         self.start_time = 0
     def stop(self):
         self._stop_event.set()
     def build_beacon_packet(self,ssid:str, channel):
-        ts = (self.start_time - time.time_ns())//1000
+        ts = (time.time_ns() - self.start_time)//1000
         rand_mac = str(scapy.RandMAC())
         packet = (
             scapy.RadioTap()/
@@ -40,9 +40,10 @@ class BeaconSpam:
     def next_channel(self):
         if self.channel < 13:
             self.channel+=1
-            proc = self.channel_switcher.run_airodump(interface=globals.interface, channel=self.channel)
-            time.sleep(0.5)
-            proc.terminate()
+            try:
+                subprocess.run(["iw", "dev", self.IFACE, "set", "channel", str(self.channel)], check=True)
+            except Exception as e:
+                print(f"Failed to set channel via iw: {e}")
         else:
             self.channel = 1
     def start_beacon_spam(self):
@@ -56,7 +57,8 @@ class BeaconSpam:
                     self.next_channel()
                     self.counter = 1
                 pkt = self.build_beacon_packet(ssid, self.channel)
-                scapy.sendp(pkt, iface=self.IFACE, verbose=False, loop=2,inter=0.1)
+                for i in range(2):
+                    scapy.sendp(pkt, iface=self.IFACE, verbose=False, inter=0.1)
                 globals.bc += 1
             except Exception as e:
                 print(e)
