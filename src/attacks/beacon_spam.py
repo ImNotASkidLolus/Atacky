@@ -2,12 +2,14 @@ import scapy.all as scapy
 import globals
 import time 
 import threading
+import get_networks as get_networks
 class BeaconSpam:
     def __init__(self):
         self.IFACE = globals.interface
         self._stop_event = threading.Event()
         self.channel = 1
         self.counter = 1
+        self.channel_switcher = get_networks.get_networks()
     def stop(self):
         self._stop_event.set()
     def build_beacon_packet(self,ssid:str, channel):
@@ -36,14 +38,18 @@ class BeaconSpam:
     def next_channel(self):
         if self.channel < 13:
             self.channel+=1
+            proc = self.channel_switcher.run_airodump(interface=globals.interface, channel=self.channel)
+            time.sleep(0.5)
+            proc.terminate()
         else:
             self.channel = 1
     def start_beacon_spam(self):
+        self.next_channel()
         while not self._stop_event.is_set() and not globals.larp_mode:
             try:
                 ssid = globals.selected_ssid + str(self.counter)
                 self.counter +=1
-                if self.counter > 9999:
+                if self.counter > 20:
                     self.next_channel()
                     self.counter = 1
                 pkt = self.build_beacon_packet(ssid, self.channel)

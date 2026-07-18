@@ -7,7 +7,7 @@ import os
 import threading 
 import curses
 import argparse
-import get_networks as get_networks
+import attacks.get_networks as get_networks
 import screen.main_tui as main_tui
 import screen.attack_scr as attack_scr
 import screen.sniffer_scr as sniff_scr
