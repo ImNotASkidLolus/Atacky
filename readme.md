@@ -6,6 +6,8 @@
 * `MAC ADDRESS OUI LOOKUP`
 * `WARDRIVING`
 * `PACKET SNIFFING`
+* `HANDSHAKE CAPTURE`
+
 ## Necessary dependecies
 ### For the app to launch you need:
 * `scapy` 
