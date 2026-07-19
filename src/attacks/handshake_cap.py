@@ -22,7 +22,6 @@ class capture:
     def stop(self):
         self._stop.set()
     def check_packet(self, p):
-    # Since the BPF filter only lets target traffic through, save everything immediately!
         self.found_packets.append(p)
         
         if p.haslayer("EAPOL"):
@@ -33,13 +32,11 @@ class capture:
             else:
                 self.to_frames += 1    # AP -> CLI
             
-            # Trigger the buffer window on baseline traffic detection
             if self.to_frames >= 4 and self.from_frames >= 4:
                 if not self.found_handshake:
                     self.found_handshake = True
                     self.start_buffer_time = time.time()
 
-        # Manage the graceful exit window
         if self.found_handshake:
             if time.time() - self.start_buffer_time > 5.0:
                 return True
