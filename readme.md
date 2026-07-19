@@ -43,9 +43,14 @@ While on the main screen every `10s` it refreshes the found networks. By pressin
 * pressing `t` shows a detailed gps info
 * pressing `q` or `CTRL+c` quits the app
 * pressing `g` while in deauth mode allows to deauth a chosen device
+### You don't have a GPS module?
+For this app to work it's not necessary to have a GPS module, but it's highly recomended. If you want to buy one that you know that works here is a link you can use to find a suitable module:
+
+https://www.amazon.pl/dp/B07F6Y6DPT?ref=ppx_yo2ov_dt_b_fed_asin_title
+
 ## IMAGES
 <p float="left">
-    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="35%">
-    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="35%">
-    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="35%">
+    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
 </p>
