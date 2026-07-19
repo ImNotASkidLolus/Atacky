@@ -98,7 +98,6 @@ def draw_handshake_cap_screen(box, width, height):
     box.addstr(1,1, "HANDSHAKE CAPTURE".center(width -2), curses.color_pair(1))
     if globals.handshake_capture.found_handshake:
         box.addstr(2, 1, "HANDSHAKE FOUND!".center(width -2), curses.color_pair(1))
-        time.sleep(3)
         globals.handshake_sniff = False
         if globals.handshake_thread:
             globals.handshake_capture.stop()
