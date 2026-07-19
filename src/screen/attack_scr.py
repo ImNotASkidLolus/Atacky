@@ -1,6 +1,7 @@
 import curses
 import globals
 import attacks.OUI_checker as oui
+import time
 
 def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
     attack_box.erase()
@@ -24,11 +25,15 @@ def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
         attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(1))
     else:
         attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(4))
-    if globals.clients is None or globals.clients == []:
-        attack_box.addstr(7,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
-        attack_box.addstr(8, 1, f"Retrying in {globals.retry_time_left}s")
+    if globals.selected_row == 5:
+        attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(1))
     else:
-        attack_box.addstr(7,1, "Clients for this network FOUND!", curses.color_pair(4))        
+        attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(4))
+    if globals.clients is None or globals.clients == []:
+        attack_box.addstr(8,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
+        attack_box.addstr(9, 1, f"Retrying in {globals.retry_time_left}s")
+    else:
+        attack_box.addstr(8,1, "Clients for this network FOUND!", curses.color_pair(4))        
     attack_box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width - 2), curses.color_pair(1))
 
 def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
@@ -85,3 +90,19 @@ def draw_oui_screen(attack_box, stdscr, width, height):
             except curses.error:
                 break
     attack_box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width -2), curses.color_pair(1))
+def draw_handshake_cap_screen(box, width, height):
+    box.erase()
+    box.attron(curses.color_pair(2))
+    box.box()
+    box.attroff(curses.color_pair(2))
+    box.addstr(1,1, "HANDSHAKE CAPTURE".center(width -2), curses.color_pair(1))
+    if globals.handshake_capture.found_handshake:
+        box.addstr(2, 1, "HANDSHAKE FOUND!".center(width -2), curses.color_pair(1))
+        time.sleep(3)
+        globals.handshake_sniff = False
+        if globals.handshake_thread:
+            globals.handshake_capture.stop()
+            globals.handshake_thread = None
+    else:
+         box.addstr(2, 1, "HANDSHAKE NOT FOUND!".center(width -2), curses.color_pair(1))
+    box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width -2), curses.color_pair(1))

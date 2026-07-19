@@ -81,6 +81,8 @@ def main(stdscr):
                     attack_scr.draw_auth_screen(attack_screen,stdscr, cols - 10)
                 elif globals.oui_checker:
                     attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
+                elif globals.handshake_sniff:
+                    attack_scr.draw_handshake_cap_screen(attack_screen, cols - 10, min(rows-22, 12))
             else:
                 attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, 12)
                 if globals.send_deauth:
@@ -91,6 +93,8 @@ def main(stdscr):
                     attack_scr.draw_auth_screen(attack_screen,stdscr, cols -10)
                 elif globals.oui_checker:
                     attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, 12)
+                elif globals.handshake_sniff:
+                    attack_scr.draw_handshake_cap_screen(attack_screen, cols- 10, 12)
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         elif globals.det_gps:
@@ -165,6 +169,8 @@ if not globals.larp_mode:
         globals.sniff.stop()
     if gps_thread:
         globals.gps.stop()
+    if globals.handshake_thread:
+        globals.handshake_capture.stop()
     scanner.stop()
 # print(f"BSSIDS: {globals.l_bssids}\n")
 # print(f"SSIDS: {globals.l_ssids}\n")

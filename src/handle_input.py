@@ -1,4 +1,4 @@
-from attacks import authattack, beacon_spam, deauth as deauth
+from attacks import authattack, beacon_spam, deauth as deauth, handshake_cap as handshake
 import globals
 import threading
 import curses
@@ -127,43 +127,50 @@ def handle_input(key, stdscr):
         if globals.send_deauth:
             globals.send_deauth = False
             globals.guided_deauth = False
+            globals.started_attack = False
             if globals.deauth_attack is not None:
                 globals.deauth_attack.stop()
                 globals.deauth_thread = None
                 globals.deauth_attack = None
-            stdscr.clear()
         elif globals.send_beacon:
             globals.send_beacon = False
+            globals.started_attack = False
             if globals.beacon_sp is not None:
                 globals.beacon_sp.stop()
                 globals.beacon_thread = None
                 globals.beacon_sp = None
-                
-            stdscr.clear()
         elif globals.send_auth:
             globals.send_auth = False
+            globals.started_attack = False
             if globals.auth_attack is not None:
                 globals.auth_attack.stop()
                 globals.auth_thread = None
                 globals.auth_attack = None
-            stdscr.clear()
         elif globals.oui_checker:
             globals.oui_checker = False
+            globals.started_attack = False
         elif globals.attack_menu:
             globals.attack_menu = False
             globals.selected_ssid = None
             globals.selected_bssid = None
             globals.clients = ""
+            globals.started_attack = False
             globals.selected_row = 2
             if globals.proc:
                 globals.proc.terminate()
-            stdscr.clear()
         elif globals.sniff_packets:
+            globals.started_attack = False
             globals.sniff_packets = False
             globals.sniff.stop()
             globals.sniff_thread = None
         elif globals.det_gps:
             globals.det_gps = False
+        elif globals.handshake_sniff:
+            globals.handshake_sniff = False
+            globals.started_attack = False
+            globals.handshake_capture.stop()
+            globals.handshake_thread = None
+            globals.handshake_capture = None
         stdscr.clear()
         
     elif key in (curses.KEY_ENTER, 10, 13):
@@ -179,38 +186,50 @@ def handle_input(key, stdscr):
                     globals.retry_time_left = 10
                     globals.attack_menu = True
         elif globals.attack_menu and not globals.guided_deauth:
-            if globals.selected_row == 1 and not globals.send_auth and not globals.send_beacon:
+            if globals.selected_row == 1 and not globals.started_attack:
                 if globals.clients and (globals.deauth_thread is None or not globals.deauth_thread.is_alive()):
                     if not globals.guided_deauth:
                         globals.send_deauth = True
+                        globals.started_attack = True
                         globals.deauth_attack = deauth.DeauthAttack()
                         globals.deauth_thread = threading.Thread(target=globals.deauth_attack.start_deauth, daemon=True)
                         globals.deauth_thread.start()
                 else:
                     pass
-            elif globals.selected_row == 2 and not globals.send_auth and not globals.send_deauth:
+            elif globals.selected_row == 2 and not globals.started_attack:
                 if not globals.send_beacon and (globals.beacon_thread is None or not globals.beacon_thread.is_alive()):
                     globals.send_beacon = True
+                    globals.started_attack = True
                     globals.beacon_sp = beacon_spam.BeaconSpam()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_beacon_spam, daemon=True)
                     globals.beacon_thread.start()
                     globals.proc.terminate()
                 else:
                     pass
-            elif globals.selected_row == 3 and not globals.send_beacon and not globals.send_deauth:
+            elif globals.selected_row == 3 and not globals.started_attack:
                 if not globals.send_auth and (globals.auth_thread is None or not globals.auth_thread.is_alive()):
                     globals.send_auth = True
+                    globals.started_attack = True
                     globals.auth_attack = authattack.auth_attack()
                     globals.auth_thread = threading.Thread(target=globals.auth_attack.start_auth_attack, daemon=True)
                     globals.auth_thread.start()
-            elif globals.selected_row == 4 and not globals.send_deauth and not globals.send_auth and not globals.send_beacon:
+            elif globals.selected_row == 4 and not globals.started_attack:
                 if not globals.oui_checker:
                     globals.oui_checker = True
+                    globals.started_attack = True
+            elif globals.selected_row == 5 and not globals.started_attack: 
+                if not globals.handshake_sniff and (globals.handshake_thread is None or not globals.handshake_thread.is_alive()):
+                    globals.started_attack = True
+                    globals.handshake_sniff = True
+                    globals.handshake_capture = handshake.capture()
+                    globals.handshake_thread = threading.Thread(target=globals.handshake_capture.capture_handshakes, daemon=True)
+                    globals.handshake_thread.start()
         elif globals.guided_deauth and globals.send_deauth:
             for i in range(min(10, len(globals.clients))):
                 if i + 1 == globals.selected_client_row:
                     globals.selected_client = globals.clients[i]
                     globals.send_deauth = True
+                    globals.started_attack = True
                     globals.deauth_attack = deauth.DeauthAttack()
                     globals.deauth_thread = threading.Thread(target=globals.deauth_attack.start_deauth, daemon=True)
                     globals.deauth_thread.start()
