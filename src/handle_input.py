@@ -110,7 +110,7 @@ def handle_input(key, stdscr):
     elif key == curses.KEY_DOWN:
         with globals.lock:
             if globals.attack_menu and not globals.guided_deauth:
-                if globals.selected_row < 4:
+                if globals.selected_row < 5:
                     globals.selected_row += 1
             if globals.guided_deauth and not globals.selected_client:
                 if globals.selected_client_row < max(1, len(globals.clients)):
