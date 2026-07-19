@@ -101,7 +101,7 @@ def main(stdscr):
             gps_scr.draw_gps(gps_info)
             gps_scr.draw_satelite_info(gps_sats)
         draw_status()
-        if cols > 100:
+        if cols > 90:
             draw_input_info()
             draw_title()
         

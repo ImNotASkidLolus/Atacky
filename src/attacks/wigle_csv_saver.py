@@ -28,7 +28,7 @@ class csv_saver:
         for bssid, essid, channel, privacy in zip(globals.l_bssids, globals.l_ssids, globals.l_channels, globals.l_sec):
             if bssid in self.seen:
                 continue
-            if globals.gps.lat is 0:
+            if globals.gps.lat == 0:
                 return
             with globals.lock:
                 if bssid in self.seen:

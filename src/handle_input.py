@@ -154,6 +154,12 @@ def handle_input(key, stdscr):
         elif globals.oui_checker:
             globals.oui_checker = False
             globals.started_attack = False
+        elif globals.handshake_sniff:
+            globals.handshake_sniff = False
+            globals.started_attack = False
+            globals.handshake_capture.stop()
+            globals.handshake_thread = None
+            globals.handshake_capture = None
         elif globals.attack_menu:
             globals.attack_menu = False
             globals.selected_ssid = None
@@ -170,12 +176,7 @@ def handle_input(key, stdscr):
             globals.sniff_thread = None
         elif globals.det_gps:
             globals.det_gps = False
-        elif globals.handshake_sniff:
-            globals.handshake_sniff = False
-            globals.started_attack = False
-            globals.handshake_capture.stop()
-            globals.handshake_thread = None
-            globals.handshake_capture = None
+        
         stdscr.clear()
         
     elif key in (curses.KEY_ENTER, 10, 13):
