@@ -109,9 +109,7 @@ def main(stdscr):
         main_box.noutrefresh()
         if globals.attack_menu:
             attack_box.noutrefresh()
-            if globals.send_deauth or globals.send_beacon or globals.send_auth:
-                attack_screen.noutrefresh()
-            elif globals.oui_checker:
+            if globals.send_deauth or globals.send_beacon or globals.send_auth or globals.oui_checker or globals.handshake_sniff:
                 attack_screen.noutrefresh()
         elif globals.det_gps:
             gps_info.noutrefresh()
