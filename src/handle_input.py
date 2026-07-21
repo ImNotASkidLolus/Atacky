@@ -96,12 +96,13 @@ def handle_input(key, stdscr):
             globals.det_gps = False
     elif key == curses.KEY_UP:
         with globals.lock:
-            if globals.attack_menu and not globals.guided_deauth:
-                if globals.selected_row == 1:
-                    globals.selected_row = 5
-                elif globals.selected_row > 1:
-                    globals.selected_row -= 1
-            if globals.guided_deauth and not globals.selected_client:
+            if not globals.started_attack:
+                if globals.attack_menu and not globals.guided_deauth:
+                    if globals.selected_row == 1:
+                        globals.selected_row = 5
+                    elif globals.selected_row > 1:
+                        globals.selected_row -= 1
+            elif globals.guided_deauth and not globals.selected_client:
                 if globals.selected_client_row > 1:
                     globals.selected_client_row -= 1
         if globals.selected_row > 1 and not globals.attack_menu:
@@ -111,13 +112,13 @@ def handle_input(key, stdscr):
                 globals.scroll_delay += 0.1
     elif key == curses.KEY_DOWN:
         with globals.lock:
-            if globals.attack_menu and not globals.guided_deauth:
-                if globals.selected_row == 5:
-                    globals.selected_row = 1
-                elif globals.selected_row < 5:
-                    globals.selected_row += 1
-                    
-            if globals.guided_deauth and not globals.selected_client:
+            if not globals.started_attack:
+                if globals.attack_menu and not globals.guided_deauth:
+                    if globals.selected_row == 5:
+                        globals.selected_row = 1
+                    elif globals.selected_row < 5:
+                        globals.selected_row += 1        
+            elif globals.guided_deauth and not globals.selected_client:
                 if globals.selected_client_row < max(1, len(globals.clients)):
                     globals.selected_client_row += 1
         if globals.selected_row <= max(1, len(globals.l_ssids)) and not globals.attack_menu:
