@@ -45,8 +45,8 @@ def main(stdscr):
     else:
         attack_box = curses.newwin(12, cols - 10, 2, 5)
         attack_screen = curses.newwin(min(rows - 22, 12), cols-10, 14, 5)
-        gps_info = curses.newwin(17, 38, 2, cols//2 - 19)
-        gps_sats = curses.newwin(min(rows - 22, 17), 38, 19, cols//2- 19) 
+        gps_info = curses.newwin(17, 38, 3, cols//2 - 19)
+        gps_sats = curses.newwin(min(rows - 22, 17), 38, 20, cols//2- 19) 
 
     status = curses.newwin(1, cols-1, rows - 3, 1)
     title = curses.newwin(1, cols - 1, 0, 1)
