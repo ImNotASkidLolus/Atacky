@@ -3,6 +3,7 @@ import globals
 
 def draw_gps(main_box):
     try:
+        main_box.erase()
         head, bear = "N/A", "N/A"
         if globals.fix and not globals.larp_mode:
             if globals.gps.country_name == "Not found":
@@ -47,7 +48,8 @@ def draw_gps(main_box):
     except Exception as e:
         print("Error printing too screen, perhaps your terminal is too small :( main")
         print(e)
-def draw_satelite_info(found_satelites_box:curses.window):
+def draw_satelite_info(found_satelites_box:curses.window, height):
+        found_satelites_box.erase()
         try:
             found_satelites_box.attron(curses.color_pair(2))
             found_satelites_box.box()
@@ -72,7 +74,7 @@ def draw_satelite_info(found_satelites_box:curses.window):
                         found_satelites_box.addstr(i, 12 + len("SNR: "), f"{int(snr)}dB  ", curses.color_pair(4))
                         found_satelites_box.addstr(i, 24, f"USED: ",curses.color_pair(3))
                         found_satelites_box.addstr(i, 24 + len("used: "), f"{used}",curses.color_pair(4))
-                        if i < 15:
+                        if i < height - 2:
                             i = i+1
                         else:
                             i = 2

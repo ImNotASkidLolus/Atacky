@@ -99,7 +99,7 @@ def main(stdscr):
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         elif globals.det_gps:
             gps_scr.draw_gps(gps_info)
-            gps_scr.draw_satelite_info(gps_sats)
+            gps_scr.draw_satelite_info(gps_sats, min(rows-22, 17))
         draw_status()
         if cols > 90:
             draw_input_info()
