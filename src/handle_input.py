@@ -210,7 +210,8 @@ def handle_input(key, stdscr):
                     globals.beacon_sp = beacon_spam.BeaconSpam()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_beacon_spam, daemon=True)
                     globals.beacon_thread.start()
-                    globals.proc.terminate()
+                    if not globals.larp_mode:
+                        globals.proc.terminate()
                 else:
                     pass
             elif globals.selected_row == 3 and not globals.started_attack:
