@@ -210,6 +210,7 @@ def handle_input(key, stdscr):
                     globals.pwngrid_thread = None
             globals.selected_misc_attack = "None"
         elif globals.misceleaneous:
+            globals.stop_scan = False
             globals.misceleaneous = False
         
         stdscr.clear()
