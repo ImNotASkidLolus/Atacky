@@ -7,6 +7,7 @@
 * `WARDRIVING`
 * `PACKET SNIFFING`
 * `HANDSHAKE CAPTURE`
+* `MISC ATTACKS`
 
 ## Necessary dependecies
 ### For the app to launch you need:
@@ -47,6 +48,7 @@ While on the main screen every `10s` it refreshes the found networks. By pressin
 * pressing `t` shows a detailed gps info
 * pressing `q` or `CTRL+c` quits the app
 * pressing `g` while in deauth mode allows to deauth a chosen device
+* pressing `m` while in the main menu shows misc attacks menu
 ### You don't have a GPS module?
 For this app to work it's not necessary to have a GPS module, but it's highly recomended. If you want to buy one that you know that works here is a link you can use to find a suitable module:
 
