@@ -7,6 +7,8 @@ class Sniffer:
         self._event_key = threading.Event()
     def stop(self):
         self._event_key.set()
+    def reset(self):
+        self._event_key = threading.Event()
     def __dynamic_stop(self):
         return self._event_key.is_set()
     

@@ -12,6 +12,8 @@ class BeaconSpam:
         self.counter = 1
     def stop(self):
         self._stop_event.set()
+    def reset(self):
+        self._stop_event = threading.Event()
     def build_beacon_packet(self,ssid:str):
         rand_mac = str(scapy.RandMAC())
         packet = (
@@ -54,4 +56,35 @@ class BeaconSpam:
                 scapy.sendp(pkt, iface=self.IFACE, verbose=0, inter=0.010, count=8)
             except Exception as e:
                 print(e)
-                time.sleep(0.1)                
+                time.sleep(0.1)
+    def start_rickroll(self):
+        self.next_channel()
+        while not self._stop_event.is_set() and not globals.larp_mode:
+            try:
+                ssids = ["Never gonna", "Give you up", "Never gonna", "Let you down"]
+                for ssid in ssids:
+                    pkt = self.build_beacon_packet(ssid)
+                    scapy.sendp(pkt, iface=self.IFACE, verbose=0)
+            except Exception as e:
+                print(e)
+                time.sleep(0.1)
+    def start_random(self):
+        self.next_channel()
+        while not self._stop_event.is_set() and not globals.larp_mode:
+            try:
+                ssids = ["TJcj8Cw8HV",
+                        "VGqLGgJKr1",
+                        "aazxCfiKlT",
+                        "JlhYEFRc42",
+                        "imBJCwEna0",
+                        "9OIXgqm5xm",
+                        "1OWdfAdH3m",
+                        "GYQykhfjnI",
+                        "TOiloyiiC5",
+                        "Iib7c4vLfJ"]
+                for ssid in ssids:
+                    pkt = self.build_beacon_packet(ssid)
+                    scapy.sendp(pkt, iface=self.IFACE, verbose=0)
+            except Exception as e:
+                print(e)
+                time.sleep(0.1)          

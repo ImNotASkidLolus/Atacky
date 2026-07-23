@@ -24,6 +24,8 @@ proc = None
 stop_scan = False
 lock = threading.Lock()
 
+selected_misc_attack = "None"
+
 selected_row = 2
 selected_client_row = 1
 
@@ -40,6 +42,8 @@ filter_packets = False
 det_gps = False
 started_attack = False
 handshake_sniff = False
+detect_pwnagotchi = False
+misceleaneous = False
 
 handshake_capture = None
 deauth_thread = None
@@ -52,6 +56,8 @@ ble_scan = None
 ble_thread = None
 sniff_thread = None
 handshake_thread = None
+pwngrid_detect = None
+pwngrid_thread = None
 sniff = None
 sniff_filter = ""
 retry_time_left = 10 #time in seconds for retrying the client and wifi network sniffs

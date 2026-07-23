@@ -21,6 +21,8 @@ class capture:
             print(f"Failed to set channel via iw: {e}")
     def stop(self):
         self._stop.set()
+    def reset(self):
+        self._stop = threading.Event()
     def check_packet(self, p):
         self.found_packets.append(p)
         

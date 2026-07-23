@@ -48,6 +48,8 @@ class gps_get():
         self._is_set = threading.Event()
     def stop(self):
         self._is_set.set()
+    def reset(self):
+        self._is_set = threading.Event()
     def get_fix(self):
         if not GPS_AVAILABLE:
             return "Error: GPS NOT FOUND!"

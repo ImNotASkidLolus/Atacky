@@ -1,9 +1,5 @@
 print("LOADING, PLEASE WAIT...")
 
-import sys
-
-
-import os
 import threading 
 import curses
 import argparse
@@ -39,12 +35,12 @@ def main(stdscr):
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
     if cols > 80:
         attack_box = curses.newwin(12, cols - 10, rows//2 - 12, 5)
-        attack_screen = curses.newwin(12, cols - 10, rows//2, 5)
+        attack_screen = curses.newwin(rows-22, cols - 10, rows//2, 5)
         gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
         gps_sats = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2)
     else:
         attack_box = curses.newwin(12, cols - 10, 2, 5)
-        attack_screen = curses.newwin(min(rows - 22, 12), cols-10, 14, 5)
+        attack_screen = curses.newwin(rows-22, cols-10, 14, 5)
         gps_info = curses.newwin(17, 38, 3, cols//2 - 19)
         gps_sats = curses.newwin(min(rows - 22, 17), 38, 20, cols//2- 19) 
 
@@ -70,31 +66,43 @@ def main(stdscr):
         key = stdscr.getch()
         if not globals.sniff_packets:
             main_tui.draw_main_box(main_box, stdscr, rows-2, cols-2)
-        if globals.attack_menu: 
+        if globals.attack_menu or globals.misceleaneous: 
             if cols < 80:
-                attack_scr.draw_attack_screen(attack_box, stdscr, cols - 10, 12)
-                if globals.send_deauth:
-                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols - 10, min(rows - 22, 12))
-                elif globals.send_beacon:
-                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols - 10)
-                elif globals.send_auth:
-                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols - 10)
-                elif globals.oui_checker:
-                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
-                elif globals.handshake_sniff:
-                    attack_scr.draw_handshake_cap_screen(attack_screen, cols - 10, min(rows-22, 12))
+                if globals.misceleaneous:
+                    attack_scr.draw_misceleaneous(attack_box, cols-10, 12)
+                    if globals.detect_pwnagotchi:
+                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
+                elif globals.attack_menu:
+                    attack_scr.draw_attack_screen(attack_box, stdscr, cols - 10, 12)
+                    if globals.send_deauth:
+                        attack_scr.draw_deauth_screen(attack_screen, stdscr, cols - 10, min(rows - 22, 12))
+                    elif globals.send_beacon:
+                        attack_scr.draw_beacon_screen(attack_screen, stdscr, cols - 10)
+                    elif globals.send_auth:
+                        attack_scr.draw_auth_screen(attack_screen,stdscr, cols - 10)
+                    elif globals.oui_checker:
+                        attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
+                    elif globals.handshake_sniff:
+                        attack_scr.draw_handshake_cap_screen(attack_screen, cols - 10, min(rows-22, 12))
+                    elif globals.detect_pwnagotchi:
+                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, min(rows-22, 12))
             else:
-                attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, 12)
-                if globals.send_deauth:
-                    attack_scr.draw_deauth_screen(attack_screen, stdscr, cols -10, 12)
-                elif globals.send_beacon:
-                    attack_scr.draw_beacon_screen(attack_screen, stdscr, cols -10)
-                elif globals.send_auth:
-                    attack_scr.draw_auth_screen(attack_screen,stdscr, cols -10)
-                elif globals.oui_checker:
-                    attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, 12)
-                elif globals.handshake_sniff:
-                    attack_scr.draw_handshake_cap_screen(attack_screen, cols- 10, 12)
+                if globals.misceleaneous:
+                    attack_scr.draw_misceleaneous(attack_box, cols-10, 12)
+                elif globals.attack_menu:
+                    attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, rows-22)
+                    if globals.send_deauth:
+                        attack_scr.draw_deauth_screen(attack_screen, stdscr, cols -10, rows-22)
+                    elif globals.send_beacon:
+                        attack_scr.draw_beacon_screen(attack_screen, stdscr, cols -10)
+                    elif globals.send_auth:
+                        attack_scr.draw_auth_screen(attack_screen,stdscr, cols -10)
+                    elif globals.oui_checker:
+                        attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, rows-22)
+                    elif globals.handshake_sniff:
+                        attack_scr.draw_handshake_cap_screen(attack_screen, cols- 10, rows-22)
+                    elif globals.detect_pwnagotchi:
+                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         elif globals.det_gps:
@@ -106,10 +114,11 @@ def main(stdscr):
             draw_title()
         
         stdscr.noutrefresh()
-        main_box.noutrefresh()
-        if globals.attack_menu:
+        if not globals.misceleaneous and not globals.attack_menu:
+            main_box.noutrefresh()
+        elif globals.attack_menu or globals.misceleaneous:
             attack_box.noutrefresh()
-            if globals.send_deauth or globals.send_beacon or globals.send_auth or globals.oui_checker or globals.handshake_sniff:
+            if globals.send_deauth or globals.send_beacon or globals.send_auth or globals.oui_checker or globals.handshake_sniff or globals.detect_pwnagotchi:
                 attack_screen.noutrefresh()
         elif globals.det_gps:
             gps_info.noutrefresh()
@@ -169,6 +178,8 @@ if not globals.larp_mode:
         globals.gps.stop()
     if globals.handshake_thread:
         globals.handshake_capture.stop()
+    if globals.pwngrid_detect:
+        globals.pwngrid_detect.stop()
     scanner.stop()
 # print(f"BSSIDS: {globals.l_bssids}\n")
 # print(f"SSIDS: {globals.l_ssids}\n")

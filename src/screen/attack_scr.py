@@ -2,6 +2,7 @@ import curses
 import globals
 import attacks.OUI_checker as oui
 import time
+import json
 
 def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
     attack_box.erase()
@@ -30,12 +31,35 @@ def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
     else:
         attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(4))
     if globals.clients is None or globals.clients == []:
-        attack_box.addstr(8,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
-        attack_box.addstr(9, 1, f"Retrying in {globals.retry_time_left}s")
+        attack_box.addstr(9,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
+        attack_box.addstr(10, 1, f"Retrying in {globals.retry_time_left}s")
     else:
-        attack_box.addstr(8,1, "Clients for this network FOUND!", curses.color_pair(4))        
+        attack_box.addstr(9,1, "Clients for this network FOUND!", curses.color_pair(4))        
     attack_box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width - 2), curses.color_pair(1))
-
+def draw_misceleaneous(box, width, height):
+    box.erase()
+    box.attron(curses.color_pair(2))
+    box.box()
+    box.attroff(curses.color_pair(2))
+    box.addstr(1,1, "MISCELEANOUS ATTACKS".center(width - 2), curses.color_pair(1))
+    if globals.selected_row == 1:
+        box.addstr(3, 1, "1. Detect pwnagotchis", curses.color_pair(1))
+    else:
+        box.addstr(3, 1, "1. Detect pwnagotchis", curses.color_pair(4))
+    if globals.selected_row == 2:
+        box.addstr(4,1, "2. Beacon spam(Rick roll)", curses.color_pair(1))
+    else: 
+        box.addstr(4,1, "2. Beacon spam(Rick roll)", curses.color_pair(4))
+    if globals.selected_row == 3:
+        box.addstr(5,1, "3. Beacon spam(Random)", curses.color_pair(1))
+    else:
+        box.addstr(5,1, "3. Beacon spam(Random)", curses.color_pair(4))
+    if globals.selected_row == 4:
+        box.addstr(6,1, "4. Deauth flood", curses.color_pair(1))
+    else:
+        box.addstr(6,1, "4. Deauth flood", curses.color_pair(4))
+                    
+    box.addstr(height -2, 1, f"Selected: {globals.selected_misc_attack}".center(width -2), curses.color_pair(1))
 def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
     attack_box.erase()
     attack_box.attron(curses.color_pair(2))
@@ -105,3 +129,23 @@ def draw_handshake_cap_screen(box, width, height):
     else:
          box.addstr(2, 1, "HANDSHAKE NOT FOUND!".center(width -2), curses.color_pair(1))
     box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width -2), curses.color_pair(1))
+def pwnagotchi_detect(box, width, height):
+    box.erase()
+    box.attron(curses.color_pair(2))
+    box.box()
+    box.attroff(curses.color_pair(2))
+    box.addstr(1,1, "PWNAGOTCHI DETECTION".center(width -2), curses.color_pair(1))
+    if globals.pwngrid_detect:
+        try:
+            for i, info in enumerate(globals.pwngrid_detect.pwnagotchis_found, start=1):
+                data = json.load(info)
+                if i > height - 2:
+                    break
+                if data:
+                    box.addstr(2 + i, 1, f"{i}. {data["name"]}")
+                
+        except curses.error:
+            pass
+    else:
+        box.addstr(3,1, "No pwnagotchis found yet :(".center(width-2), curses.color_pair(1))
+    

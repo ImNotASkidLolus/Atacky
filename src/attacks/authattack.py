@@ -9,6 +9,8 @@ class auth_attack():
         self.IFACE = globals.interface
     def stop(self):
         self._stop_event.set()
+    def reset(self):
+        self._stop_event = threading.Event()
     def build_auth_packet(self):
         rand_mac = scapy.RandMAC()
         packet = (scapy.RadioTap()/
