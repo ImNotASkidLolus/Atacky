@@ -41,7 +41,7 @@ def draw_main_box(main_box, stdscr, height, width):
                     main_box.addstr(i+1, 73, "│", curses.color_pair(2))
             else:
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
-                main_box.addstr(1, 1, "BSSID", curses.color_pair(1))
+                main_box.addstr(1, 1, "SSID", curses.color_pair(1))
                 main_box.addstr(1, int((5/6) * width) , "CHANNEL", curses.color_pair(1))
                 for i, (ssid, ch) in enumerate(small_data, start=1):
                     try:
