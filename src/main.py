@@ -105,7 +105,7 @@ def main(stdscr):
                         attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
-        elif globals.det_gps:
+        if globals.det_gps:
             gps_scr.draw_gps(gps_info)
             gps_scr.draw_satelite_info(gps_sats, min(rows-22, 17))
         draw_status()
@@ -120,7 +120,7 @@ def main(stdscr):
             attack_box.noutrefresh()
             if globals.send_deauth or globals.send_beacon or globals.send_auth or globals.oui_checker or globals.handshake_sniff or globals.detect_pwnagotchi:
                 attack_screen.noutrefresh()
-        elif globals.det_gps:
+        if globals.det_gps:
             gps_info.noutrefresh()
             gps_sats.noutrefresh()
         status.noutrefresh()
