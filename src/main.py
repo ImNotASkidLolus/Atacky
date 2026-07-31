@@ -1,4 +1,5 @@
 print("LOADING, PLEASE WAIT...")
+print("This should take about 10 seconds")
 
 import threading 
 import curses
