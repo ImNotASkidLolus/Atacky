@@ -66,23 +66,24 @@ class gps_get():
             try:
                 for _ in range(20):
                     report = self.session.next()
-                    if report['class'] == 'TPV': #looks for the TPV class data and updates the gps_get class
-                        globals.fix   = getattr(report, 'mode',  1)
-                        self.lat   = getattr(report, 'lat',   0)
-                        self.lon   = getattr(report, 'lon',   0)
-                        self.laterr = getattr(report, 'epy', "N/A")
-                        self.lonerr = getattr(report, 'epx', "N/A")
-                        self.alt   = getattr(report, 'alt',   "N/A")
-                        self.speed = getattr(report, 'speed', 0)
-                        self.speederr = getattr(report, 'eps', 0)
-                        self.time = getattr(report, 'time', datetime.datetime.now())
-                        self.timeerr = getattr(report, 'ept', "N/A")
-                        self.heading = getattr(report, 'track', 0)
-                        self.climb = getattr(report, 'climb', "N/A")
-                    elif report['class'] == 'SKY': #looks for the SKY class data and updates the gps_get class
-                        usat = getattr(report, 'uSat', None)
-                        nsat = getattr(report, 'nSat', None)
-                        satelites = getattr(report, 'satellites', [])
+                    r_class = report.get('class')
+                    if r_class == 'TPV': #looks for the TPV class data and updates the gps_get class
+                        globals.fix   = report.get('mode',  1)
+                        self.lat   = report.get('lat',   0)
+                        self.lon   = report.get('lon',   0)
+                        self.laterr = report.get('epy', "N/A")
+                        self.lonerr = report.get('epx', "N/A")
+                        self.alt   = report.get('altMSL',   report.get('alt', "N/A"))
+                        self.speed = report.get('speed', 0)
+                        self.speederr = report.get('eps', 0)
+                        self.time = report.get('time', datetime.datetime.now())
+                        self.timeerr = report.get('ept', "N/A")
+                        self.heading = report.get('track', 0)
+                        self.climb = report.get('climb', "N/A")
+                    elif r_class == 'SKY': #looks for the SKY class data and updates the gps_get class
+                        usat = report.get('uSat', None)
+                        nsat = report.get('nSat', None)
+                        satelites = report.get('satellites', [])
                         if nsat and usat != None:
                             self.nsat = nsat
                             self.usat = usat

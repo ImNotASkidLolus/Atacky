@@ -20,8 +20,6 @@ class csv_saver:
     def __init__(self, path):
         self.path = path
         self.seen = set()
-        if os.path.exists(self.path):
-            self.path += "1"
         with open(path, 'w', newline='') as f:
             f.write(','.join(WIGLE_HEADER) + '\n')
             w = csv.writer(f)

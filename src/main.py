@@ -84,11 +84,11 @@ def main(stdscr):
                         attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
                     elif globals.handshake_sniff:
                         attack_scr.draw_handshake_cap_screen(attack_screen, cols - 10, min(rows-22, 12))
-                    elif globals.detect_pwnagotchi:
-                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, min(rows-22, 12))
             else:
                 if globals.misceleaneous:
                     attack_scr.draw_misceleaneous(attack_box, cols-10, 12)
+                    if globals.detect_pwnagotchi:
+                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
                 elif globals.attack_menu:
                     attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, rows-22)
                     if globals.send_deauth:
@@ -101,8 +101,7 @@ def main(stdscr):
                         attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, rows-22)
                     elif globals.handshake_sniff:
                         attack_scr.draw_handshake_cap_screen(attack_screen, cols- 10, rows-22)
-                    elif globals.detect_pwnagotchi:
-                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
+                    
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         if globals.det_gps:
