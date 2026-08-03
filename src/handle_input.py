@@ -90,13 +90,13 @@ def handle_input(key, stdscr):
                 globals.deauth_thread = None
                 globals.deauth_attack = None
     elif key == ord('t') or key == ord('T') :
-        if not globals.det_gps and not globals.misceleaneous:
+        if not globals.det_gps and not globals.misceleaneous and not globals.attack_menu:
             globals.det_gps = True
         else:
             globals.det_gps = False
     elif key == ord('m') or key == ord('M'):
         stdscr.clear()
-        if not globals.misceleaneous:
+        if not globals.misceleaneous and not globals.attack_menu:
             globals.misceleaneous = True
             globals.stop_scan = True
         else:
