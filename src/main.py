@@ -32,18 +32,42 @@ def main(stdscr):
     curses.init_pair(6, curses.COLOR_BLACK,   curses.COLOR_CYAN)     # was yellow/white — now black on cyan, clean and readable
     curses.init_pair(8, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # line select text — unchanged, this one was already correct
     curses.init_pair(9, curses.COLOR_GREEN,   curses.COLOR_GREEN)    # green bar — unchanged, solid fill needs to stay green
+    if cols > 80:
+        att_sel_height = 14
+        att_sel_width = cols - 10
+        
+        att_screen_height = rows-22
+        att_screen_width = cols-10
+        
+        gps_in_height = 17
+        gps_in_width = cols//2
+        
+        gps_sat_height = 17
+        gps_sat_width = cols//2
+    else:
+        att_sel_height = 14
+        att_sel_width = cols - 10
+        
+        att_screen_height = max(rows - 22, 5)
+        att_screen_width = cols-10
+        
+        gps_in_height = 17
+        gps_in_width = 38
+        
+        gps_sat_height = max(rows - 22, 5)
+        gps_sat_width = 38
     
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
     if cols > 80:
-        attack_box = curses.newwin(12, cols - 10, rows//2 - 12, 5)
-        attack_screen = curses.newwin(rows-22, cols - 10, rows//2, 5)
-        gps_info = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2 - 38)
-        gps_sats = curses.newwin(17, 38, int((rows - 10)//2)-11, cols//2)
+        attack_sel = curses.newwin(att_sel_height, att_sel_width, rows//2 - 14, 5)
+        attack_screen = curses.newwin(att_screen_height, att_screen_width, rows//2, 5)
+        gps_info = curses.newwin(gps_in_height, gps_in_width, int((rows - 10)//2)-11, cols//2 - 38)
+        gps_sats = curses.newwin(gps_sat_height, gps_sat_width, int((rows - 10)//2)-11, cols//2)
     else:
-        attack_box = curses.newwin(12, cols - 10, 2, 5)
-        attack_screen = curses.newwin(rows-22, cols-10, 14, 5)
-        gps_info = curses.newwin(17, 38, 3, cols//2 - 19)
-        gps_sats = curses.newwin(min(rows - 22, 17), 38, 20, cols//2- 19) 
+        attack_sel = curses.newwin(att_sel_height, att_sel_width, 2, 5)
+        attack_screen = curses.newwin(att_screen_height, att_screen_width, 16, 5)
+        gps_info = curses.newwin(gps_in_height, gps_in_width, 3, cols//2 - 19)
+        gps_sats = curses.newwin(gps_sat_height, gps_sat_width, 20, cols//2- 19) 
 
     status = curses.newwin(1, cols-1, rows - 3, 1)
     title = curses.newwin(1, cols - 1, 0, 1)
@@ -70,44 +94,44 @@ def main(stdscr):
         if globals.attack_menu or globals.misceleaneous: 
             if cols < 80:
                 if globals.misceleaneous:
-                    attack_scr.draw_misceleaneous(attack_box, cols-10, 12)
+                    attack_scr.draw_misceleaneous(attack_sel, att_sel_width, att_sel_height)
                     if globals.detect_pwnagotchi:
-                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
+                        attack_scr.pwnagotchi_detect(attack_screen, att_screen_width, att_screen_height)
                 elif globals.attack_menu:
-                    attack_scr.draw_attack_screen(attack_box, stdscr, cols - 10, 12)
+                    attack_scr.draw_attack_screen(attack_sel, stdscr, att_sel_width, att_sel_height)
                     if globals.send_deauth:
-                        attack_scr.draw_deauth_screen(attack_screen, stdscr, cols - 10, min(rows - 22, 12))
+                        attack_scr.draw_deauth_screen(attack_screen, stdscr, att_screen_width, att_screen_height)
                     elif globals.send_beacon:
-                        attack_scr.draw_beacon_screen(attack_screen, stdscr, cols - 10)
+                        attack_scr.draw_beacon_screen(attack_screen, stdscr, att_screen_width)
                     elif globals.send_auth:
-                        attack_scr.draw_auth_screen(attack_screen,stdscr, cols - 10)
+                        attack_scr.draw_auth_screen(attack_screen,stdscr, att_screen_width)
                     elif globals.oui_checker:
-                        attack_scr.draw_oui_screen(attack_screen, stdscr, cols - 10,  min(rows - 22, 12))
+                        attack_scr.draw_oui_screen(attack_screen, stdscr, att_screen_width,  att_screen_height)
                     elif globals.handshake_sniff:
-                        attack_scr.draw_handshake_cap_screen(attack_screen, cols - 10, min(rows-22, 12))
+                        attack_scr.draw_handshake_cap_screen(attack_screen, att_screen_width, att_screen_height)
             else:
                 if globals.misceleaneous:
-                    attack_scr.draw_misceleaneous(attack_box, cols-10, 12)
+                    attack_scr.draw_misceleaneous(attack_sel, att_sel_width, att_sel_height)
                     if globals.detect_pwnagotchi:
-                        attack_scr.pwnagotchi_detect(attack_screen, cols-10, rows-22)
+                        attack_scr.pwnagotchi_detect(attack_screen, att_screen_width, att_screen_height)
                 elif globals.attack_menu:
-                    attack_scr.draw_attack_screen(attack_box, stdscr, cols -10, rows-22)
+                    attack_scr.draw_attack_screen(attack_sel, stdscr, att_sel_width, att_sel_height)
                     if globals.send_deauth:
-                        attack_scr.draw_deauth_screen(attack_screen, stdscr, cols -10, rows-22)
+                        attack_scr.draw_deauth_screen(attack_screen, stdscr, att_screen_width, att_screen_height)
                     elif globals.send_beacon:
-                        attack_scr.draw_beacon_screen(attack_screen, stdscr, cols -10)
+                        attack_scr.draw_beacon_screen(attack_screen, stdscr, att_screen_width)
                     elif globals.send_auth:
-                        attack_scr.draw_auth_screen(attack_screen,stdscr, cols -10)
+                        attack_scr.draw_auth_screen(attack_screen,stdscr, att_screen_width)
                     elif globals.oui_checker:
-                        attack_scr.draw_oui_screen(attack_screen, stdscr, cols -10, rows-22)
+                        attack_scr.draw_oui_screen(attack_screen, stdscr, att_screen_width, att_screen_height)
                     elif globals.handshake_sniff:
-                        attack_scr.draw_handshake_cap_screen(attack_screen, cols- 10, rows-22)
+                        attack_scr.draw_handshake_cap_screen(attack_screen, att_screen_width, att_screen_height)
                     
         elif globals.sniff_packets:
             sniff_scr.draw_packets(main_box, rows - 3, cols - 2, stdscr)
         if globals.det_gps:
             gps_scr.draw_gps(gps_info)
-            gps_scr.draw_satelite_info(gps_sats, min(rows-22, 17))
+            gps_scr.draw_satelite_info(gps_sats,gps_sat_height)
         draw_status()
         if cols > 90:
             draw_input_info()
@@ -117,7 +141,7 @@ def main(stdscr):
         if not globals.misceleaneous and not globals.attack_menu:
             main_box.noutrefresh()
         elif globals.attack_menu or globals.misceleaneous:
-            attack_box.noutrefresh()
+            attack_sel.noutrefresh()
             if globals.send_deauth or globals.send_beacon or globals.send_auth or globals.oui_checker or globals.handshake_sniff or globals.detect_pwnagotchi:
                 attack_screen.noutrefresh()
         if globals.det_gps:
