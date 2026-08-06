@@ -78,7 +78,7 @@ class get_networks:
                         globals.retry_time_left = 10
                         for _ in range(10):
                             time.sleep(1)
-                        globals.retry_time_left -=1
+                            globals.retry_time_left -=1
                         globals.proc.terminate()
                         globals.proc.wait()
                         if not globals.stop_scan:
