@@ -66,13 +66,13 @@ class get_networks:
         filepath = os.path.expanduser("~/output-01.csv")
         while not self._event_stop.is_set():
             try:
-                if not globals.send_beacon and not globals.stop_scan:
+                if not globals.send_beacon:
                     if globals.proc:
                         globals.proc.terminate()
                         globals.proc.wait()
                     if globals.attack_menu and not globals.guided_deauth:
                         globals.proc = self.run_airodump(globals.interface, channel=globals.channel, bssid=globals.selected_bssid)
-                    else:
+                    elif not globals.stop_scan:
                         globals.proc = self.run_airodump(globals.interface, globals.channel)
                     if globals.proc:
                         globals.retry_time_left = 10
