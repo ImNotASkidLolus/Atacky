@@ -33,14 +33,14 @@ def handle_input(key, stdscr):
     elif key == ord('p') or key == ord('P'):
         if not globals.larp_mode:
             if not globals.sniff_packets and not globals.misceleaneous:
-                globals.stop_scan = False
+                globals.stop_scan = True
                 globals.sniff_packets = True
                 globals.packets = []
                 globals.sniff = sniffer.Sniffer()
                 globals.sniff_thread = threading.Thread(target=globals.sniff.sniff_packets, daemon=True)
                 globals.sniff_thread.start()
             else:
-                globals.stop_scan = True
+                globals.stop_scan = False
                 globals.sniff_packets = False
                 globals.sniff.stop()
                 globals.sniff = None
