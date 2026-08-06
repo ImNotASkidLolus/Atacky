@@ -70,16 +70,16 @@ class get_networks:
                     if globals.proc:
                         globals.proc.terminate()
                         globals.proc.wait()
-                        globals.retry_time_left = 10
-                        for _ in range(10):
-                            time.sleep(1)
-                        globals.retry_time_left -=1
                     if globals.retry_time_left == 0:
                         if not globals.stop_scan:
                             globals.proc = self.run_airodump(globals.interface, globals.channel)
                         elif globals.attack_menu and not globals.guided_deauth:
                             globals.proc = self.run_airodump(globals.interface, channel=globals.channel, bssid=globals.selected_bssid)
                         if globals.proc:
+                            globals.retry_time_left = 10
+                            for _ in range(10):
+                                time.sleep(1)
+                            globals.retry_time_left -=1
                             globals.proc.terminate()
                             globals.proc.wait()
                             if not globals.stop_scan:
