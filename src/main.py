@@ -43,7 +43,7 @@ def main(stdscr):
         gps_in_width = 38
         
         gps_sat_height = 17
-        gps_sat_width = 57
+        gps_sat_width = 38
     else:
         att_sel_height = 14
         att_sel_width = cols - 10
@@ -55,7 +55,7 @@ def main(stdscr):
         gps_in_width = 38
         
         gps_sat_height = max(rows - 22, 5)
-        gps_sat_width = 57
+        gps_sat_width = 38
     
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
     if cols > 80:
