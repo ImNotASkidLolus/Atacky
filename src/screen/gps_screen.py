@@ -13,7 +13,7 @@ def draw_gps(main_box):
         main_box.box()
         main_box.attroff(curses.color_pair(2))
         
-        main_box.addstr(1,5, " Current gps location: ", curses.color_pair(1))
+        main_box.addstr(1,1, " Current gps location: ".center(36), curses.color_pair(1))
         main_box.addstr(2,2, "Longitude: ", curses.color_pair(3))
         main_box.addstr(2,2 + len("Longitude: "), f"{globals.gps.lon}", curses.color_pair(4))
         main_box.addstr(3,2, "Latitude: ", curses.color_pair(3))
@@ -55,7 +55,7 @@ def draw_satelite_info(found_satelites_box:curses.window, height):
             found_satelites_box.box()
             found_satelites_box.attroff(curses.color_pair(2))
 
-            found_satelites_box.addstr(1, 9, " Satelites found: ", curses.color_pair(1))
+            found_satelites_box.addstr(1, 1, " Satelites found: ".center(55), curses.color_pair(1))
             i = 2
             if (globals.fix or globals.larp_mode):
                 sat = globals.gps.get_satelite_info()
