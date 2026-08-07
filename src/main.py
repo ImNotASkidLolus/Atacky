@@ -40,10 +40,10 @@ def main(stdscr):
         att_screen_width = cols-10
         
         gps_in_height = 17
-        gps_in_width = cols//2
+        gps_in_width = 38
         
         gps_sat_height = 17
-        gps_sat_width = cols//2
+        gps_sat_width = 38
     else:
         att_sel_height = 14
         att_sel_width = cols - 10
