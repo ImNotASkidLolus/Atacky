@@ -145,14 +145,30 @@ class gps_get():
                 return country_name
         return "Ocean"
 
-
+    def get_constelation(self, id):
+        if id == 0:
+            return "GPS(US)"
+        elif id == 1:
+            return "SBAS"
+        elif id == 2:
+            return "GALILEO(EU)"
+        elif id == 3:
+            return "BEIDOU(CN)"
+        elif id == 4:
+            return "IMES(JPN)"
+        elif id == 5:
+            return "QZSS(JPN)"
+        elif id == 6:
+            return "GLONASS(RU)"
+        else:
+            return "N/A"
     def get_satelite_info(self):
         sat = []
         if self.satelites is not None:
             for satellite in self.satelites:
-                sat.append((satellite.get('PRN', 0), satellite.get('used', False), satellite.get('ss', 0)))
+                sat.append((satellite.get('PRN', 0), satellite.get('used', False), satellite.get('ss', 0), satellite.get('gnssid', "N/A")))
             return sat
-        return [("N/A", "N/A", "N/A")]
+        return [("N/A", "N/A", "N/A", "N/A")]
     def set_larp_values(self):
         self.lat = 21.3769420
         self.lon = 42.0967321
@@ -168,10 +184,10 @@ class gps_get():
         self.climb = 0 #climb rate 
         self.session = None
         self.satelites = [
-            {"PRN": 10, "el": 63, "az": 137, "ss": 17, "used": True},
-            {"PRN": 7,  "el": 61, "az": 98,  "ss": 15, "used": True},
-            {"PRN": 5,  "el": 59, "az": 290, "ss": 20, "used": True},
-            {"PRN": 26, "el": 23, "az": 252, "ss": 0,  "used": True}
+            {"PRN": 10, "el": 63, "az": 137, "ss": 17, "used": True, "gnssid": 0},
+            {"PRN": 7,  "el": 61, "az": 98,  "ss": 15, "used": True, "gnssid": 1},
+            {"PRN": 5,  "el": 59, "az": 290, "ss": 20, "used": True, "gnssid": 2},
+            {"PRN": 26, "el": 23, "az": 252, "ss": 0,  "used": True, "gnssid": 3}
         ]
         self.usat = 4 #number of used satellites
         self.nsat = 4 #number of found satellites

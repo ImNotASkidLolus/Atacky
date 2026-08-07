@@ -66,14 +66,18 @@ def draw_satelite_info(found_satelites_box:curses.window, height):
                     found_satelites_box.addstr(2, 12 + len("SNR: "), "N/A", curses.color_pair(4))
                     found_satelites_box.addstr(2, 24, "USED: ",curses.color_pair(3))
                     found_satelites_box.addstr(2, 24 + len("USED: "), "N/A", curses.color_pair(4))
+                    found_satelites_box.addstr(2, 38, f"CONST: ",curses.color_pair(3))
+                    found_satelites_box.addstr(2, 38 + len("CONST: "), "N/A",curses.color_pair(4))
                 else:
-                    for prn, used, snr in sat:
+                    for prn, used, snr, gnssid in sat:
                         found_satelites_box.addstr(i , 2, f"ID: ", curses.color_pair(3))
                         found_satelites_box.addstr(i, 2 + len("ID: "), f"{prn}  ",curses.color_pair(4))
                         found_satelites_box.addstr(i , 12, f"SNR: ", curses.color_pair(3))
                         found_satelites_box.addstr(i, 12 + len("SNR: "), f"{int(snr)}dB  ", curses.color_pair(4))
                         found_satelites_box.addstr(i, 24, f"USED: ",curses.color_pair(3))
                         found_satelites_box.addstr(i, 24 + len("used: "), f"{used}",curses.color_pair(4))
+                        found_satelites_box.addstr(i, 38, f"CONST: ",curses.color_pair(3))
+                        found_satelites_box.addstr(i, 38 + len("CONST: "), globals.gps.get_constelation(gnssid),curses.color_pair(4))
                         if i < height - 2:
                             i = i+1
                         else:
@@ -84,6 +88,8 @@ def draw_satelite_info(found_satelites_box:curses.window, height):
                 found_satelites_box.addstr(2, 12 + len("SNR: "), "N/A", curses.color_pair(4))
                 found_satelites_box.addstr(2, 24, "USED: ",curses.color_pair(3))
                 found_satelites_box.addstr(2, 24 + len("USED: "), "N/A", curses.color_pair(4))
+                found_satelites_box.addstr(2, 38, f"CONST: ",curses.color_pair(3))
+                found_satelites_box.addstr(2, 38 + len("CONST: "), "N/A",curses.color_pair(4))
         except Exception:
             print("Error printing too screen, perhaps your terminal is too small :( satellites")
             exit()
