@@ -184,6 +184,7 @@ else:
     globals.l_sec = larp_values.l_sec
     globals.clients = larp_values.l_clients
     globals.gps = larp_values.gps
+    globals.networks_found = larp_values.networks_found
 
 #=====================start main loop=========================#
 curses.wrapper(main)
