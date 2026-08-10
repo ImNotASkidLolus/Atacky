@@ -11,6 +11,7 @@ clients = []
 
 interface = "wlan0"
 channel = None
+networks_found = []
 
 selected_ssid = None
 selected_bssid = None
@@ -63,3 +64,14 @@ sniff_filter = ""
 retry_time_left = 10 #time in seconds for retrying the client and wifi network sniffs
 scroll_delay = 0.1
 times_logged = 0
+
+def set_and_calc_networks():
+    global networks_found
+    for netw in l_bssids:
+        if netw not in networks_found:
+            networks_found.append(netw)
+    return len(networks_found)
+
+    
+    
+    

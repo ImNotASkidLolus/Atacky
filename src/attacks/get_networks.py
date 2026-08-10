@@ -88,6 +88,7 @@ class get_networks:
                                 globals.l_ssids = ssids
                                 globals.l_sec = sec
                                 globals.l_channels = channels
+                                globals.set_and_calc_networks()
                         elif globals.attack_menu and not globals.guided_deauth:
                             clients = self.parse_clients_csv(filepath)
                             with globals.lock:

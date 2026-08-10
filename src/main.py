@@ -83,7 +83,7 @@ def main(stdscr):
         input_info.attroff(curses.color_pair(1))
     def draw_status():
         status.attron(curses.color_pair(1))
-        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s lat: {round(globals.gps.lat,2)} lon: {round(globals.gps.lon,2)}".ljust(cols - 7))
+        status.addstr(0, 2, f" Next update in: {globals.retry_time_left}s lat: {round(globals.gps.lat,2)} lon: {round(globals.gps.lon,2)} netw seen: {globals.set_and_calc_networks()}".ljust(cols - 7))
         status.attroff(curses.color_pair(1))
     
     while not globals.quit_app:
