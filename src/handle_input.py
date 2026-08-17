@@ -250,8 +250,6 @@ def handle_input(key, stdscr):
                         globals.beacon_sp.reset()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_beacon_spam, daemon=True)
                     globals.beacon_thread.start()
-                    if not globals.larp_mode:
-                        globals.proc.terminate()
             elif globals.selected_row == 3 and not globals.started_attack:
                 if not globals.send_auth and (globals.auth_thread is None or not globals.auth_thread.is_alive()):
                     globals.send_auth = True
@@ -311,8 +309,6 @@ def handle_input(key, stdscr):
                         globals.beacon_sp.reset()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_rickroll, daemon=True)
                     globals.beacon_thread.start()
-                    if not globals.larp_mode:
-                        globals.proc.terminate()
             elif globals.selected_row == 3:
                 if not globals.send_beacon and (globals.beacon_thread is None or not globals.beacon_thread.is_alive()):
                     globals.selected_misc_attack = "Beacon random"
@@ -324,8 +320,6 @@ def handle_input(key, stdscr):
                         globals.beacon_sp.reset()
                     globals.beacon_thread = threading.Thread(target=globals.beacon_sp.start_random, daemon=True)
                     globals.beacon_thread.start()
-                    if not globals.larp_mode:
-                        globals.proc.terminate()
             elif globals.selected_row == 4:
                 if (globals.deauth_thread is None or not globals.deauth_thread.is_alive()):
                     if not globals.guided_deauth:
