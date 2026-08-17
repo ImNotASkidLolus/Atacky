@@ -206,15 +206,15 @@ if not globals.larp_mode:
     if globals.pwngrid_detect:
         globals.pwngrid_detect.stop()
     scanner.stop()
-# print(f"BSSIDS: {globals.l_bssids}\n")
-# print(f"SSIDS: {globals.l_ssids}\n")
-# print(f"SECURITY: {globals.l_sec}")
-# print(f"Clients: {globals.clients}")
-# print(f"Channels: {globals.l_channels}")
-# # print(f"Selected client: {globals.selected_client}")
-# # if os.path.exists(os.path.expanduser("~/output-01.csv")):
-# #     os.remove(os.path.expanduser("~/output-01.csv"))
-# # print("\nGPS class data:")
-# # for key, value in vars(globals.gps).items():
-# #     print(f"{key}: {value}")
-# print(f"COLS: {cols} ROWS: {rows}")
+print(f"BSSIDS: {globals.l_bssids}\n")
+print(f"SSIDS: {globals.l_ssids}\n")
+print(f"SECURITY: {globals.l_sec}")
+print(f"Clients: {globals.clients}")
+print(f"Channels: {globals.l_channels}")
+# print(f"Selected client: {globals.selected_client}")
+# if os.path.exists(os.path.expanduser("~/output-01.csv")):
+#     os.remove(os.path.expanduser("~/output-01.csv"))
+# print("\nGPS class data:")
+# for key, value in vars(globals.gps).items():
+#     print(f"{key}: {value}")
+

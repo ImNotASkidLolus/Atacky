@@ -1,107 +1,61 @@
 import csv
+import random
 import subprocess
 import os
 import time
 import globals
 import threading
-
-class get_networks:
+import scapy.all as scapy
+def packet_handler(packet):
+    if packet.haslayer(scapy.Dot11):
+        if packet.haslayer(scapy.Dot11Beacon):
+            ssid = packet[scapy.Dot11Elt].info.decode(errors='ignore')
+            bssid = packet[scapy.Dot11].addr2
+            channel = packet[scapy.Dot11Elt:3].info
+            channel = int.from_bytes(channel, byteorder='little')
+            privacy = packet[scapy.Dot11Elt:4].info
+            privacy = int.from_bytes(privacy, byteorder='little')
+            with globals.lock:
+                if bssid not in globals.l_bssids:
+                    globals.l_bssids.append(bssid)
+                    globals.l_ssids.append(ssid)
+                    globals.l_channels.append(channel)
+                    globals.l_sec.append(str(privacy))
+def find_clients(packet):
+    if packet.haslayer(scapy.Dot11):
+        if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
+            client_mac = packet.addr1 if packet.addr1 != globals.selected_bssid else packet.addr2
+            with globals.lock:
+                if client_mac not in globals.clients:
+                    globals.clients.append(client_mac)
+class get_networks: 
     def __init__(self):
         self._event_stop = threading.Event()
-    def run_airodump(self, interface, channel=None, bssid=None):
-        output_path = os.path.expanduser("~/output")
-        command = ["airodump-ng", 
-        "--output-format", "csv", 
-        "--write", output_path]
-        if channel:
-            command += ["--channel", str(channel)]
-        if bssid:
-            command += ["--bssid", str(bssid)]
-        command.append(str(interface))
-
-        t_proc = subprocess.Popen(
-            command,
-            start_new_session=True,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
-        return t_proc
     def stop(self):
         self._event_stop.set()
-    def parse_csv(self, filename):
-        channels, bssids, ssids, sec = [], [], [], []
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
-            reader = csv.reader(f, delimiter=',')
-            for row in reader:
-                # skip header and blank lines, stop at client section
-                if not row or row[0].strip() == 'BSSID':
-                    continue
-                if row[0].strip() == 'Station MAC':
-                    break  # client section starts, we only want APs
-                if len(row) > 13:
-                    bssids.append(row[0].strip())
-                    channels.append(row[3].strip())
-                    sec.append(row[5].strip())
-                    ssids.append(row[13].strip())
-        return ssids, bssids, sec, channels
-    def parse_clients_csv(self, filename):
-        global station_line
-        clients = []
-        station_line = False
-        with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
-            reader = csv.reader(f, delimiter=',')
-            for row in reader:
-                if not row:
-                    continue
-                if row[0].strip() == 'Station MAC':
-                    station_line = True
-                    continue
-                if station_line:
-                    if len(row) < 6:
-                        continue
-                    clients.append(row[0].strip())
-        return clients
+    def send_probe_request(self):
+        random_mac = scapy.RandMAC()
+        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(random.randint(1, 12))], check=True)
+        probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
+                              addr2=random_mac,
+                              addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
+        scapy.sendp(probe_p, iface=globals.interface, count = 5, inter = 0.1, verbose=False)
     def continuous_running(self):
-        filepath = os.path.expanduser("~/output-01.csv")
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
-                    if globals.proc:
-                        globals.proc.terminate()
-                        globals.proc.wait()
-                    if globals.attack_menu and not globals.guided_deauth:
-                        globals.proc = self.run_airodump(globals.interface, channel=globals.channel, bssid=globals.selected_bssid)
-                    elif not globals.stop_scan:
-                        globals.proc = self.run_airodump(globals.interface, globals.channel)
-                    if globals.proc:
-                        globals.retry_time_left = 10
-                        for _ in range(10):
-                            time.sleep(1)
-                            globals.retry_time_left -=1
-                        globals.proc.terminate()
-                        globals.proc.wait()
-                        if not globals.stop_scan:
-                            ssids, bssids, sec, channels = self.parse_csv(filepath)
-                            with globals.lock:
-                                globals.l_bssids = bssids
-                                globals.l_ssids = ssids
-                                globals.l_sec = sec
-                                globals.l_channels = channels
-                                globals.set_and_calc_networks()
-                        elif globals.attack_menu and not globals.guided_deauth:
-                            clients = self.parse_clients_csv(filepath)
-                            with globals.lock:
-                                globals.clients = clients
-                        if os.path.exists(filepath):
-                            os.remove(filepath)
+                    if not globals.stop_scan:
+                        self.send_probe_request()
+                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=5)
+                        globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
+                    elif globals.attack_menu and globals.selected_bssid:
+                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=5)
+                        
                 else:
-                    if globals.proc:
-                        globals.proc.terminate()
-                        globals.proc.wait()
+
                     time.sleep(1)
-            except Exception:
-                globals.proc.terminate()
+            except Exception as e:
+                print(f"Error occurred: {e}")
                 time.sleep(1)
