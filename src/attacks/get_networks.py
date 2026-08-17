@@ -41,6 +41,7 @@ class get_networks:
                               addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
         scapy.sendp(probe_p, iface=globals.interface, count = 5, inter = 0.1, verbose=False)
     def continuous_running(self):
+        scans_before_reset = 10
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
@@ -48,11 +49,19 @@ class get_networks:
                         self.send_probe_request()
                         scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=5)
                         globals.set_and_calc_networks()
+                        
                         if globals.fix:
                             globals.csv_saver.log()
                     elif globals.attack_menu and globals.selected_bssid:
                         scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=5)
-                        
+                    scans_before_reset -= 1   
+                    if scans_before_reset <= 0:
+                        globals.l_bssids = []
+                        globals.l_ssids = []
+                        globals.l_sec = []
+                        globals.l_channels = []
+                        globals.clients = []
+                        scans_before_reset = 10
                 else:
 
                     time.sleep(1)
