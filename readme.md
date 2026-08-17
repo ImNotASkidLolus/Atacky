@@ -7,7 +7,8 @@
 * `WARDRIVING`
 * `PACKET SNIFFING`
 * `HANDSHAKE CAPTURE`
-* `MISC ATTACKS`
+* `MISC ATTACKS`<br>
+ALL JUST BY USING SCAPY!
 
 ## Necessary dependecies
 ### For the app to launch you need:
@@ -42,7 +43,7 @@ The window closes 5s after a handshake was captured
 ### How to traverse the UI:
 While on the main screen every `10s` it refreshes the found networks. By pressing the `S` key it allows you to use `ARROW-UP` and `ARROW-DOWN` to select a desired network. You can select the network by pressing the `ENTER` key. After an attack menu will be displayed for you. You can traverse through the menu using `ARROWS` and pressing `ENTER` to select the attack. To go back you can simply press the `BACKSPACE` or `ARROW-LEFT` key.
 ### Other options:
-* pressing `p` start the packet sniffer
+* pressing `p` start the packet sniffer `ARROW-KEYs` change the scroll speed
 * pressing `f` while packet sniffing allows for packet filtering
 * pressing `r` resets filters while in packet sniffing mode
 * pressing `t` shows a detailed gps info
