@@ -32,7 +32,6 @@ def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
         attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(4))
     if globals.clients is None or globals.clients == []:
         attack_box.addstr(9,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
-        attack_box.addstr(10, 1, f"Retrying in {globals.retry_time_left}s")
     else:
         attack_box.addstr(9,1, "Clients for this network FOUND!", curses.color_pair(4))        
     attack_box.addstr(12,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width - 2), curses.color_pair(1))
