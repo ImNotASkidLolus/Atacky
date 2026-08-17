@@ -189,8 +189,6 @@ else:
 #=====================start main loop=========================#
 curses.wrapper(main)
 if not globals.larp_mode:
-    if globals.proc:
-        globals.proc.terminate()
     if globals.beacon_thread:
         globals.beacon_sp.stop()
     if globals.deauth_thread:
