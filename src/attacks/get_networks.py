@@ -6,6 +6,17 @@ import time
 import globals
 import threading
 import scapy.all as scapy
+def get_sec(priv):
+    if priv == 0:
+        return "OPEN"
+    elif priv == 1:
+        return "WEP"
+    elif priv == 2:
+        return "WPA"
+    elif priv == 3:
+        return "WPA2"
+    else:
+        return "UNKNOWN"
 def packet_handler(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.haslayer(scapy.Dot11Beacon):
@@ -14,13 +25,13 @@ def packet_handler(packet):
             channel = packet[scapy.Dot11Elt:3].info
             channel = int.from_bytes(channel, byteorder='little')
             privacy = packet[scapy.Dot11Elt:4].info
-            privacy = int.from_bytes(privacy, byteorder='little')
+            privacy = int(privacy[1])
             with globals.lock:
                 if bssid not in globals.l_bssids:
                     globals.l_bssids.append(bssid)
                     globals.l_ssids.append(ssid)
                     globals.l_channels.append(channel)
-                    globals.l_sec.append(str(privacy))
+                    globals.l_sec.append(get_sec(privacy))
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
@@ -35,7 +46,7 @@ class get_networks:
         self._event_stop.set()
     def send_probe_request(self):
         random_mac = scapy.RandMAC()
-        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(random.randint(1, 12))], check=True)
+        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(random.randint(1, 11))], check=True)
         probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
                               addr2=random_mac,
                               addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()

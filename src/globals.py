@@ -61,7 +61,6 @@ pwngrid_detect = None
 pwngrid_thread = None
 sniff = None
 sniff_filter = ""
-retry_time_left = 10 #time in seconds for retrying the client and wifi network sniffs
 scroll_delay = 0.1
 times_logged = 0
 
