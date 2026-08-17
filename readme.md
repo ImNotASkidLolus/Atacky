@@ -9,7 +9,12 @@
 * `HANDSHAKE CAPTURE`
 * `MISC ATTACKS`<br>
 ALL JUST BY USING SCAPY!
-
+## IMAGES
+<p float="left">
+    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
+    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
+</p>
 ## Necessary dependecies
 ### For the app to launch you need:
 * `scapy` 
@@ -55,9 +60,3 @@ For this app to work it's not necessary to have a GPS module, but it's highly re
 
 https://www.amazon.pl/dp/B07F6Y6DPT?ref=ppx_yo2ov_dt_b_fed_asin_title
 
-## IMAGES
-<p float="left">
-    <img src="./images/Screenshot 2026-07-16 at 9.28.48 PM.png" width="30%">
-    <img src="./images/Screenshot 2026-07-16 at 9.31.25 PM.png" width="30%">
-    <img src="./images/Screenshot 2026-07-16 at 9.29.00 PM.png" width="30%">
-</p>
