@@ -26,7 +26,6 @@ def handle_input(key, stdscr):
         globals.quit_app = True
     elif key == ord('s') or key == ord('S'):
         if not globals.stop_scan and not globals.misceleaneous:
-            subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
             globals.stop_scan = True
         elif globals.selected_bssid and globals.selected_ssid:
             pass
@@ -181,8 +180,6 @@ def handle_input(key, stdscr):
             globals.clients = ""
             globals.started_attack = False
             globals.selected_row = 2
-            if globals.proc:
-                globals.proc.terminate()
         elif globals.sniff_packets:
             globals.started_attack = False
             globals.sniff_packets = False
@@ -227,6 +224,7 @@ def handle_input(key, stdscr):
                     globals.selected_bssid = globals.l_bssids[idx]
                     if globals.l_channels[idx]:
                         globals.channel = globals.l_channels[idx]
+                        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                     globals.selected_row = 1
                     globals.retry_time_left = 10
                     globals.attack_menu = True
