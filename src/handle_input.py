@@ -186,6 +186,8 @@ def handle_input(key, stdscr):
             if globals.sniff is not None:
                 globals.sniff.stop()
                 globals.sniff_thread = None
+        elif globals.stop_scan:
+            globals.stop_scan = False
         elif globals.det_gps:
             globals.det_gps = False
         elif globals.selected_misc_attack != "None": 

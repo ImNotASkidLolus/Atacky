@@ -6,6 +6,12 @@ import time
 import globals
 import threading
 import scapy.all as scapy
+
+ssids = []
+bssids = []
+sec = []
+channels = []
+clients = []
 def get_sec(priv):
     if priv == 0:
         return "OPEN"
@@ -27,18 +33,18 @@ def packet_handler(packet):
             privacy = packet[scapy.Dot11Elt:4].info
             privacy = int(privacy[1])
             with globals.lock:
-                if bssid not in globals.l_bssids:
-                    globals.l_bssids.append(bssid)
-                    globals.l_ssids.append(ssid)
-                    globals.l_channels.append(channel)
-                    globals.l_sec.append(get_sec(privacy))
+                if bssid not in bssids:
+                    bssids.append(bssid)
+                    ssids.append(ssid)
+                    channels.append(channel)
+                    sec.append(get_sec(privacy))
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
             client_mac = packet.addr1 if packet.addr1 != globals.selected_bssid else packet.addr2
             with globals.lock:
-                if client_mac not in globals.clients:
-                    globals.clients.append(client_mac)
+                if client_mac not in clients:
+                    clients.append(client_mac)
 class get_networks: 
     def __init__(self):
         self._event_stop = threading.Event()
@@ -58,23 +64,21 @@ class get_networks:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
                         self.send_probe_request()
-                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=5)
+                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=1)
                         globals.set_and_calc_networks()
-                        
                         if globals.fix:
                             globals.csv_saver.log()
-                    elif globals.stop_scan and globals.attack_menu and globals.selected_bssid:
-                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=2)
+                    elif globals.stop_scan and globals.selected_bssid:
+                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1)
                     scans_before_reset -= 1   
                     if scans_before_reset <= 0:
-                        globals.l_bssids = []
-                        globals.l_ssids = []
-                        globals.l_sec = []
-                        globals.l_channels = []
-                        globals.clients = []
+                        globals.l_bssids = bssids
+                        globals.l_ssids = ssids
+                        globals.l_sec = sec
+                        globals.l_channels = channels
+                        globals.clients = clients
                         scans_before_reset = 10
                 else:
-
                     time.sleep(1)
             except Exception as e:
                 print(f"Error occurred: {e}")
