@@ -1,3 +1,6 @@
+from random import random
+import subprocess
+
 from attacks import authattack, beacon_spam, deauth as deauth, handshake_cap as handshake, pwnagotchi_detector as pwngrid
 import globals
 import threading
@@ -23,8 +26,7 @@ def handle_input(key, stdscr):
         globals.quit_app = True
     elif key == ord('s') or key == ord('S'):
         if not globals.stop_scan and not globals.misceleaneous:
-            if globals.proc:
-                globals.proc.terminate()
+            subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
             globals.stop_scan = True
         elif globals.selected_bssid and globals.selected_ssid:
             pass
