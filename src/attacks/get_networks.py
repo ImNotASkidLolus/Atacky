@@ -64,7 +64,7 @@ class get_networks:
                         if globals.fix:
                             globals.csv_saver.log()
                     elif globals.stop_scan or (globals.attack_menu and globals.selected_bssid):
-                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=5)
+                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=2)
                     scans_before_reset -= 1   
                     if scans_before_reset <= 0:
                         globals.l_bssids = []
