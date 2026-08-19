@@ -92,6 +92,7 @@ class get_networks:
                                 addr2=random_mac,
                                 addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
             scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
+            scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout = 0.5,stop_filter=lambda x: selected_network_info())
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         while not self._event_stop.is_set():
@@ -100,7 +101,6 @@ class get_networks:
                     if not globals.stop_scan:
                         if not probe_thread.is_alive():
                             probe_thread.start()
-                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout = 1,stop_filter=lambda x: selected_network_info())
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
