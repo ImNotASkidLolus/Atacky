@@ -52,7 +52,7 @@ def packet_handler(packet):
                     sec.clear()
                     channels.clear()
                     clients.clear()
-                    scans_before_reset = 10
+                    scans_before_reset = 20
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
