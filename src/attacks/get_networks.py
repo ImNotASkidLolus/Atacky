@@ -55,11 +55,14 @@ def packet_handler(packet):
                     scans_before_reset = 20
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
-        if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
-            client_mac = packet.addr1 if packet.addr1 != globals.selected_bssid else packet.addr2
-            with globals.lock:
-                if client_mac not in clients:
-                    clients.append(client_mac)
+        target = globals.selected_bssid
+        addrs = [packet.addr1, packet.addr2, packet.addr3]
+        if target in addrs:
+            for addr in addrs:
+                if addr and addr != target and addr != "ff:ff:ff:ff:ff:ff":
+                    with globals.lock:
+                        if addr not in clients:
+                            clients.append(addr)
 def selected_network_info():
     with globals.lock:
         if globals.selected_bssid:
