@@ -52,7 +52,8 @@ class get_networks:
         self._event_stop.set()
     def send_probe_request(self):
         random_mac = scapy.RandMAC()
-        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(random.randint(1, 11))], check=True)
+        globals.current_channel = str(random.randint(1, 11))
+        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", globals.current_channel], check=True)
         probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
                               addr2=random_mac,
                               addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()

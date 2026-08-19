@@ -8,7 +8,7 @@ l_ssids = []
 l_sec = []
 l_channels = []
 clients = []
-
+current_channel = None
 interface = "wlan0"
 channel = None
 networks_found = []
