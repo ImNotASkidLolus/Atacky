@@ -56,20 +56,23 @@ class get_networks:
         else:
             globals.current_channel = 1
     def send_probe_request(self):
-        random_mac = scapy.RandMAC()
-        self.change_channel()
-        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)], check=True)
-        probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
-                              addr2=random_mac,
-                              addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
-        scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
+        while not self._event_stop.is_set():
+            random_mac = scapy.RandMAC()
+            self.change_channel()
+            subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)], check=True)
+            probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
+                                addr2=random_mac,
+                                addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
+            scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
         scans_before_reset = 10
+        probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
-                        threading.Thread(target=self.send_probe_request, daemon=True).start()
+                        if not probe_thread.is_alive():
+                            probe_thread.start()
                         scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=1)
                         globals.set_and_calc_networks()
                         if globals.fix:
