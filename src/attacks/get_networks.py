@@ -25,6 +25,7 @@ def get_sec(priv):
         return "UNKNOWN"
 scans_before_reset = 10
 def packet_handler(packet):
+    global scans_before_reset
     if packet.haslayer(scapy.Dot11):
         if packet.haslayer(scapy.Dot11Beacon):
             ssid = packet[scapy.Dot11Elt].info.decode(errors='ignore')
