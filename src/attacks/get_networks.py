@@ -62,7 +62,7 @@ class get_networks:
         probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
                               addr2=random_mac,
                               addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
-        scapy.sendp(probe_p, iface=globals.interface, count = 5, inter = 0.1, verbose=False)
+        scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
         scans_before_reset = 10
         while not self._event_stop.is_set():
