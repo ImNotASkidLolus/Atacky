@@ -86,6 +86,12 @@ class get_networks:
                         globals.l_sec = sec
                         globals.l_channels = channels
                         globals.clients = clients
+                        bssids.clear()
+                        ssids.clear()
+                        sec.clear()
+                        channels.clear()
+                        clients.clear()
+                        
                         scans_before_reset = 10
                 else:
                     time.sleep(1)
