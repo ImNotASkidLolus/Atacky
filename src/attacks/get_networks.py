@@ -23,6 +23,7 @@ def get_sec(priv):
         return "WPA2"
     else:
         return "UNKNOWN"
+scans_before_reset = 10
 def packet_handler(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.haslayer(scapy.Dot11Beacon):
@@ -38,6 +39,19 @@ def packet_handler(packet):
                     ssids.append(ssid)
                     channels.append(channel)
                     sec.append(get_sec(privacy))
+                scans_before_reset -= 1   
+                if scans_before_reset <= 0:
+                    globals.l_bssids = bssids
+                    globals.l_ssids = ssids
+                    globals.l_sec = sec
+                    globals.l_channels = channels
+                    globals.clients = clients
+                    bssids.clear()
+                    ssids.clear()
+                    sec.clear()
+                    channels.clear()
+                    clients.clear()
+                    scans_before_reset = 10
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.addr1 == globals.selected_bssid or packet.addr2 == globals.selected_bssid:
@@ -70,7 +84,6 @@ class get_networks:
                                 addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
             scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
-        scans_before_reset = 10
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         while not self._event_stop.is_set():
             try:
@@ -86,20 +99,8 @@ class get_networks:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                             globals.current_channel = globals.channel
-                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1)
-                    scans_before_reset -= 1   
-                    if scans_before_reset <= 0:
-                        globals.l_bssids = bssids
-                        globals.l_ssids = ssids
-                        globals.l_sec = sec
-                        globals.l_channels = channels
-                        globals.clients = clients
-                        bssids.clear()
-                        ssids.clear()
-                        sec.clear()
-                        channels.clear()
-                        clients.clear()
-                        scans_before_reset = 10
+                        scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, stop_filter=lambda x: not globals.stop_scan)
+                    
                 else:
                     time.sleep(1)
             except Exception as e:
