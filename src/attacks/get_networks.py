@@ -69,8 +69,8 @@ class get_networks:
             try:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
-                        self.send_probe_request()
-                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=1)
+                        threading.Thread(target=self.send_probe_request, daemon=True).start()
+                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=0.5)
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
