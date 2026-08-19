@@ -45,6 +45,11 @@ def find_clients(packet):
             with globals.lock:
                 if client_mac not in clients:
                     clients.append(client_mac)
+def selected_network_info():
+    with globals.lock:
+        if globals.selected_bssid:
+            return True
+        return False
 class get_networks: 
     def __init__(self):
         self._event_stop = threading.Event()
@@ -73,7 +78,7 @@ class get_networks:
                     if not globals.stop_scan:
                         if not probe_thread.is_alive():
                             probe_thread.start()
-                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout=1)
+                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, stop_filter=lambda x: selected_network_info())
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
