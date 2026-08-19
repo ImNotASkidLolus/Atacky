@@ -92,7 +92,7 @@ class get_networks:
                     if not globals.stop_scan:
                         if not probe_thread.is_alive():
                             probe_thread.start()
-                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, stop_filter=lambda x: selected_network_info())
+                        scapy.sniff(iface=globals.interface, prn=packet_handler, store=0, timeout = 1,stop_filter=lambda x: selected_network_info())
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
