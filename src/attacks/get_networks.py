@@ -79,8 +79,15 @@ class get_networks:
         while not self._event_stop.is_set():
             random_mac = scapy.RandMAC()
             self.change_channel()
-            subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)], check=True, capture_output=True,
-        text=True)
+            try:
+                subprocess.run(
+                    ["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)],
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to set channel to {globals.current_channel}: {e.stderr}")
             probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
                                 addr2=random_mac,
                                 addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
