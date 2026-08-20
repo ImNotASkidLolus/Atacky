@@ -86,11 +86,13 @@ class get_networks:
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         scans_before_reset = 5
         while not self._event_stop.is_set():
+            global l_bssids, l_ssids, l_sec, l_channels, l_clients
             l_bssids = []
             l_ssids = []
             l_sec = []
             l_channels = []
             l_clients = []
+            buffer_wait = None
             try:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
@@ -100,31 +102,36 @@ class get_networks:
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
-                        scans_before_reset -= 1   
-                        if scans_before_reset <= 0:
-                            l_bssids = bssids
-                            l_ssids = ssids
-                            l_sec = sec
-                            l_channels = channels
-                            l_clients = clients
-                            clients.clear()
-                            channels.clear()
-                            bssids.clear()
-                            ssids.clear()
-                            sec.clear()
-                            scans_before_reset = 5
-                        if scans_before_reset == 3:
-                            globals.l_bssids = l_bssids
-                            globals.l_ssids = l_ssids
-                            globals.l_sec = l_sec
-                            globals.l_channels = l_channels
-                            globals.l_clients = l_clients
+                        if buffer_wait is not  None:
+                            if buffer_wait < 2:
+                                buffer_wait += 1                            
                     elif globals.stop_scan and globals.selected_bssid:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                             globals.current_channel = globals.channel
                         scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1,stop_filter=lambda x: not globals.stop_scan)
-                    
+                    scans_before_reset -= 1   
+                    if scans_before_reset <= 0:
+                        l_bssids = bssids
+                        l_ssids = ssids
+                        l_sec = sec
+                        l_channels = channels
+                        l_clients = clients
+                        if buffer_wait >= 2:
+                            l_bssids = bssids
+                            l_ssids = ssids
+                            l_sec = sec
+                            l_channels = channels
+                            l_clients = clients
+                            buffer_wait = 0
+                        clients.clear()
+                        channels.clear()
+                        bssids.clear()
+                        ssids.clear()
+                        sec.clear()
+                        scans_before_reset = 5
+                        if buffer_wait is None:
+                            buffer_wait = 0
                 else:
                     time.sleep(1)
             except Exception as e:
