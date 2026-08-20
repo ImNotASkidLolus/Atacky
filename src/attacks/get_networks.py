@@ -23,9 +23,7 @@ def get_sec(priv):
         return "WPA2"
     else:
         return "UNKNOWN"
-scans_before_reset = 10
 def packet_handler(packet):
-    global scans_before_reset
     if packet.haslayer(scapy.Dot11):
         if packet.haslayer(scapy.Dot11Beacon):
             ssid = packet[scapy.Dot11Elt].info.decode(errors='ignore')
@@ -40,19 +38,7 @@ def packet_handler(packet):
                     ssids.append(ssid)
                     channels.append(channel)
                     sec.append(get_sec(privacy))
-                scans_before_reset -= 1   
-                if scans_before_reset <= 0:
-                    globals.l_bssids = bssids
-                    globals.l_ssids = ssids
-                    globals.l_sec = sec
-                    globals.l_channels = channels
-                    globals.clients = clients
-                    bssids.clear()
-                    ssids.clear()
-                    sec.clear()
-                    channels.clear()
-                    clients.clear()
-                    scans_before_reset = 20
+                
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         target = globals.selected_bssid
@@ -98,6 +84,7 @@ class get_networks:
                 scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
+        scans_before_reset = 10
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
@@ -108,6 +95,14 @@ class get_networks:
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()
+                        scans_before_reset -= 1   
+                        if scans_before_reset <= 0:
+                            globals.l_bssids = bssids
+                            globals.l_ssids = ssids
+                            globals.l_sec = sec
+                            globals.l_channels = channels
+                            globals.clients = clients
+                            scans_before_reset = 10
                     elif globals.stop_scan and globals.selected_bssid:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
