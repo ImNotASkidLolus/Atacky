@@ -102,11 +102,11 @@ class get_networks:
                         scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1,stop_filter=lambda x: not globals.stop_scan)
                     globals.scans_before_reset -= 1 
                     if globals.scans_before_reset <= 0:
-                        globals.l_bssids = bssids
-                        globals.l_ssids = ssids
-                        globals.l_sec = sec
-                        globals.l_channels = channels
-                        globals.l_clients = clients
+                        globals.l_bssids = bssids.copy()
+                        globals.l_ssids = ssids.copy()
+                        globals.l_sec = sec.copy()
+                        globals.l_channels = channels.copy()
+                        globals.l_clients = clients.copy()
                         clients.clear()
                         channels.clear()
                         bssids.clear()
