@@ -92,7 +92,7 @@ class get_networks:
             l_sec = []
             l_channels = []
             l_clients = []
-            buffer_wait = None
+            buffer_wait = int()
             try:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
@@ -118,11 +118,11 @@ class get_networks:
                         l_channels = channels
                         l_clients = clients
                         if buffer_wait >= 2:
-                            l_bssids = bssids
-                            l_ssids = ssids
-                            l_sec = sec
-                            l_channels = channels
-                            l_clients = clients
+                            globals.l_bssids = l_bssids
+                            globals.l_ssids = l_ssids
+                            globals.l_sec = l_sec
+                            globals.l_channels = l_channels
+                            globals.l_clients = l_clients
                             buffer_wait = 0
                         clients.clear()
                         channels.clear()
