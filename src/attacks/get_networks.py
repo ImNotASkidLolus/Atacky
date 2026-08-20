@@ -100,19 +100,24 @@ class get_networks:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                             globals.current_channel = globals.channel
                         scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1,stop_filter=lambda x: not globals.stop_scan)
-                    scans_before_reset -= 1 
-                    if scans_before_reset <= 0:
-                        globals.l_bssids = bssids.copy()
-                        globals.l_ssids = ssids.copy()
-                        globals.l_sec = sec.copy()
-                        globals.l_channels = channels.copy()
-                        globals.l_clients = clients.copy()
-                        clients.clear()
-                        channels.clear()
-                        bssids.clear()
-                        ssids.clear()
-                        sec.clear()
-                        scans_before_reset = 5
+                    if not globals.stop_scan:
+                        scans_before_reset -= 1 
+                        if scans_before_reset <= 0:
+                            globals.l_bssids = bssids.copy()
+                            globals.l_ssids = ssids.copy()
+                            globals.l_sec = sec.copy()
+                            globals.l_channels = channels.copy()
+                            channels.clear()
+                            bssids.clear()
+                            ssids.clear()
+                            sec.clear()
+                            scans_before_reset = 5
+                    elif globals.stop_scan and globals.selected_bssid:
+                        scans_before_reset -= 1 
+                        if scans_before_reset <= 0:
+                            globals.l_clients = clients.copy()
+                            clients.clear()
+                            scans_before_reset = 5
                 else:
                     time.sleep(1)
             except Exception as e:
