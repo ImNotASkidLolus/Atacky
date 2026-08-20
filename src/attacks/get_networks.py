@@ -84,7 +84,7 @@ class get_networks:
                 scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
-        scans_before_reset = 10
+        scans_before_reset = 5
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
@@ -102,7 +102,12 @@ class get_networks:
                             globals.l_sec = sec
                             globals.l_channels = channels
                             globals.clients = clients
-                            scans_before_reset = 10
+                            clients.clear()
+                            channels.clear()
+                            bssids.clear()
+                            ssids.clear()
+                            sec.clear()
+                            scans_before_reset = 5
                     elif globals.stop_scan and globals.selected_bssid:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
