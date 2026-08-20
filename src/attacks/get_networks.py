@@ -84,7 +84,7 @@ class get_networks:
                 scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
-        globals.scans_before_reset = 5
+        scans_before_reset = 5
         while not self._event_stop.is_set():
             try:
                 if not globals.send_beacon:
@@ -100,8 +100,8 @@ class get_networks:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                             globals.current_channel = globals.channel
                         scapy.sniff(filter=f" wlan host {globals.selected_bssid}", iface=globals.interface, prn=find_clients, store=0, timeout=1,stop_filter=lambda x: not globals.stop_scan)
-                    globals.scans_before_reset -= 1 
-                    if globals.scans_before_reset <= 0:
+                    scans_before_reset -= 1 
+                    if scans_before_reset <= 0:
                         globals.l_bssids = bssids.copy()
                         globals.l_ssids = ssids.copy()
                         globals.l_sec = sec.copy()
@@ -112,7 +112,7 @@ class get_networks:
                         bssids.clear()
                         ssids.clear()
                         sec.clear()
-                        globals.scans_before_reset = 5
+                        scans_before_reset = 5
                 else:
                     time.sleep(1)
             except Exception as e:
