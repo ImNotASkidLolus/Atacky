@@ -97,17 +97,23 @@ class get_networks:
                             globals.csv_saver.log()
                         scans_before_reset -= 1   
                         if scans_before_reset <= 0:
-                            globals.l_bssids = bssids
-                            globals.l_ssids = ssids
-                            globals.l_sec = sec
-                            globals.l_channels = channels
-                            globals.clients = clients
+                            l_bssids = bssids
+                            l_ssids = ssids
+                            l_sec = sec
+                            l_channels = channels
+                            l_clients = clients
                             clients.clear()
                             channels.clear()
                             bssids.clear()
                             ssids.clear()
                             sec.clear()
                             scans_before_reset = 5
+                        if scans_before_reset == 3:
+                            globals.l_bssids = l_bssids
+                            globals.l_ssids = l_ssids
+                            globals.l_sec = l_sec
+                            globals.l_channels = l_channels
+                            globals.l_clients = l_clients
                     elif globals.stop_scan and globals.selected_bssid:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
