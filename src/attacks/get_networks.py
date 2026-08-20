@@ -112,7 +112,7 @@ class get_networks:
                             ssids.clear()
                             sec.clear()
                         else:
-                            globals.l_clients = clients.copy()
+                            globals.clients = clients.copy()
                             clients.clear()
                         
                         scans_before_reset = 5
