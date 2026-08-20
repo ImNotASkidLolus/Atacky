@@ -63,6 +63,7 @@ sniff = None
 sniff_filter = ""
 scroll_delay = 0.1
 times_logged = 0
+scans_before_reset = 5
 
 def set_and_calc_networks():
     global networks_found
