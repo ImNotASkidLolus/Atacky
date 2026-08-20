@@ -86,6 +86,11 @@ class get_networks:
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         scans_before_reset = 5
         while not self._event_stop.is_set():
+            l_bssids = []
+            l_ssids = []
+            l_sec = []
+            l_channels = []
+            l_clients = []
             try:
                 if not globals.send_beacon:
                     if not globals.stop_scan:
