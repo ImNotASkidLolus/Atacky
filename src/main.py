@@ -113,7 +113,7 @@ def main(stdscr):
         title.attroff(curses.color_pair(1))
     def draw_input_info():
         input_info.attron(curses.color_pair(1))
-        input_info.addstr(0, 1, "P-Packet sniff S-stop scan G-Guided deauth Up/Down-select options".ljust(cols - 5))
+        input_info.addstr(0, 1, "P-Packet sniff S-stop scan G-Guided deauth Up/Down-select options ENTER-Confirm T-GPS info".ljust(cols - 5))
         input_info.attroff(curses.color_pair(1))
     def draw_status():
         status.attron(curses.color_pair(1))
