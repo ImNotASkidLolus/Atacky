@@ -67,23 +67,26 @@ class get_networks:
         else:
             globals.current_channel = 1
     def send_probe_request(self):
-        while not globals.stop_scan:
-            random_mac = scapy.RandMAC()
-            self.change_channel()
-            try:
-                subprocess.run(
-                    ["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)],
-                    check=True,
-                    capture_output=True,
-                    text=True
-                )
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to set channel to {globals.current_channel}: {e.stderr}")
-            probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
-                                addr2=random_mac,
-                                addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
-        
-            scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
+        while not self._event_stop.is_set():
+            if not globals.stop_scan:
+                random_mac = scapy.RandMAC()
+                self.change_channel()
+                try:
+                    subprocess.run(
+                        ["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.current_channel)],
+                        check=True,
+                        capture_output=True,
+                        text=True
+                    )
+                except subprocess.CalledProcessError as e:
+                    print(f"Failed to set channel to {globals.current_channel}: {e.stderr}")
+                probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
+                                    addr2=random_mac,
+                                    addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
+            
+                scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
+            else:
+                time.sleep(0.5)
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         scans_before_reset = 5
