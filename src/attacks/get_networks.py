@@ -32,6 +32,14 @@ def packet_handler(packet):
             channel = int.from_bytes(channel, byteorder='little')
             privacy = packet[scapy.Dot11Elt:4].info
             privacy = int(privacy[1])
+            bssid.replace("\0", "")
+            ssid.replace("\0", "")
+            channel.replace("\0", "")
+            privacy.replace("\0", "")
+            bssid.replace("\x00", "")
+            ssid.replace("\x00", "")
+            channel.replace("\x00", "")
+            privacy.replace("\x00", "")
             with globals.lock:
                 if bssid not in bssids:
                     bssids.append(bssid)
