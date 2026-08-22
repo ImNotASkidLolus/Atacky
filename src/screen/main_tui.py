@@ -22,13 +22,13 @@ def draw_main_box(main_box, stdscr, height, width):
                 for i, (ssid, bssid, sec, ch) in enumerate(big_data, start=1):
                     try:
                         if not stop_scan or row_selected != i + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:int((3/6) * width)], curses.color_pair(4))
+                            main_box.addstr(i + 1, 1,  ssid[:int((3/6) * width)].replace("\0",""), curses.color_pair(4))
                             main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(4))
                             main_box.addstr(i + 1, int((4/6) * width)+ 2, sec, curses.color_pair(4))
                             main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(4))
                         else:
                             main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:int((3/6) * width)], curses.color_pair(8))
+                            main_box.addstr(i + 1, 1,  ssid[:int((3/6) * width)].replace("\0",""), curses.color_pair(8))
                             main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(8))
                             main_box.addstr(i + 1, int((4/6) * width)+ 2, sec, curses.color_pair(8))
                             main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(8))
@@ -45,11 +45,11 @@ def draw_main_box(main_box, stdscr, height, width):
                 for i, (ssid, ch) in enumerate(small_data, start=1):
                     try:
                         if not stop_scan or row_selected != i + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5], curses.color_pair(4))
+                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(4))
                             main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(4))
                         else:
                             main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5], curses.color_pair(8))
+                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(8))
                             main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(8))
                     except curses.error:
                         break
