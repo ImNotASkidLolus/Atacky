@@ -62,10 +62,17 @@ class get_networks:
     def stop(self):
         self._event_stop.set()
     def change_channel(self):
-        if globals.current_channel < 13:
-            globals.current_channel += 1
-        else:
-            globals.current_channel = 1
+        CHANNELS= [1, 2, 3, 4, 
+                         5, 6, 7, 8, 
+                         9, 10, 11, 12, 
+                         13, 36, 40, 44, 48,           # UNII-1
+                        52, 56, 60, 64,           # UNII-2A
+                        100, 104, 108, 112, 116,   # UNII-2C
+                        120, 124, 128, 132, 136, 
+                        140, 144,
+                        149, 153, 157, 161, 165   # UNII-3
+                        ]
+        return random.choice(CHANNELS)
     def send_probe_request(self):
         while not self._event_stop.is_set():
             if not globals.stop_scan:
