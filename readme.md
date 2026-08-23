@@ -58,5 +58,5 @@ While on the main screen every `10s` it refreshes the found networks. By pressin
 ### You don't have a GPS module?
 For this app to work it's not necessary to have a GPS module, but it's highly recomended. If you want to buy one that you know that works here is a link you can use to find a suitable module:
 
-https://www.amazon.pl/dp/B07F6Y6DPT?ref=ppx_yo2ov_dt_b_fed_asin_title
+https://www.amazon.pl/Geekstory-odbiornik-satelitarnej-kompatybilny-Mikrokontroler/dp/B07PRGBLX7?__mk_pl_PL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1OVB2C83HYNV1&dib=eyJ2IjoiMSJ9.jhvYT2SnMWd9L05Oef_jkkHcUzpN7JV9vEOk2JZ-RsytcG42gNHOnQrqIcAWzAIDjaVbcomu3Yr-BVmsuShWn6PpeCOTHWng9WG7ZoC34gLU43W3koO7RkyXDX93UhpNO-8OIPbeUo1cyXG4eXF-NnHzEUhdIeSyErGQPZOtyONcdjGsYoZvdtJ5MruaWx84OLfwaQDpLpmuR5eRnG83JgZBkGSFqb_ZDpkAD2BCvaG1aC2IlvzHp3LXISFnw3mPP0IGI9jrkWS2XGH6piU2F1o_CKJwYN05_wGhMgZh_6g.-bI934tuoMT1kVOr1h3BoN22S7ThrQB_zAWTsTwBENc&dib_tag=se&keywords=gps+module&qid=1787491430&sprefix=gps+module%2Caps%2C143&sr=8-30
 
