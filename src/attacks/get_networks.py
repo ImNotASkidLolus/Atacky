@@ -62,7 +62,7 @@ class get_networks:
     def stop(self):
         self._event_stop.set()
     def change_channel(self):
-        if globals.current_channel < 11:
+        if globals.current_channel < 13:
             globals.current_channel += 1
         else:
             globals.current_channel = 1
