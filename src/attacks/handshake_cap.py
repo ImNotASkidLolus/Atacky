@@ -50,7 +50,8 @@ class capture:
         thread.start()
         bpf_filter = f"wlan addr2 {globals.selected_bssid.lower()} or wlan addr3 {globals.selected_bssid.lower()}"        
         scapy.sniff(filter = bpf_filter, iface = globals.interface, stop_filter= lambda p: self.check_packet(p) or self._stop.is_set())
-        scapy.wrpcapng(f"{globals.selected_ssid}.pcap", self.found_packets)
+        if self.found_handshake:
+            scapy.wrpcapng(f"{globals.selected_ssid}.pcap", self.found_packets)
         self.found_handshake = True
         d.stop()
 
