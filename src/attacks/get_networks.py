@@ -34,8 +34,6 @@ def packet_handler(packet):
             privacy = int(privacy[1])
             ssid.replace("\0", "")
             ssid.replace("\x00", "")
-            if channel > 13:
-                ssid = f"(5G) {ssid}"
             with globals.lock:
                 if bssid not in bssids:
                     bssids.append(bssid)
