@@ -61,6 +61,7 @@ def selected_network_info():
 class get_networks: 
     def __init__(self):
         self._event_stop = threading.Event()
+        self.channel_idx = 0
     def stop(self):
         self._event_stop.set()
     def change_channel(self):
@@ -70,11 +71,13 @@ class get_networks:
                          13, 36, 40, 44, 48,           # UNII-1
                         52, 56, 60, 64,           # UNII-2A
                         100, 104, 108, 112, 116,   # UNII-2C
-                        120, 124, 128, 132, 136, 
-                        140, 144,
-                        149, 153, 157, 161, 165   # UNII-3
+                        120, 124, 128, 132, 136  # UNII-3
                         ]
-        globals.current_channel = random.choice(CHANNELS)
+        if self.channel_idx < len(CHANNELS):
+            self.channel_idx +=1
+        else:
+            self.channel_idx = 0
+        globals.current_channel = CHANNELS[self.channel_idx]
     def send_probe_request(self):
         while not self._event_stop.is_set():
             if not globals.stop_scan:
