@@ -46,8 +46,6 @@ def draw_main_box(main_box, stdscr, height, width):
                 main_box.addstr(1, int((5/6) * width) , "CHANNEL", curses.color_pair(1))
                 for i, (ssid, ch) in enumerate(small_data, start=1):
                     try:
-                        if ch > 13:
-                            ssid = f"(5G) {ssid}"
                         if not stop_scan or row_selected != i + 1:
                             main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(4))
                             main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(4))

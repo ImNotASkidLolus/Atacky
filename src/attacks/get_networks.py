@@ -66,11 +66,7 @@ class get_networks:
         CHANNELS= [1, 2, 3, 4, 
                          5, 6, 7, 8, 
                          9, 10, 11, 12, 
-                         13, 36, 40, 44, 48,           # UNII-1
-                        52, 56, 60, 64,           # UNII-2A
-                        100, 104, 108, 112, 116,   # UNII-2C
-                        120, 124, 128, 132, 136  # UNII-3
-                        ]
+                         13]
         if self.channel_idx < len(CHANNELS) - 1:
             self.channel_idx +=1
         else:
