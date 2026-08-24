@@ -74,7 +74,7 @@ class get_networks:
                         140, 144,
                         149, 153, 157, 161, 165   # UNII-3
                         ]
-        return random.choice(CHANNELS)
+        globals.current_channel = random.choice(CHANNELS)
     def send_probe_request(self):
         while not self._event_stop.is_set():
             if not globals.stop_scan:
