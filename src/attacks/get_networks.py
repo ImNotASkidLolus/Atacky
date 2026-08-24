@@ -73,7 +73,7 @@ class get_networks:
                         100, 104, 108, 112, 116,   # UNII-2C
                         120, 124, 128, 132, 136  # UNII-3
                         ]
-        if self.channel_idx < len(CHANNELS):
+        if self.channel_idx < len(CHANNELS) - 1:
             self.channel_idx +=1
         else:
             self.channel_idx = 0
