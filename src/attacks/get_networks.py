@@ -60,24 +60,24 @@ class get_networks:
     def __init__(self):
         self._event_stop = threading.Event()
         self.channel_idx = 0
+        self.CHANNELS= [1, 2, 3, 4, 
+                        5, 6, 7, 8, 
+                        9, 10, 11, 12, 
+                        13, 36, 40, 44,
+                        48, 52, 56, 60, 
+                        64, 100, 104, 108,
+                        112, 116, 120, 124, 
+                        128, 132, 136, 140,
+                        144, 149, 153, 157, 
+                        161, 165]
     def stop(self):
         self._event_stop.set()
     def change_channel(self):
-        CHANNELS= [1, 2, 3, 4, 
-                         5, 6, 7, 8, 
-                         9, 10, 11, 12, 
-                         13, 36, 40, 44,
-                         48, 52, 56, 60, 
-                         64, 100, 104, 108,
-                         112, 116, 120, 124, 
-                         128, 132, 136, 140,
-                         144, 149, 153, 157, 
-                         161, 165]
-        if self.channel_idx < len(CHANNELS) - 1:
+        if self.channel_idx < len(self.CHANNELS) - 1:
             self.channel_idx +=1
         else:
             self.channel_idx = 0
-        globals.current_channel = CHANNELS[self.channel_idx]
+        globals.current_channel = self.CHANNELS[self.channel_idx]
     def send_probe_request(self):
         while not self._event_stop.is_set():
             if not globals.stop_scan:
