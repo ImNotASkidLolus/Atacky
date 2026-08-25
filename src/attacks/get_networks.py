@@ -66,7 +66,13 @@ class get_networks:
         CHANNELS= [1, 2, 3, 4, 
                          5, 6, 7, 8, 
                          9, 10, 11, 12, 
-                         13]
+                         13, 36, 40, 44,
+                         48, 52, 56, 60, 
+                         64, 100, 104, 108,
+                         112, 116, 120, 124, 
+                         128, 132, 136, 140,
+                         144, 149, 153, 157, 
+                         161, 165]
         if self.channel_idx < len(CHANNELS) - 1:
             self.channel_idx +=1
         else:
@@ -84,8 +90,8 @@ class get_networks:
                         capture_output=True,
                         text=True
                     )
-                except subprocess.CalledProcessError as e:
-                    print(f"Failed to set channel to {globals.current_channel}: {e.stderr}")
+                except subprocess.CalledProcessError:
+                    continue
                 probe_p = scapy.RadioTap() / scapy.Dot11(addr1="ff:ff:ff:ff:ff:ff",  
                                     addr2=random_mac,
                                     addr3="ff:ff:ff:ff:ff:ff") / scapy.Dot11ProbeReq()
