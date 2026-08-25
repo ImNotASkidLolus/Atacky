@@ -73,11 +73,14 @@ class get_networks:
     def stop(self):
         self._event_stop.set()
     def change_channel(self):
-        if self.channel_idx < len(self.CHANNELS) - 1:
-            self.channel_idx +=1
+        if globals.channel:
+            globals.current_channel = globals.channel
         else:
-            self.channel_idx = 0
-        globals.current_channel = self.CHANNELS[self.channel_idx]
+            if self.channel_idx < len(self.CHANNELS) - 1:
+                self.channel_idx +=1
+            else:
+                self.channel_idx = 0
+            globals.current_channel = self.CHANNELS[self.channel_idx]
     def send_probe_request(self):
         while not self._event_stop.is_set():
             if not globals.stop_scan:
