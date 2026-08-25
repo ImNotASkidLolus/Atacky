@@ -46,6 +46,11 @@ def packet_handler(packet):
                     ssids.append(ssid)
                     channels.append(channel)
                     sec.append(get_sec(privacy))
+                if bssid not in globals.l_bssids:
+                    bssids.append(bssid)
+                    ssids.append(ssid)
+                    channels.append(channel)
+                    sec.append(get_sec(privacy))
                 
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
