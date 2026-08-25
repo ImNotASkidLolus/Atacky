@@ -22,7 +22,7 @@ def get_sec(priv):
     elif priv == 3:
         return "WPA2"
     else:
-        return "UNKNOWN"
+        return priv
 def packet_handler(packet):
     if packet.haslayer(scapy.Dot11):
         if packet.haslayer(scapy.Dot11Beacon):
