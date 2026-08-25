@@ -35,8 +35,11 @@ def packet_handler(packet):
                     return
             privacy = packet[scapy.Dot11Elt:4].info
             privacy = int(privacy[1])
-            if packet[scapy.Dot11Elt:48]:
-                privacy = 3
+            try:
+                if packet[scapy.Dot11Elt:48]:
+                    privacy = 3
+            except Exception:
+                pass
             ssid.replace("\0", "")
             ssid.replace("\x00", "")
             with globals.lock:
