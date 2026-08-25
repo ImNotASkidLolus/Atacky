@@ -35,8 +35,7 @@ def packet_handler(packet):
                     return
             privacy = packet[scapy.Dot11Elt:4].info
             privacy = int(privacy[1])
-            RSN_INFO = packet[scapy.Dot11Elt:48].info
-            if RSN_INFO:
+            if packet[scapy.Dot11Elt:48].info:
                 privacy = 3
             ssid.replace("\0", "")
             ssid.replace("\x00", "")
