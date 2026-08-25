@@ -30,8 +30,9 @@ def packet_handler(packet):
             bssid = packet[scapy.Dot11].addr2
             channel = packet[scapy.Dot11Elt:3].info
             channel = int.from_bytes(channel, byteorder='little')
-            if channel != globals.channel:
-                return
+            if globals.channel:
+                if channel != globals.channel:
+                    return
             privacy = packet[scapy.Dot11Elt:4].info
             privacy = int(privacy[1])
             ssid.replace("\0", "")
