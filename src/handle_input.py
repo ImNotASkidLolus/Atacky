@@ -226,7 +226,6 @@ def handle_input(key, stdscr):
                     globals.selected_bssid = globals.l_bssids[idx]
                     if globals.l_channels[idx]:
                         globals.channel = globals.l_channels[idx]
-                        subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                     globals.selected_row = 1
                     globals.retry_time_left = 10
                     globals.attack_menu = True
