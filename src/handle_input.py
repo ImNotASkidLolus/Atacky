@@ -189,7 +189,7 @@ def handle_input(key, stdscr):
         elif globals.stop_scan:
             globals.stop_scan = False
             if not globals.started_w_single_channel:
-                globals.channel = False
+                globals.channel = None
         elif globals.det_gps:
             globals.det_gps = False
         elif globals.selected_misc_attack != "None": 
