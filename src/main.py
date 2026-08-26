@@ -195,6 +195,8 @@ argument_parser.add_argument("-l", "--larp", action="store_true", help = "Enable
 argument_parser.add_argument("-o", "--output", type=str, help="Specify the output file of the wigle csv")
 args = argument_parser.parse_args()
 globals.channel = args.channel
+if globals.channel:
+    globals.started_w_single_channel = True
 globals.interface = args.interface
 globals.larp_mode = args.larp
 wigle_filepath = args.output

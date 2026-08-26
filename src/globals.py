@@ -45,6 +45,7 @@ started_attack = False
 handshake_sniff = False
 detect_pwnagotchi = False
 misceleaneous = False
+started_w_single_channel = False
 
 handshake_capture = None
 deauth_thread = None
@@ -63,6 +64,7 @@ sniff = None
 sniff_filter = ""
 scroll_delay = 0.1
 times_logged = 0
+
 
 def set_and_calc_networks():
     global networks_found

@@ -188,6 +188,8 @@ def handle_input(key, stdscr):
                 globals.sniff_thread = None
         elif globals.stop_scan:
             globals.stop_scan = False
+            if not globals.started_w_single_channel:
+                globals.channel = False
         elif globals.det_gps:
             globals.det_gps = False
         elif globals.selected_misc_attack != "None": 
@@ -227,7 +229,6 @@ def handle_input(key, stdscr):
                     if globals.l_channels[idx]:
                         globals.channel = globals.l_channels[idx]
                     globals.selected_row = 1
-                    globals.retry_time_left = 10
                     globals.attack_menu = True
         elif globals.attack_menu and not globals.guided_deauth and not globals.misceleaneous:
             if globals.selected_row == 1 and not globals.started_attack:
