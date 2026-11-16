@@ -2,8 +2,6 @@ import curses
 import globals
 def draw_main_box(main_box, stdscr, height, width):
         with globals.lock:
-            big_data = list(zip(globals.l_ssids, globals.l_bssids, globals.l_sec, globals.l_channels))
-            small_data = list(zip(globals.l_ssids, globals.l_channels))
             stop_scan = globals.stop_scan
         main_box.erase()
         main_box.attron(curses.color_pair(2))
@@ -13,49 +11,107 @@ def draw_main_box(main_box, stdscr, height, width):
         if globals.attack_menu:
             pass
         else:
+            num_of_networks = len(globals.l_bssids)
+            loop_count = num_of_networks * 2
+            k = 0 # index of the network in the array of networks, it increments by 1 every two loop iterations
             if width > 85:
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
-                main_box.addstr(1, 1,  "SSID", curses.color_pair(1))
-                main_box.addstr(1, int((3/6) * width)+ 2, "BSSID", curses.color_pair(1))
-                main_box.addstr(1, int((4/6) * width)+ 2, "SECURITY", curses.color_pair(1))
-                main_box.addstr(1, int((5/6) * width)+ 2, "CHANNEL", curses.color_pair(1))
-                for i, (ssid, bssid, sec, ch) in enumerate(big_data, start=1):
+                main_box.addstr(1, 1,  "SSID", curses.color_pair(11))
+                main_box.addstr(1, int((3/6) * width)+ 2, "BSSID", curses.color_pair(17))
+                main_box.addstr(1, int((4/6) * width)+ 2, "SECURITY", curses.color_pair(15))
+                main_box.addstr(1, int((5/6) * width)+ 2, "CHANNEL", curses.color_pair(13))
+                for i in range(1, loop_count + 2):
                     try:
+                        if i == loop_count + 1:
+                            for j in range(width):
+                                if j == 0:
+                                    main_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                                elif j == width - 1:
+                                    main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                                elif j == int((3/6) * width) or j == int((4/6) * width)  or j == int((5/6) * width):
+                                    main_box.addstr(i + 1, j, "┴", curses.color_pair(2))
+                                else:    
+                                    main_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                            break
+                        elif i % 2 != 0:
+                            for j in range(width):
+                                if j == 0:
+                                    main_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                                elif j == width - 1:
+                                    main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                                elif j == int((3/6) * width) or j == int((4/6) * width)  or j == int((5/6) * width):
+                                    main_box.addstr(i + 1, j, "┼", curses.color_pair(2))
+                                else:    
+                                    main_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                            continue
+                        else:
+                            main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
+                            main_box.addstr(i+1, int((4/6) * width), "│", curses.color_pair(2))
+                            main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
+
+                        ssid = globals.l_ssids[k]
+                        bssid = globals.l_bssids[k]
+                        ch = globals.l_channels[k]
+                        sec = globals.l_sec[k]
+                        k = k + 1
                         if ch > 13:
                             ssid = f"(5G) {ssid}"
-                        if not stop_scan or row_selected != i + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(4))
-                            main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(4))
-                            main_box.addstr(i + 1, int((4/6) * width)+ 2, str(sec), curses.color_pair(4))
-                            main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(4))
+                        if not stop_scan or row_selected != k + 1:
+                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(10))
+                            main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(16))
+                            main_box.addstr(i + 1, int((4/6) * width)+ 2, str(sec), curses.color_pair(14))
+                            main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(12))
                         else:
                             main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(8))
-                            main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(8))
-                            main_box.addstr(i + 1, int((4/6) * width)+ 2,  str(sec), curses.color_pair(8))
-                            main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(8))
+                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(11))
+                            main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(17))
+                            main_box.addstr(i + 1, int((4/6) * width)+ 2,  str(sec), curses.color_pair(15))
+                            main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(13))
                     except curses.error:
-                        break
-                for i in range(height -3):
-                    main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
-                    main_box.addstr(i+1, int((4/6) * width), "│", curses.color_pair(2))
-                    main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
+                        break  
             else:
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
-                main_box.addstr(1, 1, "SSID", curses.color_pair(1))
-                main_box.addstr(1, int((5/6) * width) , "CHANNEL", curses.color_pair(1))
-                for i, (ssid, ch) in enumerate(small_data, start=1):
+                main_box.addstr(1, 1, "SSID", curses.color_pair(11))
+                main_box.addstr(1, int((5/6) * width) , "CHANNEL", curses.color_pair(13))
+                for i in range(1, loop_count + 2):
+                    if i == 1:
+                        continue
+                    if i == loop_count + 1:
+                        for j in range(width):
+                            if j == 0:
+                                main_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                            elif j == width - 1:
+                                main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                            else:    
+                                main_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                        break
+                    elif i % 2 != 0:
+                        for j in range(width):
+                            if j == 0:
+                                main_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                            elif j == width - 1:
+                                main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                            else:    
+                                main_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                        continue
+                    else:
+                        ssid = globals.l_ssids[k]
+                        bssid = globals.l_bssids[k]
+                        ch = globals.l_channels[k]
+                        sec = globals.l_sec[k]
+                        k = k + 1
                     if ch > 13:
                         ssid = f"(5G) {ssid}"
                     try:
-                        if not stop_scan or row_selected != i + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(4))
-                            main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(4))
+                        if not stop_scan or row_selected != k + 1:
+                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(10))
+                            main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(12))
                         else:
                             main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(8))
-                            main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(8))
+                            main_box.addstr(i + 1, 1,  ssid[:int((5/6) * width) - 5].replace("\0",""), curses.color_pair(11))
+                            main_box.addstr(i + 1, int((5/6) * width), str(ch), curses.color_pair(13))
                     except curses.error:
                         break
                 for i in range(height - 3):
                     main_box.addstr(i+1, int((5/6) * width) - 2, "│", curses.color_pair(2))
+ 

@@ -66,6 +66,20 @@ def main(stdscr):
     curses.init_pair(6, curses.COLOR_BLACK,   curses.COLOR_CYAN)     # was yellow/white — now black on cyan, clean and readable
     curses.init_pair(8, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # line select text — unchanged, this one was already correct
     curses.init_pair(9, curses.COLOR_GREEN,   curses.COLOR_GREEN)    # green bar — unchanged, solid fill needs to stay green
+
+    #======================TUI better colors===========================#
+    curses.init_pair(10, curses.COLOR_BLUE, -1) # Color of networks when not selected
+    curses.init_pair(11, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of networks when selected
+
+    curses.init_pair(12, curses.COLOR_GREEN, -1) # Color of channels when not selected
+    curses.init_pair(13, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of channels when not selected
+
+    curses.init_pair(14, curses.COLOR_YELLOW, -1) # Color of security when not selected
+    curses.init_pair(15, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of security when not selected
+
+    curses.init_pair(16, curses.COLOR_GREEN, -1) # Color of bssids when not selected
+    curses.init_pair(17, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of bssids when not selected
+
     if cols > 80:
         att_sel_height = 14
         att_sel_width = cols - 10
@@ -93,8 +107,8 @@ def main(stdscr):
     
     main_box = curses.newwin(rows - 3, cols - 2, 1, 1)
     if cols > 80:
-        attack_sel = curses.newwin(att_sel_height, att_sel_width, rows//2 - 14, 5)
-        attack_screen = curses.newwin(att_screen_height, att_screen_width, rows//2, 5)
+        attack_sel = curses.newwin(att_sel_height, att_sel_width, 2, 5)
+        attack_screen = curses.newwin(att_screen_height, att_screen_width, 16, 5)
         gps_info = curses.newwin(gps_in_height, gps_in_width, int((rows - 10)//2)-11, cols//2 - 38)
         gps_sats = curses.newwin(gps_sat_height, gps_sat_width, int((rows - 10)//2)-11, cols//2)
     else:

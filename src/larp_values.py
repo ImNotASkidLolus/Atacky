@@ -9,7 +9,7 @@ l_bssids = [
 l_ssids = [
     "HomeNetwork", "CoffeeShop_WiFi", "Office_5G", "Neighbor_Net",
     "GuestNetwork", "big big big big network name bla bla bla bla bla", "SecureNet_Pro", "HiddenSSID",
-    "PublicWiFi", "TestNetwork", "big big big big network name bla bla bla bla bla"
+    "PublicWiFi", "TestNetwork"
 ]
 
 l_sec = [

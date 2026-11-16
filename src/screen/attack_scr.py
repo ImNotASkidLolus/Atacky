@@ -64,22 +64,55 @@ def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
     attack_box.attron(curses.color_pair(2))
     attack_box.box()
     attack_box.attroff(curses.color_pair(2))
+    attack_box.addstr(1,1, " ".center(width -2), curses.color_pair(1))
     if not globals.clients:
         attack_box.addstr(1,1, "No clients found for this network.", curses.color_pair(1))
     else:
-        attack_box.addstr(1,1, "DEAUTHENTICATION ATTACK".center(width -2), curses.color_pair(1))
-        for i, client in enumerate(globals.clients,start=1):
+        attack_box.addstr(1, 1, "MAC ADDRESS", curses.color_pair(11))
+        attack_box.addstr(1, int(0.5* width + 2), "LOOKUP", curses.color_pair(13))
+        k = 0
+        loop_count = len(globals.clients) * 2
+        for i in range(1, loop_count + 2):
             try:
+                if i == loop_count + 1:
+                    for j in range(width):
+                        if j == 0:
+                            attack_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                        elif j == width - 1:
+                            attack_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                        elif j == int(0.5 * width):
+                            attack_box.addstr(i + 1, j, "┴", curses.color_pair(2))
+                        else:    
+                            attack_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                    break
+                elif i % 2 != 0:
+                    for j in range(width):
+                        if j == 0:
+                            attack_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                        elif j == width - 1:
+                            attack_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                        elif j == int(0.5 * width):
+                            attack_box.addstr(i + 1, j, "┼", curses.color_pair(2))
+                        else:    
+                            attack_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                    continue
+                else:
+                    attack_box.addstr(i+1, int(0.5 * width), "│", curses.color_pair(2))
+                client = globals.clients[k]
+                k = k + 1
                 if i < height - 3:
                     if not globals.guided_deauth:
-                        attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
+                        attack_box.addstr(i + 1, 1, client, curses.color_pair(10))
+                        attack_box.addstr(i + 1, int(0.5*width + 2), oui.check_vendor(client)[:15], curses.color_pair(12))
                     if globals.guided_deauth:
-                        if globals.selected_client_row == i:
-                            attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(8))
+                        if globals.selected_client_row == k + 1:
+                            attack_box.addstr(i + 1, 1, client, curses.color_pair(10))
+                            attack_box.addstr(i + 1, int(0.5*width + 2), oui.check_vendor(client)[:15], curses.color_pair(12))
                         else:
-                            attack_box.addstr(i + 1, 1, f"{i}. {client} ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
-                        attack_box.addstr(height - 2, 1, f"GUIDED: {globals.guided_deauth}", curses.color_pair(1))
-                        attack_box.addstr(height - 2, 15, f"CLIENT: {globals.selected_client}", curses.color_pair(1))
+                            attack_box.addstr(i + 1, 1, client, curses.color_pair(11))
+                            attack_box.addstr(i + 1, int(0.5*width + 2), oui.check_vendor(client)[:15], curses.color_pair(13))
+                else:
+                    break
             except curses.error:
                 break
         
@@ -102,17 +135,49 @@ def draw_oui_screen(attack_box, stdscr, width, height):
     attack_box.attron(curses.color_pair(2))
     attack_box.box()
     attack_box.attroff(curses.color_pair(2))
-    attack_box.addstr(1,1, "OUI MAC ADDRESS LOOKUP".center(width -2), curses.color_pair(1))
+    attack_box.addstr(1,1, " ".center(width -2), curses.color_pair(1))
     if not globals.clients:
         attack_box.addstr(1,1, "No clients found for this network".center(width -2), curses.color_pair(1))
     else:
-        for i, client in enumerate(globals.clients,start=1):
+        attack_box.addstr(1, 1, "MAC ADDRESS", curses.color_pair(11))
+        attack_box.addstr(1, int(0.5* width) + 2, "LOOKUP", curses.color_pair(13))
+        k = 0
+        loop_count = len(globals.clients) * 2
+        for i in range(1, loop_count + 2):
             try:
+                if i == height - 3:
+                    for j in range(width):
+                        if j == 0:
+                            attack_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                        elif j == width - 1:
+                            attack_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                        elif j == int(0.5 * width):
+                            attack_box.addstr(i + 1, j, "┴", curses.color_pair(2))
+                        else:    
+                            attack_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                    break
+                elif i % 2 != 0:
+                    for j in range(width):
+                        if j == 0:
+                            attack_box.addstr(i + 1, j, "├",curses.color_pair(2))
+                        elif j == width - 1:
+                            attack_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                        elif j == int(0.5 * width):
+                            attack_box.addstr(i + 1, j, "┼", curses.color_pair(2))
+                        else:    
+                            attack_box.addstr(i + 1, j, "─",curses.color_pair(2))
+                    continue
+                else:
+                    attack_box.addstr(i + 1, int(0.5 * width), "│", curses.color_pair(2))
+                client = globals.clients[k]
+                k = k + 1
                 if i < height - 3:
-                    attack_box.addstr(i + 1, 1, f"{i}. {client}  ->  {oui.check_vendor(client)[:15]}", curses.color_pair(4))
+                    attack_box.addstr(i + 1, 1, client, curses.color_pair(10))
+                    attack_box.addstr(i + 1, int(0.5*width + 2), oui.check_vendor(client)[:15], curses.color_pair(12))
+                else:
+                    break
             except curses.error:
                 break
-    attack_box.addstr(height - 2,1, f"SSID: {globals.selected_ssid[:10]} {globals.selected_bssid}".center(width -2), curses.color_pair(1))
 def draw_handshake_cap_screen(box, width, height):
     box.erase()
     box.attron(curses.color_pair(2))
