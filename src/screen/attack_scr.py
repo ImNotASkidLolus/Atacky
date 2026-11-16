@@ -11,25 +11,25 @@ def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
     attack_box.attroff(curses.color_pair(2))
     attack_box.addstr(1,1, "SELECT YOUR ATTACK TYPE".center(width -2), curses.color_pair(1))
     if globals.selected_row == 1:
-        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(1))
+        attack_box.addstr(3,1, " ->Deauthentication Attack(DEAUTH)", curses.color_pair(4))
     else:
-        attack_box.addstr(3,1, "1. Deauthentication Attack(DEAUTH)", curses.color_pair(4))
+        attack_box.addstr(3,1, " Deauthentication Attack(DEAUTH)", curses.color_pair(4))
     if globals.selected_row == 2:
-        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(1))
+        attack_box.addstr(4,1, " ->FAKE BEACON FRAME SPAM", curses.color_pair(4))
     else:
-        attack_box.addstr(4,1, "2. FAKE BEACON FRAME SPAM", curses.color_pair(4))
+        attack_box.addstr(4,1, " FAKE BEACON FRAME SPAM", curses.color_pair(4))
     if globals.selected_row == 3:
-        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(1))
+        attack_box.addstr(5, 1, " ->Authentication flood attack", curses.color_pair(4))
     else:
-        attack_box.addstr(5, 1, "3. Authentication flood attack", curses.color_pair(4))
+        attack_box.addstr(5, 1, " Authentication flood attack", curses.color_pair(4))
     if globals.selected_row == 4:
-        attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(1))
+        attack_box.addstr(6, 1, " ->Client MAC OUI map lookup", curses.color_pair(4))
     else:
-        attack_box.addstr(6, 1, "4. Client MAC OUI map lookup", curses.color_pair(4))
+        attack_box.addstr(6, 1, " Client MAC OUI map lookup", curses.color_pair(4))
     if globals.selected_row == 5:
-        attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(1))
+        attack_box.addstr(7, 1, " ->Handshake capture", curses.color_pair(4))
     else:
-        attack_box.addstr(7, 1, "5. Handshake capture", curses.color_pair(4))
+        attack_box.addstr(7, 1, " Handshake capture", curses.color_pair(4))
     if globals.clients is None or globals.clients == []:
         attack_box.addstr(9,1, "Clients for this network NOT FOUND!", curses.color_pair(4))
     else:
@@ -42,21 +42,21 @@ def draw_misceleaneous(box, width, height):
     box.attroff(curses.color_pair(2))
     box.addstr(1,1, "MISCELEANOUS ATTACKS".center(width - 2), curses.color_pair(1))
     if globals.selected_row == 1:
-        box.addstr(3, 1, "1. Detect pwnagotchis", curses.color_pair(1))
+        box.addstr(3, 1, " ->Detect pwnagotchis", curses.color_pair(4))
     else:
-        box.addstr(3, 1, "1. Detect pwnagotchis", curses.color_pair(4))
+        box.addstr(3, 1, " Detect pwnagotchis", curses.color_pair(4))
     if globals.selected_row == 2:
-        box.addstr(4,1, "2. Beacon spam(Rick roll)", curses.color_pair(1))
+        box.addstr(4,1, " ->Beacon spam(Rick roll)", curses.color_pair(4))
     else: 
-        box.addstr(4,1, "2. Beacon spam(Rick roll)", curses.color_pair(4))
+        box.addstr(4,1, " Beacon spam(Rick roll)", curses.color_pair(4))
     if globals.selected_row == 3:
-        box.addstr(5,1, "3. Beacon spam(Random)", curses.color_pair(1))
+        box.addstr(5,1, " ->Beacon spam(Random)", curses.color_pair(4))
     else:
-        box.addstr(5,1, "3. Beacon spam(Random)", curses.color_pair(4))
+        box.addstr(5,1, " Beacon spam(Random)", curses.color_pair(4))
     if globals.selected_row == 4:
-        box.addstr(6,1, "4. Deauth flood", curses.color_pair(1))
+        box.addstr(6,1, " ->Deauth flood", curses.color_pair(4))
     else:
-        box.addstr(6,1, "4. Deauth flood", curses.color_pair(4))
+        box.addstr(6,1, " Deauth flood", curses.color_pair(4))
                     
     box.addstr(12, 1, f"Selected: {globals.selected_misc_attack}".center(width -2), curses.color_pair(1))
 def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
@@ -72,9 +72,9 @@ def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
         attack_box.addstr(1, int(0.5* width + 2), "LOOKUP", curses.color_pair(13))
         k = 0
         loop_count = len(globals.clients) * 2
-        for i in range(1, loop_count + 2):
+        for i in range(1, loop_count + 1):
             try:
-                if i == loop_count + 1:
+                if i == loop_count:
                     for j in range(width):
                         if j == 0:
                             attack_box.addstr(i + 1, j, "├",curses.color_pair(2))

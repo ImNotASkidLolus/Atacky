@@ -18,8 +18,8 @@ def draw_main_box(main_box, stdscr, height, width):
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
                 main_box.addstr(1, 1,  "SSID", curses.color_pair(11))
                 main_box.addstr(1, int((3/6) * width)+ 2, "BSSID", curses.color_pair(17))
-                main_box.addstr(1, int((4/6) * width)+ 2, "SECURITY", curses.color_pair(15))
-                main_box.addstr(1, int((5/6) * width)+ 2, "CHANNEL", curses.color_pair(13))
+                main_box.addstr(1, int((3/6) * width) + 20 + 2, "SECURITY", curses.color_pair(15))
+                main_box.addstr(1, int((5/6) * width) + 2, "CHANNEL", curses.color_pair(13))
                 for i in range(1, loop_count + 2):
                     try:
                         if i == loop_count + 1:
@@ -28,7 +28,7 @@ def draw_main_box(main_box, stdscr, height, width):
                                     main_box.addstr(i + 1, j, "├",curses.color_pair(2))
                                 elif j == width - 1:
                                     main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
-                                elif j == int((3/6) * width) or j == int((4/6) * width)  or j == int((5/6) * width):
+                                elif j == int((3/6) * width) or j == int((3/6) * width) + 20  or j == int((5/6) * width):
                                     main_box.addstr(i + 1, j, "┴", curses.color_pair(2))
                                 else:    
                                     main_box.addstr(i + 1, j, "─",curses.color_pair(2))
@@ -39,14 +39,15 @@ def draw_main_box(main_box, stdscr, height, width):
                                     main_box.addstr(i + 1, j, "├",curses.color_pair(2))
                                 elif j == width - 1:
                                     main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
-                                elif j == int((3/6) * width) or j == int((4/6) * width)  or j == int((5/6) * width):
+                                elif j == int((3/6) * width) or j == int((3/6) * width) + 20  or j == int((5/6) * width):
                                     main_box.addstr(i + 1, j, "┼", curses.color_pair(2))
                                 else:    
                                     main_box.addstr(i + 1, j, "─",curses.color_pair(2))
                             continue
+                        
                         else:
                             main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
-                            main_box.addstr(i+1, int((4/6) * width), "│", curses.color_pair(2))
+                            main_box.addstr(i+1, int((3/6) * width) + 20, "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
 
                         ssid = globals.l_ssids[k]
@@ -57,15 +58,15 @@ def draw_main_box(main_box, stdscr, height, width):
                         if ch > 13:
                             ssid = f"(5G) {ssid}"
                         if not stop_scan or row_selected != k + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(10))
+                            main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(10))
                             main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(16))
-                            main_box.addstr(i + 1, int((4/6) * width)+ 2, str(sec), curses.color_pair(14))
+                            main_box.addstr(i + 1, int((3/6) * width) + 20 + 2, str(sec), curses.color_pair(14))
                             main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(12))
                         else:
                             main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:width//2].replace("\0",""), curses.color_pair(11))
+                            main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(11))
                             main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(17))
-                            main_box.addstr(i + 1, int((4/6) * width)+ 2,  str(sec), curses.color_pair(15))
+                            main_box.addstr(i + 1, int((3/6) * width) + 20 + 2,  str(sec), curses.color_pair(15))
                             main_box.addstr(i + 1, int((5/6) * width)+ 2, str(ch), curses.color_pair(13))
                     except curses.error:
                         break  
