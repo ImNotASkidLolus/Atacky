@@ -51,7 +51,7 @@ def draw_main_box(main_box, stdscr, height, width):
                             main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((3/6) * width) + 20, "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
-                            if k < num_of_networks:
+                            if k < num_of_networks - 1:
                                 ssid = globals.l_ssids[k]
                                 bssid = globals.l_bssids[k]
                                 ch = globals.l_channels[k]

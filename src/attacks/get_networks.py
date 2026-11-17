@@ -21,6 +21,10 @@ def get_sec(priv):
         return "WPA"
     elif priv == 3:
         return "WPA2"
+    elif priv == 5:
+        return "WPA(256)"
+    elif priv == 24:
+        return "WPA3-P"
     else:
         return priv
 def packet_handler(packet):
