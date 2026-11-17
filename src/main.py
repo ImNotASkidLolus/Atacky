@@ -157,8 +157,16 @@ argument_parser.add_argument("-i", "--interface", type=str, help="Specify the ne
 argument_parser.add_argument("-c", "--channel", type=str, help="Specify the channel of scanning")
 argument_parser.add_argument("-l", "--larp", action="store_true", help = "Enable LARP mode")
 argument_parser.add_argument("-o", "--output", type=str, help="Specify the output file of the wigle csv")
+argument_parser.add_argument("-g", "--twoghz", action="store_true", help="activate only 2.4ghz mode")
+argument_parser.add_argument("-a", "--fiveghz", action="store_true", help="activate only 5ghz mode")
+
 args = argument_parser.parse_args()
 globals.channel = args.channel
+globals.two_ghz_only = args.twoghz
+globals.five_ghz_only = args.fiveghz
+if globals.two_ghz_only and globals.five_ghz_only:
+    print("YOU can't activate both 2 ghz only mode with 5 ghz only mode, that makes no sense right?")
+    exit()
 if globals.channel:
     globals.started_w_single_channel = True
 globals.interface = args.interface

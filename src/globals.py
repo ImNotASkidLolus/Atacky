@@ -47,6 +47,9 @@ detect_pwnagotchi = False
 misceleaneous = False
 started_w_single_channel = False
 
+two_ghz_only = False
+five_ghz_only = False
+
 handshake_capture = None
 deauth_thread = None
 beacon_thread = None
