@@ -52,42 +52,23 @@ def packet_handler(packet):
                     if ssid == "":
                         return
                     elif bssid not in bssids:
-                        with globals.lock:
-                            bssids.append(bssid)
-                            ssids.append(ssid)
-                            channels.append(channel)
-                            sec.append(get_sec(privacy))
+                        bssids.append(bssid)
+                        ssids.append(ssid)
+                        channels.append(channel)
+                        sec.append(get_sec(privacy))
     except IndexError:
         return
                 
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):
         target = globals.selected_bssid
-        
-        # Extract frame control flags to determine address meanings
-        to_ds = packet.FCfield & 0x01
-        from_ds = packet.FCfield & 0x02
-        
-        bssid = None
-        client_addr = None
-        
-        # Determine actual BSSID and client based on 802.11 direction rules
-        if packet.haslayer(scapy.Dot11Beacon) or packet.haslayer(scapy.Dot11ProbeResp):
-            bssid = packet.addr3
-            client_addr = packet.addr2  # Often broadcast, but can be source
-        elif to_ds == 1 and from_ds == 0:  # Client -> AP
-            bssid = packet.addr1
-            client_addr = packet.addr2
-        elif to_ds == 0 and from_ds == 1:  # AP -> Client
-            bssid = packet.addr2
-            client_addr = packet.addr1
-            
-        # Match only if the real BSSID matches our target
-        if bssid and bssid.lower() == target.lower():
-            if client_addr and client_addr != target and client_addr != "ff:ff:ff:ff:ff:ff":
-                with globals.lock:
-                    if client_addr not in clients:
-                        clients.append(client_addr)
+        addrs = [packet.addr1, packet.addr2, packet.addr3]
+        if target in addrs:
+            for addr in addrs:
+                if addr and addr != target and addr != "ff:ff:ff:ff:ff:ff":
+                    with globals.lock:
+                        if addr not in clients:
+                            clients.append(addr)
 def selected_network_info():
     with globals.lock:
         if globals.selected_bssid:
@@ -166,7 +147,7 @@ class get_networks:
                         globals.set_and_calc_networks()
                         if globals.fix:
                             globals.csv_saver.log()                            
-                    elif globals.stop_scan and globals.selected_bssid:
+                    elif globals.stop_scan and globals.attack_menu:
                         if globals.current_channel != globals.channel:
                             subprocess.run(["sudo", "iw", "dev", globals.interface, "set", "channel", str(globals.channel)], check=True)
                             globals.current_channel = globals.channel
