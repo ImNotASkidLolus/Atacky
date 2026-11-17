@@ -52,10 +52,11 @@ def packet_handler(packet):
                     if ssid == "":
                         return
                     elif bssid not in bssids:
-                        bssids.append(bssid)
-                        ssids.append(ssid)
-                        channels.append(channel)
-                        sec.append(get_sec(privacy))
+                        with globals.lock:
+                            bssids.append(bssid)
+                            ssids.append(ssid)
+                            channels.append(channel)
+                            sec.append(get_sec(privacy))
     except IndexError:
         return
                 
