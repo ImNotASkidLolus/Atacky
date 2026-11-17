@@ -51,12 +51,12 @@ def draw_main_box(main_box, stdscr, height, width):
                             main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((3/6) * width) + 20, "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
-                        if k < num_of_networks:
-                            ssid = globals.l_ssids[k]
-                            bssid = globals.l_bssids[k]
-                            ch = globals.l_channels[k]
-                            sec = globals.l_sec[k]
-                            k = k + 1
+                            if k < num_of_networks:
+                                ssid = globals.l_ssids[k]
+                                bssid = globals.l_bssids[k]
+                                ch = globals.l_channels[k]
+                                sec = globals.l_sec[k]
+                                k = k + 1
                         if ch > 13:
                             ssid = f"(5G) {ssid}"
                         if not stop_scan or row_selected != k + 1:
@@ -76,7 +76,7 @@ def draw_main_box(main_box, stdscr, height, width):
             else:
                 main_box.addstr(1, 1, " ".center(width - 2), curses.color_pair(9))
                 main_box.addstr(1, 1, "SSID", curses.color_pair(11))
-                main_box.addstr(1, int((5/6) * width) , "CHANNEL", curses.color_pair(13))
+                main_box.addstr(1, int((5/6) * width) + 2 , "CHANNEL", curses.color_pair(13))
                 for i in range(1, loop_count + 2):
                     if i == 1:
                         continue
@@ -99,11 +99,13 @@ def draw_main_box(main_box, stdscr, height, width):
                                 main_box.addstr(i + 1, j, "─",curses.color_pair(2))
                         continue
                     else:
-                        ssid = globals.l_ssids[k]
-                        bssid = globals.l_bssids[k]
-                        ch = globals.l_channels[k]
-                        sec = globals.l_sec[k]
-                        k = k + 1
+                        main_box.addstr(i+1, int((5/6) * width), "│", curses.color_pair(2))
+                        if k < num_of_networks:
+                            ssid = globals.l_ssids[k]
+                            bssid = globals.l_bssids[k]
+                            ch = globals.l_channels[k]
+                            sec = globals.l_sec[k]
+                            k = k + 1
                     if ch > 13:
                         # every 5GHz network has their channel above 13 so therefore we add this infront of them to distinguish them
                         ssid = f"(5G) {ssid}"
