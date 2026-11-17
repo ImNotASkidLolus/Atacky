@@ -48,6 +48,7 @@ def packet_handler(packet):
                 ssid.replace("\0", "")
                 ssid.replace("\x00", "")
                 with globals.lock:
+                    #skip networks that don't have a name
                     if ssid == "":
                         return
                     elif bssid not in bssids:
