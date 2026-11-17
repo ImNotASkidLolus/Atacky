@@ -70,7 +70,7 @@ def draw_deauth_screen(attack_box:curses.window, stdscr, width, height):
     else:
         attack_box.addstr(1, 1, "MAC ADDRESS", curses.color_pair(11))
         attack_box.addstr(1, int(0.5* width + 2), "LOOKUP", curses.color_pair(13))
-        k = 0
+        k = 0 # index of the clients in the array of clients(globals.clients), it increments by 1 every two loop iterations
         loop_count = len(globals.clients) * 2
         for i in range(1, loop_count + 1):
             try:

@@ -24,30 +24,33 @@ def get_sec(priv):
     else:
         return priv
 def packet_handler(packet):
-    if packet.haslayer(scapy.Dot11):
-        if packet.haslayer(scapy.Dot11Beacon):
-            ssid = packet[scapy.Dot11Elt].info.decode(errors='ignore')
-            bssid = packet[scapy.Dot11].addr2
-            channel = packet[scapy.Dot11Elt:3].info
-            channel = int.from_bytes(channel, byteorder='little')
-            if globals.channel:
-                if channel != globals.channel:
-                    return
-            privacy = packet[scapy.Dot11Elt:4].info
-            privacy = int(privacy[1])
-            try:
-                if packet[scapy.Dot11Elt:48]:
-                    privacy = 3
-            except Exception:
-                pass
-            ssid.replace("\0", "")
-            ssid.replace("\x00", "")
-            with globals.lock:
-                if bssid not in bssids:
-                    bssids.append(bssid)
-                    ssids.append(ssid)
-                    channels.append(channel)
-                    sec.append(get_sec(privacy))
+    try:
+        if packet.haslayer(scapy.Dot11):
+            if packet.haslayer(scapy.Dot11Beacon):
+                ssid = packet[scapy.Dot11Elt].info.decode(errors='ignore')
+                bssid = packet[scapy.Dot11].addr2
+                channel = packet[scapy.Dot11Elt:3].info
+                channel = int.from_bytes(channel, byteorder='little')
+                if globals.channel:
+                    if channel != globals.channel:
+                        return
+                privacy = packet[scapy.Dot11Elt:4].info
+                privacy = int(privacy[1])
+                try:
+                    if packet[scapy.Dot11Elt:48]:
+                        privacy = 3
+                except Exception:
+                    pass
+                ssid.replace("\0", "")
+                ssid.replace("\x00", "")
+                with globals.lock:
+                    if bssid not in bssids:
+                        bssids.append(bssid)
+                        ssids.append(ssid)
+                        channels.append(channel)
+                        sec.append(get_sec(privacy))
+    except IndexError:
+        return
                 
 def find_clients(packet):
     if packet.haslayer(scapy.Dot11):

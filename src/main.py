@@ -1,54 +1,4 @@
-print( """\033[0;31m
- █████╗ ████████╗ █████╗  ██████╗██╗  ██╗██╗   ██╗
-██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝
-███████║   ██║   ███████║██║     █████╔╝  ╚████╔╝ 
-██╔══██║   ██║   ██╔══██║██║     ██╔═██╗   ╚██╔╝  
-██║  ██║   ██║   ██║  ██║╚██████╗██║  ██╗   ██║   
-╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   by ImNoTASkidLolus\033[0m""")
-print("LOADING, PLEASE WAIT...")
-import sys
-import threading 
-#LOADED: [█ █ █ █ █ █ █ █ █ █ █ █ █]
-if "threading" in sys.modules:
-    print("[█ ░                      ] 1/13\r", end="", flush=True)
-import curses
-if "curses" in sys.modules:
-    print("[█ █ ░                    ] 2/13\r", end="", flush=True)
-import argparse
-if "argparse" in sys.modules:
-    print("[█ █ █ ░                  ] 3/13\r", end="", flush=True)
-import attacks.get_networks as get_networks
-if "attacks.get_networks" in sys.modules:
-    print("[█ █ █ █ ░                ] 4/13\r", end="", flush=True)
-import screen.main_tui as main_tui
-if "screen.main_tui" in sys.modules:
-    print("[█ █ █ █ █ ░              ] 5/13\r", end="", flush=True)
-import screen.attack_scr as attack_scr
-if "screen.attack_scr" in sys.modules:
-    print("[█ █ █ █ █ █ ░            ] 6/13\r", end="", flush=True)
-import screen.sniffer_scr as sniff_scr
-if "screen.sniffer_scr" in sys.modules:
-    print("[█ █ █ █ █ █ █ ░          ] 7/13\r", end="", flush=True)
-import screen.gps_screen as gps_scr  
-if "screen.gps_screen" in sys.modules:
-    print("[█ █ █ █ █ █ █ █ ░        ] 8/13\r", end="", flush=True)                               
-import handle_input
-if "handle_input" in sys.modules:
-    print("[█ █ █ █ █ █ █ █ █ ░      ] 9/13\r", end="", flush=True)
-import attacks.OUI_checker as oui
-if "attacks.OUI_checker" in sys.modules:
-    print("[█ █ █ █ █ █ █ █ █ █ ░    ] 10/13\r", end="", flush=True)
-import attacks.wigle_csv_saver as saver
-if "attacks.wigle_csv_saver" in sys.modules:
-    print("[█ █ █ █ █ █ █ █ █ █ █ ░  ] 11/13\r", end="", flush=True)
-import attacks.gps_tracker as tracker
-if "attacks.gps_tracke" in sys.modules:
-    print("[█ █ █ █ █ █ █ █ █ █ █ █ ░] 12/13\r", end="", flush=True)
-import globals
-if "globals"in sys.modules:
-    print("[█ █ █ █ █ █ █ █ █ █ █ █ █] 13/13\r", flush=True)
-
-
+import sys, argparse, threading, curses, globals, time
 def main(stdscr):
     global rows, cols 
     rows, cols = stdscr.getmaxyx()
@@ -215,6 +165,53 @@ globals.interface = args.interface
 globals.larp_mode = args.larp
 wigle_filepath = args.output
 if not globals.larp_mode:
+    print( """\033[0;31m
+    █████╗ ████████╗ █████╗  ██████╗██╗  ██╗██╗   ██╗
+    ██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝
+    ███████║   ██║   ███████║██║     █████╔╝  ╚████╔╝ 
+    ██╔══██║   ██║   ██╔══██║██║     ██╔═██╗   ╚██╔╝  
+    ██║  ██║   ██║   ██║  ██║╚██████╗██║  ██╗   ██║   
+    ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   by ImNoTASkidLolus\033[0m""")
+    print("LOADING, PLEASE WAIT...")
+    #LOADED: [█ █ █ █ █ █ █ █ █ █ █ █ █]
+    if "threading" in sys.modules:
+        print("[█ ░                      ] 1/13\r", end="", flush=True)
+    import curses
+    if "curses" in sys.modules:
+        print("[█ █ ░                    ] 2/13\r", end="", flush=True)
+    import argparse
+    if "argparse" in sys.modules:
+        print("[█ █ █ ░                  ] 3/13\r", end="", flush=True)
+    import attacks.get_networks as get_networks
+    if "attacks.get_networks" in sys.modules:
+        print("[█ █ █ █ ░                ] 4/13\r", end="", flush=True)
+    import screen.main_tui as main_tui
+    if "screen.main_tui" in sys.modules:
+        print("[█ █ █ █ █ ░              ] 5/13\r", end="", flush=True)
+    import screen.attack_scr as attack_scr
+    if "screen.attack_scr" in sys.modules:
+        print("[█ █ █ █ █ █ ░            ] 6/13\r", end="", flush=True)
+    import screen.sniffer_scr as sniff_scr
+    if "screen.sniffer_scr" in sys.modules:
+        print("[█ █ █ █ █ █ █ ░          ] 7/13\r", end="", flush=True)
+    import screen.gps_screen as gps_scr  
+    if "screen.gps_screen" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ ░        ] 8/13\r", end="", flush=True)                               
+    import handle_input
+    if "handle_input" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ ░      ] 9/13\r", end="", flush=True)
+    import attacks.OUI_checker as oui
+    if "attacks.OUI_checker" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ ░    ] 10/13\r", end="", flush=True)
+    import attacks.wigle_csv_saver as saver
+    if "attacks.wigle_csv_saver" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ ░  ] 11/13\r", end="", flush=True)
+    import attacks.gps_tracker as tracker
+    if "attacks.gps_tracke" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ █ ░] 12/13\r", end="", flush=True)
+    import globals
+    if "globals"in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ █ █] 13/13\r", flush=True)
     globals.oui_map = oui.load_oui()
     globals.gps = tracker.gps_get()
     globals.fix = globals.gps.get_fix()
@@ -227,7 +224,58 @@ if not globals.larp_mode:
     thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
     thread1.start()
 else:
+    print( """\033[0;31m
+    █████╗ ████████╗ █████╗  ██████╗██╗  ██╗██╗   ██╗
+    ██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝
+    ███████║   ██║   ███████║██║     █████╔╝  ╚████╔╝ 
+    ██╔══██║   ██║   ██╔══██║██║     ██╔═██╗   ╚██╔╝  
+    ██║  ██║   ██║   ██║  ██║╚██████╗██║  ██╗   ██║   
+    ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   by ImNoTASkidLolus\033[0m""")
+    print("JARVIS!")
+    time.sleep(0.5)
+    print("Sir?")
+    time.sleep(0.5)
+    print("ACTIVATE LARP MODE!")
+    time.sleep(0.5)
     import larp_values
+    if "threading" in sys.modules:
+        print("[█ ░                      ] 1/13\r", end="", flush=True)
+    import curses
+    if "curses" in sys.modules:
+        print("[█ █ ░                    ] 2/13\r", end="", flush=True)
+    import argparse
+    if "argparse" in sys.modules:
+        print("[█ █ █ ░                  ] 3/13\r", end="", flush=True)
+    import attacks.get_networks as get_networks
+    if "attacks.get_networks" in sys.modules:
+        print("[█ █ █ █ ░                ] 4/13\r", end="", flush=True)
+    import screen.main_tui as main_tui
+    if "screen.main_tui" in sys.modules:
+        print("[█ █ █ █ █ ░              ] 5/13\r", end="", flush=True)
+    import screen.attack_scr as attack_scr
+    if "screen.attack_scr" in sys.modules:
+        print("[█ █ █ █ █ █ ░            ] 6/13\r", end="", flush=True)
+    import screen.sniffer_scr as sniff_scr
+    if "screen.sniffer_scr" in sys.modules:
+        print("[█ █ █ █ █ █ █ ░          ] 7/13\r", end="", flush=True)
+    import screen.gps_screen as gps_scr  
+    if "screen.gps_screen" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ ░        ] 8/13\r", end="", flush=True)                               
+    import handle_input
+    if "handle_input" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ ░      ] 9/13\r", end="", flush=True)
+    import attacks.OUI_checker as oui
+    if "attacks.OUI_checker" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ ░    ] 10/13\r", end="", flush=True)
+    import attacks.wigle_csv_saver as saver
+    if "attacks.wigle_csv_saver" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ ░  ] 11/13\r", end="", flush=True)
+    import attacks.gps_tracker as tracker
+    if "attacks.gps_tracke" in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ █ ░] 12/13\r", end="", flush=True)
+    import globals
+    if "globals"in sys.modules:
+        print("[█ █ █ █ █ █ █ █ █ █ █ █ █] 13/13\r", flush=True)
     globals.l_bssids = larp_values.l_bssids
     globals.l_channels = larp_values.l_channels
     globals.l_ssids = larp_values.l_ssids
@@ -254,6 +302,8 @@ if not globals.larp_mode:
     if globals.pwngrid_detect:
         globals.pwngrid_detect.stop()
     scanner.stop()
+    
+#======================debugging code uncommment if needed===================#
 # print(f"BSSIDS: {globals.l_bssids}\n")
 # print(f"SSIDS: {globals.l_ssids}\n")
 # print(f"SECURITY: {globals.l_sec}")
