@@ -84,6 +84,10 @@ def draw_satelite_info(found_satelites_box:curses.window, height):
                         else:
                             i = 3
             else:
+                found_satelites_box.addstr(2 , 2, "ID ", curses.color_pair(3))
+                found_satelites_box.addstr(2, 6, "SNR",curses.color_pair(3))
+                found_satelites_box.addstr(2 , 11, "USED",curses.color_pair(3))
+                found_satelites_box.addstr(2, 18, "CONST",curses.color_pair(3))
                 found_satelites_box.addstr(3, 2, "N/A",curses.color_pair(4))
                 found_satelites_box.addstr(3, 6, "N/A",curses.color_pair(4))
                 found_satelites_box.addstr(3, 11, "N/A",curses.color_pair(4))
