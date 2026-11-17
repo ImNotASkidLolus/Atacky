@@ -215,7 +215,7 @@ if not globals.larp_mode:
     if "attacks.wigle_csv_saver" in sys.modules:
         print("[█ █ █ █ █ █ █ █ █ █ █ ░  ] 11/13\r", end="", flush=True)
     import attacks.gps_tracker as tracker
-    if "attacks.gps_tracke" in sys.modules:
+    if "attacks.gps_tracker" in sys.modules:
         print("[█ █ █ █ █ █ █ █ █ █ █ █ ░] 12/13\r", end="", flush=True)
     import globals
     if "globals"in sys.modules:
