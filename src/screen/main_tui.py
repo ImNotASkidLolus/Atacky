@@ -11,7 +11,7 @@ def draw_main_box(main_box, stdscr, height, width):
         if globals.attack_menu:
             pass
         else:
-            num_of_networks = len(globals.l_bssids)
+            num_of_networks = min(len(globals.l_bssids),len(globals.l_ssids), len(globals.l_sec), len(globals.l_channels))
             loop_count = num_of_networks * 2
             k = 0 # index of the network in the array of networks(globals.l_bssids, globals.l_ssids etc.), it increments by 1 every two loop iterations
             if width > 85:
