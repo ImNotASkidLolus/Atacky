@@ -151,7 +151,7 @@ class get_networks:
             
                 scapy.sendp(probe_p, iface=globals.interface, count = 3, inter = 0.1, verbose=False)
             else:
-                time.sleep(0.5)
+                time.sleep(0.3)
     def continuous_running(self):
         probe_thread = threading.Thread(target=self.send_probe_request, daemon=True)
         scans_before_reset = 5
