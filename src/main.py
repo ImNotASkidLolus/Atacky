@@ -172,13 +172,13 @@ globals.interface = args.interface
 globals.larp_mode = args.larp
 wigle_filepath = args.output
 if not globals.larp_mode:
-    print( """\033[0;31m
-     █████╗ ████████╗ █████╗  ██████╗██╗  ██╗██╗   ██╗
-    ██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝
-    ███████║   ██║   ███████║██║     █████╔╝  ╚████╔╝ 
-    ██╔══██║   ██║   ██╔══██║██║     ██╔═██╗   ╚██╔╝  
-    ██║  ██║   ██║   ██║  ██║╚██████╗██║  ██╗   ██║   
-    ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   by ImNoTASkidLolus\033[0m""")
+    print("\033[0;31m")
+    print( r"""                           
+      __  ____  __    ___  __ _  _  _ 
+     / _\(_  _)/ _\  / __)(  / )( \/ )
+    /    \ )( /    \( (__  )  (  )  / 
+    \_/\_/(__)\_/\_/ \___)(__\_)(__/  by ImNoTASkidLolus""")
+    print("\033[0m")
     print("LOADING, PLEASE WAIT...")
     #LOADED: [█ █ █ █ █ █ █ █ █ █ █ █ █]
     if "threading" in sys.modules:
@@ -231,13 +231,13 @@ if not globals.larp_mode:
     thread1 = threading.Thread(target=scanner.continuous_running, daemon=True)
     thread1.start()
 else:
-    print( """\033[0;31m
-     █████╗ ████████╗ █████╗  ██████╗██╗  ██╗██╗   ██╗
-    ██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝
-    ███████║   ██║   ███████║██║     █████╔╝  ╚████╔╝ 
-    ██╔══██║   ██║   ██╔══██║██║     ██╔═██╗   ╚██╔╝  
-    ██║  ██║   ██║   ██║  ██║╚██████╗██║  ██╗   ██║   
-    ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝   by ImNoTASkidLolus\033[0m""")
+    print("\033[0;31m", end="")
+    print(r"""                           
+      __  ____  __    ___  __ _  _  _ 
+     / _\(_  _)/ _\  / __)(  / )( \/ )
+    /    \ )( /    \( (__  )  (  )  / 
+    \_/\_/(__)\_/\_/ \___)(__\_)(__/  by ImNoTASkidLolus""")
+    print("\033[0m",end="")
     print("JARVIS!")
     time.sleep(0.5)
     print("Sir?")
