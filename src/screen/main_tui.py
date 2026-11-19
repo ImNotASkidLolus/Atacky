@@ -51,25 +51,25 @@ def draw_main_box(main_box, stdscr, height, width):
                             main_box.addstr(i+1, int((3/6) * width), "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((3/6) * width) + 20, "│", curses.color_pair(2))
                             main_box.addstr(i+1, int((6/7) * width), "│", curses.color_pair(2))
-                            if k < num_of_networks - 1:
+                            if k < num_of_networks:
                                 ssid = globals.l_ssids[k]
                                 bssid = globals.l_bssids[k]
                                 ch = globals.l_channels[k]
                                 sec = globals.l_sec[k]
                                 k = k + 1
-                        if ch > 13:
-                            ssid = f"(5G) {ssid}"
-                        if not stop_scan or row_selected != k + 1:
-                            main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(10))
-                            main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(16))
-                            main_box.addstr(i + 1, int((3/6) * width) + 20 + 2, str(sec), curses.color_pair(14))
-                            main_box.addstr(i + 1, int((6/7) * width)+ 2, str(ch), curses.color_pair(12))
-                        else:
-                            main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
-                            main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(11))
-                            main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(17))
-                            main_box.addstr(i + 1, int((3/6) * width) + 20 + 2,  str(sec), curses.color_pair(15))
-                            main_box.addstr(i + 1, int((6/7) * width)+ 2, str(ch), curses.color_pair(13))
+                            if ch > 13:
+                                ssid = f"(5G) {ssid}"
+                            if not stop_scan or row_selected != k + 1:
+                                main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(10))
+                                main_box.addstr(i + 1, int((3/6) * width) + 2, bssid, curses.color_pair(16))
+                                main_box.addstr(i + 1, int((3/6) * width) + 20 + 2, sec, curses.color_pair(14))
+                                main_box.addstr(i + 1, int((6/7) * width)+ 2, str(ch), curses.color_pair(12))
+                            else:
+                                main_box.addstr(i + 1, 1, " ".center(width-2), curses.color_pair(9))
+                                main_box.addstr(i + 1, 1,  ssid[:width//2 - 2].replace("\0",""), curses.color_pair(11))
+                                main_box.addstr(i + 1, int((3/6) * width)+ 2, bssid, curses.color_pair(17))
+                                main_box.addstr(i + 1, int((3/6) * width) + 20 + 2,  str(sec), curses.color_pair(15))
+                                main_box.addstr(i + 1, int((6/7) * width)+ 2, str(ch), curses.color_pair(13))
                     except curses.error:
                         break  
             # everything below works the same as above, but has less data displayed for better visibility on small screens

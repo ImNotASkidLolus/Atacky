@@ -9,27 +9,26 @@ def main(stdscr):
     stdscr.keypad(True)
 
     #======================COLORS INITIALIZATION=======================#
-    curses.init_pair(1, curses.COLOR_BLACK,   curses.COLOR_BLUE)    # title bar and label text — Tokyo Night blue
-    curses.init_pair(2, curses.COLOR_CYAN,    -1)                   # box border color — Tokyo Night cyan
+    curses.init_pair(1, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # title bar and label text — keeping classic phosphor green bg
+    curses.init_pair(2, curses.COLOR_CYAN,    -1)                  # box border color — #8BE9FD dracula cyan
     curses.init_pair(3, curses.COLOR_GREEN,   -1)
-    curses.init_pair(4, curses.COLOR_MAGENTA, -1)                   # values text — Tokyo Night purple
-    curses.init_pair(6, curses.COLOR_BLACK,   curses.COLOR_CYAN)    # was yellow/white — now black on cyan, clean and readable
-    curses.init_pair(8, curses.COLOR_BLACK,   curses.COLOR_BLUE)    # line select text — unchanged, this one was already correct
-    curses.init_pair(9, curses.COLOR_BLUE,    curses.COLOR_BLUE)    # green bar — unchanged, solid fill needs to stay green
+    curses.init_pair(4, curses.COLOR_MAGENTA, -1)                  # values text — curses MAGENTA maps close to #BD93F9 dracula purple
+    curses.init_pair(6, curses.COLOR_BLACK,   curses.COLOR_CYAN)     # was yellow/white — now black on cyan, clean and readable
+    curses.init_pair(8, curses.COLOR_BLACK,   curses.COLOR_GREEN)    # line select text — unchanged, this one was already correct
+    curses.init_pair(9, curses.COLOR_GREEN,   curses.COLOR_GREEN)    # green bar — unchanged, solid fill needs to stay green
 
-    #======================TUI better colors===========================#
-    curses.init_pair(10, curses.COLOR_BLUE, -1)                     # Color of networks when not selected
-    curses.init_pair(11, curses.COLOR_BLACK, curses.COLOR_BLUE)     # Color of networks when selected
+#======================TUI better colors===========================#
+    curses.init_pair(10, curses.COLOR_BLUE, -1) # Color of networks when not selected
+    curses.init_pair(11, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of networks when selected
 
-    curses.init_pair(12, curses.COLOR_GREEN, -1)                    # Color of channels when not selected
-    curses.init_pair(13, curses.COLOR_BLACK, curses.COLOR_BLUE)     # Color of channels when not selected
+    curses.init_pair(12, curses.COLOR_GREEN, -1) # Color of channels when not selected
+    curses.init_pair(13, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of channels when not selected
 
-    curses.init_pair(14, curses.COLOR_YELLOW, -1)                   # Color of security when not selected
-    curses.init_pair(15, curses.COLOR_BLACK, curses.COLOR_BLUE)     # Color of security when not selected
+    curses.init_pair(14, curses.COLOR_YELLOW, -1) # Color of security when not selected
+    curses.init_pair(15, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of security when not selected
 
-    curses.init_pair(16, curses.COLOR_CYAN, -1)                     # Color of bssids when not selected
-    curses.init_pair(17, curses.COLOR_BLACK, curses.COLOR_BLUE)     # Color of bssids when not selected
-
+    curses.init_pair(16, curses.COLOR_GREEN, -1) # Color of bssids when not selected
+    curses.init_pair(17, curses.COLOR_BLACK, curses.COLOR_GREEN) # Color of bssids when not selected
     if cols > 80:
         att_sel_height = 14
         att_sel_width = cols - 10

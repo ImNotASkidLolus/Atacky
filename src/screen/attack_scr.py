@@ -5,6 +5,7 @@ import time
 import json
 
 def draw_attack_screen(attack_box:curses.window, stdscr, width, height):
+    stdscr.box()
     attack_box.erase()
     attack_box.attron(curses.color_pair(2))
     attack_box.box()
