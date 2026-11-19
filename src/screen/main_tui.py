@@ -86,6 +86,8 @@ def draw_main_box(main_box, stdscr, height, width):
                                 main_box.addstr(i + 1, j, "├",curses.color_pair(2))
                             elif j == width - 1:
                                 main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                            elif j == int((6/7) * width) - 2:
+                                main_box.addstr(i + 1, j, "┴", curses.color_pair(2))
                             else:    
                                 main_box.addstr(i + 1, j, "─",curses.color_pair(2))
                         break
@@ -95,6 +97,8 @@ def draw_main_box(main_box, stdscr, height, width):
                                 main_box.addstr(i + 1, j, "├",curses.color_pair(2))
                             elif j == width - 1:
                                 main_box.addstr(i + 1, j, "┤",curses.color_pair(2))
+                            elif j == int((6/7) * width) - 2:
+                                main_box.addstr(i + 1, j, "┼", curses.color_pair(2))
                             else:    
                                 main_box.addstr(i + 1, j, "─",curses.color_pair(2))
                         continue
